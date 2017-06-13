@@ -1,0 +1,121 @@
+<VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
+  <TemplateData>
+    <Name>ProjectWebSite</Name>
+    <Description>&lt;No description available&gt;</Description>
+    <ProjectType>Web</ProjectType>
+    <ProjectSubType>CSharp</ProjectSubType>
+    <SortOrder>1000</SortOrder>
+    <CreateNewFolder>true</CreateNewFolder>
+    <DefaultName>ProjectWebSite</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+    <LocationField>Enabled</LocationField>
+    <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
+    <Icon>__TemplateIcon.ico</Icon>
+  </TemplateData>
+  <TemplateContent>
+    <Project TargetFileName="ProjectName.webproj" File="ProjectName.webproj" ReplaceParameters="true">
+      <Folder Name="App_Code" TargetFolderName="App_Code">
+        <ProjectItem ReplaceParameters="true" TargetFileName="Entity.Context.tt">Entity.Context.tt</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="Entity.Context.cs">Entity.Context.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="false" TargetFileName="Entity.edmx">Entity.edmx</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="Entity.Designer.cs">Entity.Designer.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="false" TargetFileName="Entity.edmx.diagram">Entity.edmx.diagram</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="Entity.tt">Entity.tt</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="Entity.cs">Entity.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="MailSender.cs">MailSender.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="Utils.cs">Utils.cs</ProjectItem>
+      </Folder>
+      <Folder Name="Bin" TargetFolderName="Bin">
+        <ProjectItem ReplaceParameters="false" TargetFileName="EntityFramework.dll">EntityFramework.dll</ProjectItem>
+        <ProjectItem ReplaceParameters="false" TargetFileName="EntityFramework.dll.refresh">EntityFramework.dll.refresh</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="EntityFramework.xml">EntityFramework.xml</ProjectItem>
+        <ProjectItem ReplaceParameters="false" TargetFileName="EntityFramework.SqlServer.dll">EntityFramework.SqlServer.dll</ProjectItem>
+        <ProjectItem ReplaceParameters="false" TargetFileName="EntityFramework.SqlServer.dll.refresh">EntityFramework.SqlServer.dll.refresh</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="EntityFramework.SqlServer.xml">EntityFramework.SqlServer.xml</ProjectItem>
+        <ProjectItem ReplaceParameters="false" TargetFileName="Newtonsoft.Json.dll">Newtonsoft.Json.dll</ProjectItem>
+      </Folder>
+      <Folder Name="Controllers" TargetFolderName="Controllers">
+        <ProjectItem ReplaceParameters="true" TargetFileName="mainController.js">mainController.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="ReportsController.js">ReportsController.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="SearchController.js">SearchController.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="TicketController.js">TicketController.js</ProjectItem>
+      </Folder>
+      <Folder Name="css" TargetFolderName="css">
+        <ProjectItem ReplaceParameters="true" TargetFileName="advancedStyle.css">advancedStyle.css</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="angular-moment-picker.css">angular-moment-picker.css</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="bootstrap-dialog.min.css">bootstrap-dialog.min.css</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="bootstrap-rtl.css">bootstrap-rtl.css</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="bootstrap.min.css">bootstrap.min.css</ProjectItem>
+        <Folder Name="fonts" TargetFolderName="fonts">
+          <ProjectItem ReplaceParameters="false" TargetFileName="glyphicons-halflings-regular.eot">glyphicons-halflings-regular.eot</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="glyphicons-halflings-regular.svg">glyphicons-halflings-regular.svg</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="glyphicons-halflings-regular.ttf">glyphicons-halflings-regular.ttf</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="glyphicons-halflings-regular.woff">glyphicons-halflings-regular.woff</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="glyphicons-halflings-regular.woff2">glyphicons-halflings-regular.woff2</ProjectItem>
+        </Folder>
+        <ProjectItem ReplaceParameters="true" TargetFileName="ionicons.min.css">ionicons.min.css</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="jquery-ui.css">jquery-ui.css</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="select2.min.css">select2.min.css</ProjectItem>
+      </Folder>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Default.aspx">Default.aspx</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Default.aspx.cs">Default.aspx.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="false" TargetFileName="favicon.ico">favicon.ico</ProjectItem>
+      <Folder Name="fonts" TargetFolderName="fonts">
+        <ProjectItem ReplaceParameters="false" TargetFileName="ionicons.ttf">ionicons.ttf</ProjectItem>
+        <ProjectItem ReplaceParameters="false" TargetFileName="ionicons.woff">ionicons.woff</ProjectItem>
+        <ProjectItem ReplaceParameters="false" TargetFileName="metro.eot">metro.eot</ProjectItem>
+        <ProjectItem ReplaceParameters="false" TargetFileName="metro.svg">metro.svg</ProjectItem>
+        <ProjectItem ReplaceParameters="false" TargetFileName="metro.ttf">metro.ttf</ProjectItem>
+        <ProjectItem ReplaceParameters="false" TargetFileName="metro.woff">metro.woff</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="selection.json">selection.json</ProjectItem>
+      </Folder>
+      <Folder Name="images" TargetFolderName="images">
+        <ProjectItem ReplaceParameters="false" TargetFileName="c.ico">c.ico</ProjectItem>
+      </Folder>
+      <Folder Name="JS" TargetFolderName="JS">
+        <ProjectItem ReplaceParameters="true" TargetFileName="angular-chart.min.js">angular-chart.min.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="angular-fusioncharts.min.js">angular-fusioncharts.min.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="angular-moment-picker.min.js">angular-moment-picker.min.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="angular-moment-picker2.js">angular-moment-picker2.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="angular-sanitize.min.js">angular-sanitize.min.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="angular.min.js">angular.min.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="bootstrap-dialog.min.js">bootstrap-dialog.min.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="bootstrap.min.js">bootstrap.min.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="fusioncharts.charts.js">fusioncharts.charts.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="fusioncharts.js">fusioncharts.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="jquery-2.0.0.min.js">jquery-2.0.0.min.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="jquery-3.1.0.min.js">jquery-3.1.0.min.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="jquery-ui.min.js">jquery-ui.min.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="jquery.easing.js">jquery.easing.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="jquery.tooltipster.min.js">jquery.tooltipster.min.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="linq.min.js">linq.min.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="moment-with-locales.js">moment-with-locales.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="moment.min.js">moment.min.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="ng-file-upload.min.js">ng-file-upload.min.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="select2.full.js">select2.full.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="select2.js">select2.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="template.js">template.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="tooltipster.bundle.min.js">tooltipster.bundle.min.js</ProjectItem>
+      </Folder>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Login.aspx">Login.aspx</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Login.aspx.cs">Login.aspx.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="MasterPage.master">MasterPage.master</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="MasterPage.master.cs">MasterPage.master.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="packages.config">packages.config</ProjectItem>
+      <Folder Name="Pages" TargetFolderName="Pages">
+        <ProjectItem ReplaceParameters="true" TargetFileName="CreateTicket.htm">CreateTicket.htm</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="MyTicket.html">MyTicket.html</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="Reports.htm">Reports.htm</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="Search.htm">Search.htm</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="TicketsToDo.htm">TicketsToDo.htm</ProjectItem>
+      </Folder>
+      <ProjectItem ReplaceParameters="true" TargetFileName="ResetPassword.aspx">ResetPassword.aspx</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="ResetPassword.aspx.cs">ResetPassword.aspx.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Tasks.aspx">Tasks.aspx</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Tasks.aspx.cs">Tasks.aspx.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="false" TargetFileName="vwd.webinfo">vwd.webinfo</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Web.config">Web.config</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Web.Debug.config">Web.Debug.config</ProjectItem>
+    </Project>
+  </TemplateContent>
+</VSTemplate>

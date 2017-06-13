@@ -1,0 +1,123 @@
+﻿<!--open new ticket form-->
+<div class="scrollable" style="margin-top:15px">
+    <h3>פתיחת פניה חדשה</h3>
+    <style>
+        .newticketform legend{
+            border-bottom:0;
+            padding-right:15px;
+        }
+    </style>
+    <form class="form-horizontal newticketform"><!--newticketform-->
+        <div class="row">
+            <legend>פרטי עובד</legend>
+            <div ng-show="currentUser.Permission==1">
+                <label>פרטים אישיים - משתמש</label>
+            </div>
+            <div ng-show="currentUser.Permission==2">
+                <label>פרטים אישיים - עובד</label>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-1 control-label">שם מלא:</label>
+                <div class="col-lg-3">
+                    <input class="form-control" id="inputname" ng-model="currentUser.FullName" ng-disabled="true">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-1 control-label">מחלקה:</label>
+                <div class="col-lg-3">
+                    <input class="form-control" id="inputdept" ng-model="currentUser.Department" ng-disabled="true">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-lg-1 control-label">מייל:</label>
+                <div class="col-lg-3">
+                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" ng-model="currentUser.EMail" ng-disabled="true">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-lg-1 control-label">טלפון:</label>
+                <div class="col-lg-3">
+                    <input class="form-control" id="tel" ng-model="currentUser.Tel" ng-disabled="true">
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <legend>פרטי פניה</legend>
+            <div class="form-group">
+                <label class="col-lg-1 control-label">תחום:</label>
+                <div class="col-lg-3">
+                    <select class="form-control" name="domain" data-ng-model="newTicket.Domain" required>
+                        <option value="">-- בחר תחום --</option>
+                        <option value="תחזוקה">תחזוקה</option>
+                        <option value="משק">משק</option>
+                        <option value="ביטחון">ביטחון</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-1 control-label">קטגוריה:</label>
+                <div class="col-lg-3">
+                    <select class="form-control" id="categorytype" data-ng-options="x.idCategory as x.CategoryName for x in data.Category | filter: CategoryFilter | orderBy: 'CategoryName'" data-ng-model="newTicket.idCategory" data-ng-selected="Ticket.newTicket.Category==x.idCategory" required>
+                        <option value="">-- בחר קטגוריה --</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" data-ng-show="newTicket.Domain=='תחזוקה'">
+                <label class="col-lg-1 control-label">מבנה:</label>
+                <div class="col-lg-3">
+                    <select class="form-control" name="build" data-ng-model="newTicket.Build" required>
+                        <option value="">-- בחר מבנה --</option>
+                        <option value="M">M</option>
+                        <option value="EM">EM</option>
+                        <option value="L">L</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" data-ng-show="newTicket.Domain=='תחזוקה'">
+
+                <label class="col-lg-1 control-label">חדר:</label>
+                <div class="col-lg-3">
+                    <select class="form-control" id="roomtype" data-ng-options="x.idLocation as x.Room for x in data.Location | filter: RoomFilter | orderBy: 'Room'" data-ng-model="newTicket.idLocation" data-ng-selected="newTicket.Room==x.idLocation" required>
+                        <option value="">-- בחר חדר --</option>
+                    </select>
+                </div>
+            </div>
+            <div class="checkbox" data-ng-show="currentUser.Permission =='0'">
+                <label data-ng-model="newTicket.Priority">האם הפניה קריטית?<input type="checkbox"></label>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-1 control-label">תיאור הפניה:</label>
+                <div class="col-lg-6">
+                    <textarea data-ng-model="newTicket.Description" class="form-control" rows="4" i placeholder="כתוב כאן..." required></textarea>
+                </div>
+            </div>
+            <!--<label class="custom-file">
+                <input type="file" id="file" class="custom-file-input">
+                <span class="custom-file-control"></span>
+            </label>-->
+            <div data-ng-show="currentUser.Permission =='2' || currentUser.Permission =='3' || currentUser.Permission =='0'">
+                <label class="col-lg-1 control-label">תאריך לביצוע</label>
+                <div class="col-lg-3">
+                    <div class="input-group"
+                         data-moment-picker="newTicket.DateToDo"
+                         data-locale="he"
+                         data-start-view="day"
+                         data-format="DD-MM-YYYY">
+                        <span class="input-group-addon">
+                            <i class="icon ion-calendar"></i>
+                        </span>
+                        <input class="form-control inp-d"
+                               placeholder="בחר תאריך"
+                               data-ng-model="newTicket.DateToDo"
+                               data-ng-model-options="{ updateOn: 'blur' }" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div><a href="#" class="btn btn-success" data-ng-click="addNewTicket()">שלח</a></div>
+    </form>
+</div>

@@ -1,0 +1,26 @@
+﻿<div class="container">
+    <div data-ng-if="isHomeTab()">
+        <ul class="nav nav-tabs">
+            <li><a href="#newTicket" data-toggle="tab" data-ng-click="setPage('createTicket')"><i class="icon ion-ios-plus-outline"></i> פניה חדשה</a></li>
+            <li class="active"><a href="#myTickets" data-toggle="tab" data-ng-click="setPage('MyTicket')">הפניות שלי</a></li>
+            <li data-ng-if="currentUser.Permission!=1"><a href="#ticketsToDo" data-toggle="tab" data-ng-click="setPage('TicketsToDo')">פניות לטיפול</a></li>
+            <li data-ng-if="currentUser.Permission!=1"><a href="#search" data-toggle="tab" data-ng-click="setPage('Search')"><i class="icon ion-ios-search"></i> חיפוש</a></li>
+        </ul>
+        <div id="newTicket" data-ng-if="currentPage=='createTicket'" data-ng-include="'Pages/CreateTicket.htm'"></div>
+        <div id="myTickets" data-ng-if="currentPage=='MyTicket'" data-ng-include="'Pages/MyTicket.html'"></div>
+        <div id="ticketsToDo" data-ng-if="currentPage=='TicketsToDo'" data-ng-include="'Pages/TicketsToDo.htm'"></div>
+        <div id="search" data-ng-if="currentPage=='Search'" data-ng-include="'Pages/Search.htm'"></div>
+    </div>
+    <div data-ng-if="currentPage=='Reports'" data-ng-include="'Pages/Reports.htm'"></div>
+    <div data-ng-if="currentPage=='ManageUsers'" data-ng-include="'Pages/ManageUsers.htm'"></div>
+    <!--<div class="btn-group pull-right" style="margin: 20px 0px 5px 0px" data-ng-show="currentPage != 'Reports' ">
+        <a href="#" id="btn-new" class="btn btn-primary" data-ng-click="setPage('createTicket')"><i class="icon ion-ios-plus-outline"></i>	&nbspפניה חדשה </a>
+        <a href="#" id="btn-my" class="btn btn-default" data-ng-click="setPage('MyTicket')"><span></span>&nbspהפניות שלי</a>
+        <a href="#" id="btn-todo" class="btn btn-default" data-ng-show="currentUser.Permission!=1" data-ng-click="setPage('TicketsToDo')"><span></span>&nbspפניות לטיפולי</a>
+        <a href="#" id="btn-search" class="btn btn-default" data-ng-show="currentUser.Permission!=1" data-ng-click="setPage('Search')"><i class="icon ion-ios-search"></i>	&nbspחיפוש</a>
+    </div>-->
+    <!--<div class="main-content">
+
+    <div data-ng-if="currentPage=='Reports'" data-ng-include="'Pages/Reports.htm'"></div>
+    </div>-->
+</div>

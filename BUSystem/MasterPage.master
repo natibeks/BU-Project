@@ -1,0 +1,69 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="MasterPage" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+
+    <title>מערכת לניהול פניות לוגיסטיות - אורט בראודה</title>
+    <link rel="shortcut icon" type="image/x-icon" href="images/c.ico" />
+
+    <link href="css/jquery-ui.css" rel="stylesheet" />
+    <link href="css/angular-moment-picker.css" rel="stylesheet" />
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/bootstrap-dialog.min.css" rel="stylesheet" />
+    <link href="css/bootstrap-rtl.css" rel="stylesheet" />
+    <link href="css/ionicons.min.css" rel="stylesheet" />
+    <link href="css/select2.min.css" rel="stylesheet" />
+    <link href="css/advancedStyle.css" rel="stylesheet" />
+
+    <script src="JS/jquery-2.0.0.min.js"></script>
+
+    <script src="JS/linq.min.js"></script>
+    <script src="JS/angular.min.js"></script>
+    <script src="JS/angular-moment-picker.min.js"></script>
+    <script src="JS/angular-sanitize.min.js"></script>
+    <%--    <script src="JS/angular-chart.min.js"></script>--%>
+    <script type="text/javascript" src="JS/fusioncharts.js"></script>
+    <script src="JS/fusioncharts.charts.js"></script>
+    <script src="JS/angular-fusioncharts.min.js"></script>
+
+    <script src="https://rawgit.com/dwmkerr/angular-modal-service/master/dst/angular-modal-service.js"></script>
+    <script src="JS/bootstrap.min.js"></script>
+    <script src="JS/bootstrap-dialog.min.js"></script>
+    <script src="JS/jquery-ui.min.js"></script>
+    <script src="JS/jquery.tooltipster.min.js"></script>
+    <script src="JS/moment.min.js"></script>
+    <script src="JS/moment-with-locales.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <script src="JS/ng-file-upload.min.js"></script>
+    <script src="JS/select2.js"></script>
+    <script src="JS/select2.full.js"></script>
+    <script src="JS/template.js"></script>
+
+    <script src="Controllers/mainController.js"></script>
+    <script src="Controllers/forgotPassController.js"></script>
+    <script src="Controllers/TicketController.js"></script>
+    <script src="Controllers/SearchController.js"></script>
+    <script src="Controllers/ReportsController.js"></script>
+
+
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+
+</head>
+<body style="margin: 2px; overflow: hidden;" data-ng-app="myApp">
+    <div data-ng-controller="myController">
+        <asp:ContentPlaceHolder ID="SystemPlaceHolder1" runat="server">
+        </asp:ContentPlaceHolder>
+    </div>
+    <div>
+        <asp:ContentPlaceHolder ID="LoginPlaceHolder" runat="server">
+        </asp:ContentPlaceHolder>
+    </div>
+    <div data-ng-controller="forgotPassController">
+        <asp:ContentPlaceHolder ID="ResetPassPlaceHolder" runat="server">
+        </asp:ContentPlaceHolder>
+    </div>
+</body>
+</html>

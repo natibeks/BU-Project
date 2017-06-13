@@ -1,0 +1,40 @@
+﻿.main-content {
+    margin: 70px auto;
+    width: 1120px;
+}
+
+.right-menu {
+    position: absolute;
+    top: 90px;
+    right: 20px;
+    width: 200px;
+}
+
+@media (max-width: 1560px) {
+    .main-content {
+        width: 840px;
+        margin: 60px auto;
+    }
+}
+
+@media (max-width: 1360px) {
+    .main-content {
+        width: 840px;
+        margin: 60px;
+        margin-right: 200px;
+    }
+}
+
+/* CSS REQUIRED */
+.state-icon {
+    left: -5px;
+}
+.list-group-item-primary {
+    color: rgb(255, 255, 255);
+    background-color: rgb(66, 139, 202);
+}
+
+/* DEMO ONLY - REMOVES UNWANTED MARGIN */
+.well .list-group {
+    margin-bottom: 0px;
+}

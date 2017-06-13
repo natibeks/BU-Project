@@ -1,0 +1,243 @@
+﻿<div id="editTicketModal" class="modal fade small-md" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">
+                    <span>עריכת פניה</span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label">מספר פניה:</label>
+                        <input class="form-control" ng-model="selectedTicket.idTicket" ng-disabled="true">
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label">שם הפונה:</label>
+                        <input class="form-control" ng-model="selectedTicket.owner" ng-disabled="true">
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label">נפתחה ב:</label>
+                        <input class="form-control" ng-model="selectedTicket.timeopen" ng-disabled="true">
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label">מיקום:</label>
+                        <input class="form-control" ng-model="selectedTicket.location" ng-disabled="true">
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <label class="control-label">תיאור פניה:</label>
+                        <input class="form-control" ng-model="selectedTicket.des" ng-disabled="true">
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label">תמונה:</label>
+                        <input class="form-control" ng-model="selectedTicket.location" ng-disabled="true">
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <label class="control-label">סטטוס:</label>
+                    <div>
+                        <select class="form-control" data-ng-model="selectedTicket.status" id="select">
+                            <option value="פתוחה">פתוחה</option>
+                            <option value="משויכת">משויכת</option>
+                            <option value="ממתין">ממתין</option>
+                            <option value="סגורה">סגורה</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <label class="control-label">עובד נוסף:</label>
+                    <div>
+                        <select class="form-control" data-ng-model="selectedTicket.AnotherAsignee" 
+                                data-ng-options="o.idEmployee as o.Name for o in data.Employee  | orderBy: 'Name' | filter: asigneeFilter">
+                            <option value="">בחר</option>
+                        </select>
+
+                    </div>
+                </div>
+                <!--<div>
+                    <div class="form-group col-lg-6" data-ng-show="selectedTicket.status=='משויכת'">
+                        <label for="select" class="col-lg-4 control-label">עובד נוסף:</label>
+                        <div class="col-lg-8">
+                            <select class="form-control" data-ng-model="selectedTicket.AnotherAsignee" data-ng-options="o.idEmployee as o.Name for o in data.Employee  | orderBy: 'Name' | filter: asigneeFilter">
+                                <option value="">בחר</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>-->
+
+                <div class="col-lg-12">
+                    <label class="control-label">משימות לפניה</label>
+                    <table class="table table-striped table-hover " data-ng-show="tf.length>0 && !displayNewTask">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th style="width: 80%">תיאור</th>
+                                <th>בוצע</th>
+                                <th></th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            <tr data-ng-repeat="t in tf=(data.Task | filter: filterTasks)">
+                                <td>{{t.idTask}}</td>
+                                <td>{{t.TaskDescription}}</td>
+                                <td>
+                                    <div class="checkbox">
+                                        <input style="position: relative; top: -7px;" type="checkbox" data-ng-model="t.Done">
+                                    </div>
+                                </td>
+                                <td style="padding: 10px; text-align: left">
+                                    <button style="top: -7px;" type="button" class="btn btn-primary btn-xs hid-icon icon-btn" title="מחק משימה" data-ng-click="confirmDelete(t)">
+                                        <i class="icon ion-ios-trash-outline"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="button" data-ng-click="addTask()" data-ng-show="!displayNewTask" class="btn btn-primary btn-xs">הוסף משימה</button>
+                    <textarea class="form-control" data-ng-show="displayNewTask" rows="2" data-ng-model="NewTask.TaskDescription"></textarea>
+                    <button type="button" data-ng-click="updateTask()" data-ng-show="displayNewTask" class="btn btn-primary btn-xs">שמור משימה</button>
+
+                </div>
+
+                <%--   <div class="alert alert-dismissible alert-success" data-ng-show="!error">
+                    <button type="button" class="close" data-dismiss="alert" data-ng-click="setPage('MyTicket')">&times;</button>
+                    המשימה עודכנה בהצלחה!
+                </div>
+                --%>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-ng-click="updateTicket()">שמור</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">ביטול</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="confirmDeleteModal" class="modal fade small-sm" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <label>האם אתה בטוח שברצונך למחוק משימה?</label>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-ng-click="DeleteTask()">מחק</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">ביטול</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="ShowErrorMsg" class="modal fade small-sm" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <label>{{msg}}</label>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">אישור</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="confirmOpenTicketModal" class="modal fade small-sm" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <label>פנייתך עודכנה במערכת בהצלחה!</label>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal" data-ng-click="setPage('MyTicket')">אישור</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="editUserModal" class="modal fade small-md" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">
+                    <span data-ng-if="selectedUser.Id>0">עריכת משתמש</span>
+                    <span data-ng-if="selectedUser.Id==0">משתמש חדש</span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <label class="control-label">שם מלא:</label>
+                        <input class="form-control" ng-model="selectedUser.DisplayName">
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label">אימייל:</label>
+                        <input class="form-control" ng-model="selectedUser.EmailAddress">
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label">מספר טלפון:</label>
+                        <input class="form-control" ng-model="selectedUser.TelephoneNumber">
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label">מחלקה:</label>
+                        <select class="form-control" data-ng-model="selectedUser.Department"
+                                data-ng-options="o.Id as o.Department for o in data.Departments  | orderBy: 'Department'">
+                            <option value="">בחר</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label">תפקיד:</label>
+                        <select class="form-control" data-ng-model="selectedUser.Role"
+                                data-ng-options="o.Id as o.Role for o in data.Roles  | orderBy: 'Role'">
+                            <option value="">בחר</option>
+                        </select>
+                    </div>
+                </div>
+                <hr />
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label">סיסמא:</label>
+                        <input class="form-control" ng-model="selectedUser.UserPassword">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-ng-click="updateUser()">שמור</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">ביטול</button>
+            </div>
+        </div>
+
+    </div>
+</div>

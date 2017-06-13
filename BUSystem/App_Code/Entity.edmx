@@ -1,0 +1,1029 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="MSEsystemModel1.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="idCategory" />
+          </Key>
+          <Property Name="idCategory" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CategoryName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Domain" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ChiefManager">
+          <Key>
+            <PropertyRef Name="idChiefManager" />
+          </Key>
+          <Property Name="idChiefManager" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Department">
+          <Key>
+            <PropertyRef Name="Department" />
+          </Key>
+          <Property Name="Department" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="idEmployee" />
+          </Key>
+          <Property Name="idEmployee" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Expertise" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Domain" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Expertise">
+          <Key>
+            <PropertyRef Name="idExpertise" />
+          </Key>
+          <Property Name="idExpertise" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ExpertiseName" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Image">
+          <Key>
+            <PropertyRef Name="idImage" />
+          </Key>
+          <Property Name="idImage" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Size" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Location">
+          <Key>
+            <PropertyRef Name="idLocation" />
+          </Key>
+          <Property Name="idLocation" Type="int" Nullable="false" />
+          <Property Name="Building" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Room" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Manager">
+          <Key>
+            <PropertyRef Name="idManager" />
+          </Key>
+          <Property Name="idManager" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="idLocation" Type="int" />
+        </EntityType>
+        <EntityType Name="Personnel">
+          <Key>
+            <PropertyRef Name="idPersonnel" />
+          </Key>
+          <Property Name="idPersonnel" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="idLocation" Type="int" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="Task">
+          <Key>
+            <PropertyRef Name="idTask" />
+          </Key>
+          <Property Name="idTask" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="idTicket" Type="int" Nullable="false" />
+          <Property Name="TaskDescription" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Done" Type="bit" />
+          <Property Name="isArchive" Type="bit" />
+        </EntityType>
+        <EntityType Name="Ticket">
+          <Key>
+            <PropertyRef Name="idTicket" />
+          </Key>
+          <Property Name="idTicket" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="idCategory" Type="int" Nullable="false" />
+          <Property Name="idLocation" Type="int" />
+          <Property Name="Priority" Type="bit" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Status" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Image" Type="int" />
+        </EntityType>
+        <EntityType Name="TicketsForEmployee">
+          <Key>
+            <PropertyRef Name="idUser" />
+            <PropertyRef Name="idTicket" />
+          </Key>
+          <Property Name="idEmployee" Type="nvarchar" MaxLength="50" />
+          <Property Name="idUser" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="idTicket" Type="int" Nullable="false" />
+          <Property Name="TimeOpen" Type="datetime" />
+          <Property Name="TimeClose" Type="datetime" />
+          <Property Name="AnotherAsignee" Type="nvarchar" MaxLength="50" />
+          <Property Name="Domain" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="uid" />
+          </Key>
+          <Property Name="uid" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DisplayName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="EmailAddress" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="TelephoneNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Department" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="UserPassword" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LoginStatus" Type="bit" Nullable="false" />
+          <Property Name="Role" Type="int" Nullable="false" />
+          <Property Name="isArchive" Type="bit" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'MSEsystem.dbo.MyTickets' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="MyTickets">
+          <Key>
+            <PropertyRef Name="idUser" />
+            <PropertyRef Name="idTicket" />
+            <PropertyRef Name="CategoryName" />
+            <PropertyRef Name="Building" />
+            <PropertyRef Name="Room" />
+            <PropertyRef Name="Status" />
+          </Key>
+          <Property Name="idUser" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="idTicket" Type="int" Nullable="false" />
+          <Property Name="idEmployee" Type="nvarchar" MaxLength="50" />
+          <Property Name="CategoryName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Building" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Room" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="TimeOpen" Type="datetime" />
+          <Property Name="Status" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'MSEsystem.dbo.TicketsToDo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="TicketsToDo">
+          <Key>
+            <PropertyRef Name="idTicket" />
+            <PropertyRef Name="CategoryName" />
+            <PropertyRef Name="Building" />
+            <PropertyRef Name="Room" />
+            <PropertyRef Name="Status" />
+            <PropertyRef Name="DisplayName" />
+            <PropertyRef Name="Description" />
+          </Key>
+          <Property Name="idTicket" Type="int" Nullable="false" />
+          <Property Name="CategoryName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Building" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Room" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="TimeOpen" Type="datetime" />
+          <Property Name="Status" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DisplayName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Domain" Type="nvarchar" MaxLength="50" />
+          <Property Name="Description" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="TimeClose" Type="datetime" />
+        </EntityType>
+        <Association Name="FK_ChiefManager_Manager">
+          <End Role="Manager" Type="Self.Manager" Multiplicity="1" />
+          <End Role="ChiefManager" Type="Self.ChiefManager" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Manager">
+              <PropertyRef Name="idManager" />
+            </Principal>
+            <Dependent Role="ChiefManager">
+              <PropertyRef Name="idChiefManager" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Employee_Employee">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Employee" Type="Self.Employee" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="uid" />
+            </Principal>
+            <Dependent Role="Employee">
+              <PropertyRef Name="idEmployee" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Manager_Employee">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+          <End Role="Manager" Type="Self.Manager" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="idEmployee" />
+            </Principal>
+            <Dependent Role="Manager">
+              <PropertyRef Name="idManager" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Personnel_Location">
+          <End Role="Location" Type="Self.Location" Multiplicity="0..1" />
+          <End Role="Personnel" Type="Self.Personnel" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Location">
+              <PropertyRef Name="idLocation" />
+            </Principal>
+            <Dependent Role="Personnel">
+              <PropertyRef Name="idLocation" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Personnel_Personnel">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Personnel" Type="Self.Personnel" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="uid" />
+            </Principal>
+            <Dependent Role="Personnel">
+              <PropertyRef Name="idPersonnel" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Ticket_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="Ticket" Type="Self.Ticket" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="idCategory" />
+            </Principal>
+            <Dependent Role="Ticket">
+              <PropertyRef Name="idCategory" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Ticket_Image">
+          <End Role="Image" Type="Self.Image" Multiplicity="0..1" />
+          <End Role="Ticket" Type="Self.Ticket" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Image">
+              <PropertyRef Name="idImage" />
+            </Principal>
+            <Dependent Role="Ticket">
+              <PropertyRef Name="Image" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Ticket_Location">
+          <End Role="Location" Type="Self.Location" Multiplicity="0..1" />
+          <End Role="Ticket" Type="Self.Ticket" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Location">
+              <PropertyRef Name="idLocation" />
+            </Principal>
+            <Dependent Role="Ticket">
+              <PropertyRef Name="idLocation" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TicketsForEmployee_Employee">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="0..1" />
+          <End Role="TicketsForEmployee" Type="Self.TicketsForEmployee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="idEmployee" />
+            </Principal>
+            <Dependent Role="TicketsForEmployee">
+              <PropertyRef Name="idEmployee" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TicketsForEmployee_Ticket">
+          <End Role="Ticket" Type="Self.Ticket" Multiplicity="1" />
+          <End Role="TicketsForEmployee" Type="Self.TicketsForEmployee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Ticket">
+              <PropertyRef Name="idTicket" />
+            </Principal>
+            <Dependent Role="TicketsForEmployee">
+              <PropertyRef Name="idTicket" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TicketsForEmployee_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="TicketsForEmployee" Type="Self.TicketsForEmployee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="uid" />
+            </Principal>
+            <Dependent Role="TicketsForEmployee">
+              <PropertyRef Name="idUser" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Department">
+          <End Role="Department" Type="Self.Department" Multiplicity="1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Department">
+              <PropertyRef Name="Department" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="Department" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="spGetData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <EntityContainer Name="MSEsystemModel1StoreContainer">
+          <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ChiefManager" EntityType="Self.ChiefManager" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Department" EntityType="Self.Department" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Expertise" EntityType="Self.Expertise" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Image" EntityType="Self.Image" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Location" EntityType="Self.Location" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Manager" EntityType="Self.Manager" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Personnel" EntityType="Self.Personnel" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Task" EntityType="Self.Task" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Ticket" EntityType="Self.Ticket" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TicketsForEmployee" EntityType="Self.TicketsForEmployee" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MyTickets" EntityType="Self.MyTickets" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [MyTickets].[idUser] AS [idUser], 
+    [MyTickets].[idTicket] AS [idTicket], 
+    [MyTickets].[idEmployee] AS [idEmployee], 
+    [MyTickets].[CategoryName] AS [CategoryName], 
+    [MyTickets].[Building] AS [Building], 
+    [MyTickets].[Room] AS [Room], 
+    [MyTickets].[TimeOpen] AS [TimeOpen], 
+    [MyTickets].[Status] AS [Status]
+    FROM [dbo].[MyTickets] AS [MyTickets]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="TicketsToDo" EntityType="Self.TicketsToDo" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [TicketsToDo].[idTicket] AS [idTicket], 
+    [TicketsToDo].[CategoryName] AS [CategoryName], 
+    [TicketsToDo].[Building] AS [Building], 
+    [TicketsToDo].[Room] AS [Room], 
+    [TicketsToDo].[TimeOpen] AS [TimeOpen], 
+    [TicketsToDo].[Status] AS [Status], 
+    [TicketsToDo].[DisplayName] AS [DisplayName], 
+    [TicketsToDo].[Domain] AS [Domain], 
+    [TicketsToDo].[Description] AS [Description], 
+    [TicketsToDo].[TimeClose] AS [TimeClose]
+    FROM [dbo].[TicketsToDo] AS [TicketsToDo]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_ChiefManager_Manager" Association="Self.FK_ChiefManager_Manager">
+            <End Role="Manager" EntitySet="Manager" />
+            <End Role="ChiefManager" EntitySet="ChiefManager" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employee_Employee" Association="Self.FK_Employee_Employee">
+            <End Role="User" EntitySet="User" />
+            <End Role="Employee" EntitySet="Employee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Manager_Employee" Association="Self.FK_Manager_Employee">
+            <End Role="Employee" EntitySet="Employee" />
+            <End Role="Manager" EntitySet="Manager" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Personnel_Location" Association="Self.FK_Personnel_Location">
+            <End Role="Location" EntitySet="Location" />
+            <End Role="Personnel" EntitySet="Personnel" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Personnel_Personnel" Association="Self.FK_Personnel_Personnel">
+            <End Role="User" EntitySet="User" />
+            <End Role="Personnel" EntitySet="Personnel" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Ticket_Category" Association="Self.FK_Ticket_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="Ticket" EntitySet="Ticket" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Ticket_Image" Association="Self.FK_Ticket_Image">
+            <End Role="Image" EntitySet="Image" />
+            <End Role="Ticket" EntitySet="Ticket" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Ticket_Location" Association="Self.FK_Ticket_Location">
+            <End Role="Location" EntitySet="Location" />
+            <End Role="Ticket" EntitySet="Ticket" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TicketsForEmployee_Employee" Association="Self.FK_TicketsForEmployee_Employee">
+            <End Role="Employee" EntitySet="Employee" />
+            <End Role="TicketsForEmployee" EntitySet="TicketsForEmployee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TicketsForEmployee_Ticket" Association="Self.FK_TicketsForEmployee_Ticket">
+            <End Role="Ticket" EntitySet="Ticket" />
+            <End Role="TicketsForEmployee" EntitySet="TicketsForEmployee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TicketsForEmployee_User" Association="Self.FK_TicketsForEmployee_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="TicketsForEmployee" EntitySet="TicketsForEmployee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Department" Association="Self.FK_User_Department">
+            <End Role="Department" EntitySet="Department" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MSEsystemModel1" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="MSEsystemEntities1" annotation:LazyLoadingEnabled="true">
+          <FunctionImport Name="spGetData" ReturnType="Collection(MSEsystemModel1.spGetData_Result)" />
+          <EntitySet Name="Category" EntityType="MSEsystemModel1.Category" />
+          <EntitySet Name="ChiefManager" EntityType="MSEsystemModel1.ChiefManager" />
+          <EntitySet Name="Department" EntityType="MSEsystemModel1.Department" />
+          <EntitySet Name="Employee" EntityType="MSEsystemModel1.Employee" />
+          <EntitySet Name="Expertise" EntityType="MSEsystemModel1.Expertise" />
+          <EntitySet Name="Image" EntityType="MSEsystemModel1.Image" />
+          <EntitySet Name="Location" EntityType="MSEsystemModel1.Location" />
+          <EntitySet Name="Manager" EntityType="MSEsystemModel1.Manager" />
+          <EntitySet Name="Personnel" EntityType="MSEsystemModel1.Personnel" />
+          <EntitySet Name="sysdiagrams" EntityType="MSEsystemModel1.sysdiagrams" />
+          <EntitySet Name="Ticket" EntityType="MSEsystemModel1.Ticket" />
+          <EntitySet Name="TicketsForEmployee" EntityType="MSEsystemModel1.TicketsForEmployee" />
+          <EntitySet Name="MyTickets" EntityType="MSEsystemModel1.MyTickets" />
+          <AssociationSet Name="FK_Ticket_Category" Association="MSEsystemModel1.FK_Ticket_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="Ticket" EntitySet="Ticket" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChiefManager_Manager" Association="MSEsystemModel1.FK_ChiefManager_Manager">
+            <End Role="Manager" EntitySet="Manager" />
+            <End Role="ChiefManager" EntitySet="ChiefManager" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Manager_Employee" Association="MSEsystemModel1.FK_Manager_Employee">
+            <End Role="Employee" EntitySet="Employee" />
+            <End Role="Manager" EntitySet="Manager" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TicketsForEmployee_Employee" Association="MSEsystemModel1.FK_TicketsForEmployee_Employee">
+            <End Role="Employee" EntitySet="Employee" />
+            <End Role="TicketsForEmployee" EntitySet="TicketsForEmployee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Ticket_Image" Association="MSEsystemModel1.FK_Ticket_Image">
+            <End Role="Image" EntitySet="Image" />
+            <End Role="Ticket" EntitySet="Ticket" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Personnel_Location" Association="MSEsystemModel1.FK_Personnel_Location">
+            <End Role="Location" EntitySet="Location" />
+            <End Role="Personnel" EntitySet="Personnel" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Ticket_Location" Association="MSEsystemModel1.FK_Ticket_Location">
+            <End Role="Location" EntitySet="Location" />
+            <End Role="Ticket" EntitySet="Ticket" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TicketsForEmployee_Ticket" Association="MSEsystemModel1.FK_TicketsForEmployee_Ticket">
+            <End Role="Ticket" EntitySet="Ticket" />
+            <End Role="TicketsForEmployee" EntitySet="TicketsForEmployee" />
+          </AssociationSet>
+          <EntitySet Name="Task" EntityType="MSEsystemModel1.Task" />
+          <EntitySet Name="User" EntityType="MSEsystemModel1.User" />
+          <AssociationSet Name="FK_User_Department" Association="MSEsystemModel1.FK_User_Department">
+            <End Role="Department" EntitySet="Department" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employee_Employee" Association="MSEsystemModel1.FK_Employee_Employee">
+            <End Role="User" EntitySet="User" />
+            <End Role="Employee" EntitySet="Employee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Personnel_Personnel" Association="MSEsystemModel1.FK_Personnel_Personnel">
+            <End Role="User" EntitySet="User" />
+            <End Role="Personnel" EntitySet="Personnel" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TicketsForEmployee_User" Association="MSEsystemModel1.FK_TicketsForEmployee_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="TicketsForEmployee" EntitySet="TicketsForEmployee" />
+          </AssociationSet>
+          <EntitySet Name="TicketsToDo" EntityType="MSEsystemModel1.TicketsToDo" />
+        </EntityContainer>
+        <ComplexType Name="spGetData_Result">
+          <Property Type="String" Name="uid" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="DisplayName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="EmailAddress" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="TelephoneNumber" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Department" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="UserPassword" Nullable="false" MaxLength="50" />
+          <Property Type="Boolean" Name="LoginStatus" Nullable="false" />
+          <Property Type="Int32" Name="Role" Nullable="false" />
+        </ComplexType>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="idCategory" />
+          </Key>
+          <Property Name="idCategory" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CategoryName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Domain" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Ticket" Relationship="MSEsystemModel1.FK_Ticket_Category" FromRole="Category" ToRole="Ticket" />
+        </EntityType>
+        <EntityType Name="ChiefManager">
+          <Key>
+            <PropertyRef Name="idChiefManager" />
+          </Key>
+          <Property Name="idChiefManager" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Manager" Relationship="MSEsystemModel1.FK_ChiefManager_Manager" FromRole="ChiefManager" ToRole="Manager" />
+        </EntityType>
+        <EntityType Name="Department">
+          <Key>
+            <PropertyRef Name="Department1" />
+          </Key>
+          <Property Name="Department1" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="User" Relationship="MSEsystemModel1.FK_User_Department" FromRole="Department" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="idEmployee" />
+          </Key>
+          <Property Name="idEmployee" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Expertise" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Domain" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Manager" Relationship="MSEsystemModel1.FK_Manager_Employee" FromRole="Employee" ToRole="Manager" />
+          <NavigationProperty Name="TicketsForEmployee" Relationship="MSEsystemModel1.FK_TicketsForEmployee_Employee" FromRole="Employee" ToRole="TicketsForEmployee" />
+          <NavigationProperty Name="User" Relationship="MSEsystemModel1.FK_Employee_Employee" FromRole="Employee" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Expertise">
+          <Key>
+            <PropertyRef Name="idExpertise" />
+          </Key>
+          <Property Name="idExpertise" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ExpertiseName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Image">
+          <Key>
+            <PropertyRef Name="idImage" />
+          </Key>
+          <Property Name="idImage" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Size" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Ticket" Relationship="MSEsystemModel1.FK_Ticket_Image" FromRole="Image" ToRole="Ticket" />
+        </EntityType>
+        <EntityType Name="Location">
+          <Key>
+            <PropertyRef Name="idLocation" />
+          </Key>
+          <Property Name="idLocation" Type="Int32" Nullable="false" />
+          <Property Name="Building" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Room" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Personnel" Relationship="MSEsystemModel1.FK_Personnel_Location" FromRole="Location" ToRole="Personnel" />
+          <NavigationProperty Name="Ticket" Relationship="MSEsystemModel1.FK_Ticket_Location" FromRole="Location" ToRole="Ticket" />
+        </EntityType>
+        <EntityType Name="Manager">
+          <Key>
+            <PropertyRef Name="idManager" />
+          </Key>
+          <Property Name="idManager" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="idLocation" Type="Int32" />
+          <NavigationProperty Name="ChiefManager" Relationship="MSEsystemModel1.FK_ChiefManager_Manager" FromRole="Manager" ToRole="ChiefManager" />
+          <NavigationProperty Name="Employee" Relationship="MSEsystemModel1.FK_Manager_Employee" FromRole="Manager" ToRole="Employee" />
+        </EntityType>
+        <EntityType Name="Personnel">
+          <Key>
+            <PropertyRef Name="idPersonnel" />
+          </Key>
+          <Property Name="idPersonnel" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="idLocation" Type="Int32" />
+          <NavigationProperty Name="Location" Relationship="MSEsystemModel1.FK_Personnel_Location" FromRole="Personnel" ToRole="Location" />
+          <NavigationProperty Name="User" Relationship="MSEsystemModel1.FK_Personnel_Personnel" FromRole="Personnel" ToRole="User" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="Ticket">
+          <Key>
+            <PropertyRef Name="idTicket" />
+          </Key>
+          <Property Name="idTicket" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="idCategory" Type="Int32" Nullable="false" />
+          <Property Name="idLocation" Type="Int32" />
+          <Property Name="Priority" Type="Boolean" Nullable="false" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Image" Type="Int32" />
+          <NavigationProperty Name="Category" Relationship="MSEsystemModel1.FK_Ticket_Category" FromRole="Ticket" ToRole="Category" />
+          <NavigationProperty Name="Image1" Relationship="MSEsystemModel1.FK_Ticket_Image" FromRole="Ticket" ToRole="Image" />
+          <NavigationProperty Name="Location" Relationship="MSEsystemModel1.FK_Ticket_Location" FromRole="Ticket" ToRole="Location" />
+          <NavigationProperty Name="TicketsForEmployee" Relationship="MSEsystemModel1.FK_TicketsForEmployee_Ticket" FromRole="Ticket" ToRole="TicketsForEmployee" />
+        </EntityType>
+        <EntityType Name="TicketsForEmployee">
+          <Key>
+            <PropertyRef Name="idUser" />
+            <PropertyRef Name="idTicket" />
+          </Key>
+          <Property Name="idEmployee" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="idUser" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="idTicket" Type="Int32" Nullable="false" />
+          <Property Name="TimeOpen" Type="DateTime" Precision="3" />
+          <Property Name="TimeClose" Type="DateTime" Precision="3" />
+          <Property Name="AnotherAsignee" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Domain" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Employee" Relationship="MSEsystemModel1.FK_TicketsForEmployee_Employee" FromRole="TicketsForEmployee" ToRole="Employee" />
+          <NavigationProperty Name="Ticket" Relationship="MSEsystemModel1.FK_TicketsForEmployee_Ticket" FromRole="TicketsForEmployee" ToRole="Ticket" />
+          <NavigationProperty Name="User" Relationship="MSEsystemModel1.FK_TicketsForEmployee_User" FromRole="TicketsForEmployee" ToRole="User" />
+        </EntityType>
+        <EntityType Name="MyTickets">
+          <Key>
+            <PropertyRef Name="idUser" />
+            <PropertyRef Name="idTicket" />
+            <PropertyRef Name="CategoryName" />
+            <PropertyRef Name="Building" />
+            <PropertyRef Name="Room" />
+            <PropertyRef Name="Status" />
+          </Key>
+          <Property Name="idUser" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="idTicket" Type="Int32" Nullable="false" />
+          <Property Name="idEmployee" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CategoryName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Building" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Room" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TimeOpen" Type="DateTime" Precision="3" />
+          <Property Name="Status" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_Ticket_Category">
+          <End Type="MSEsystemModel1.Category" Role="Category" Multiplicity="1" />
+          <End Type="MSEsystemModel1.Ticket" Role="Ticket" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="idCategory" />
+            </Principal>
+            <Dependent Role="Ticket">
+              <PropertyRef Name="idCategory" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChiefManager_Manager">
+          <End Type="MSEsystemModel1.Manager" Role="Manager" Multiplicity="1" />
+          <End Type="MSEsystemModel1.ChiefManager" Role="ChiefManager" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Manager">
+              <PropertyRef Name="idManager" />
+            </Principal>
+            <Dependent Role="ChiefManager">
+              <PropertyRef Name="idChiefManager" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Manager_Employee">
+          <End Type="MSEsystemModel1.Employee" Role="Employee" Multiplicity="1" />
+          <End Type="MSEsystemModel1.Manager" Role="Manager" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="idEmployee" />
+            </Principal>
+            <Dependent Role="Manager">
+              <PropertyRef Name="idManager" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TicketsForEmployee_Employee">
+          <End Type="MSEsystemModel1.Employee" Role="Employee" Multiplicity="0..1" />
+          <End Type="MSEsystemModel1.TicketsForEmployee" Role="TicketsForEmployee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="idEmployee" />
+            </Principal>
+            <Dependent Role="TicketsForEmployee">
+              <PropertyRef Name="idEmployee" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Ticket_Image">
+          <End Type="MSEsystemModel1.Image" Role="Image" Multiplicity="0..1" />
+          <End Type="MSEsystemModel1.Ticket" Role="Ticket" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Image">
+              <PropertyRef Name="idImage" />
+            </Principal>
+            <Dependent Role="Ticket">
+              <PropertyRef Name="Image" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Personnel_Location">
+          <End Type="MSEsystemModel1.Location" Role="Location" Multiplicity="0..1" />
+          <End Type="MSEsystemModel1.Personnel" Role="Personnel" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Location">
+              <PropertyRef Name="idLocation" />
+            </Principal>
+            <Dependent Role="Personnel">
+              <PropertyRef Name="idLocation" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Ticket_Location">
+          <End Type="MSEsystemModel1.Location" Role="Location" Multiplicity="0..1" />
+          <End Type="MSEsystemModel1.Ticket" Role="Ticket" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Location">
+              <PropertyRef Name="idLocation" />
+            </Principal>
+            <Dependent Role="Ticket">
+              <PropertyRef Name="idLocation" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TicketsForEmployee_Ticket">
+          <End Type="MSEsystemModel1.Ticket" Role="Ticket" Multiplicity="1" />
+          <End Type="MSEsystemModel1.TicketsForEmployee" Role="TicketsForEmployee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Ticket">
+              <PropertyRef Name="idTicket" />
+            </Principal>
+            <Dependent Role="TicketsForEmployee">
+              <PropertyRef Name="idTicket" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Task">
+          <Key>
+            <PropertyRef Name="idTask" />
+          </Key>
+          <Property Name="idTask" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="idTicket" Type="Int32" Nullable="false" />
+          <Property Name="TaskDescription" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Done" Type="Boolean" />
+          <Property Name="isArchive" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="uid" />
+          </Key>
+          <Property Name="uid" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DisplayName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="EmailAddress" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TelephoneNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Department" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UserPassword" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LoginStatus" Type="Boolean" Nullable="false" />
+          <Property Name="Role" Type="Int32" Nullable="false" />
+          <Property Name="isArchive" Type="Boolean" />
+          <NavigationProperty Name="Department1" Relationship="MSEsystemModel1.FK_User_Department" FromRole="User" ToRole="Department" />
+          <NavigationProperty Name="Employee" Relationship="MSEsystemModel1.FK_Employee_Employee" FromRole="User" ToRole="Employee" />
+          <NavigationProperty Name="Personnel" Relationship="MSEsystemModel1.FK_Personnel_Personnel" FromRole="User" ToRole="Personnel" />
+          <NavigationProperty Name="TicketsForEmployee" Relationship="MSEsystemModel1.FK_TicketsForEmployee_User" FromRole="User" ToRole="TicketsForEmployee" />
+        </EntityType>
+        <Association Name="FK_User_Department">
+          <End Type="MSEsystemModel1.Department" Role="Department" Multiplicity="1" />
+          <End Type="MSEsystemModel1.User" Role="User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Department">
+              <PropertyRef Name="Department1" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="Department" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Employee_Employee">
+          <End Type="MSEsystemModel1.User" Role="User" Multiplicity="1" />
+          <End Type="MSEsystemModel1.Employee" Role="Employee" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="uid" />
+            </Principal>
+            <Dependent Role="Employee">
+              <PropertyRef Name="idEmployee" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Personnel_Personnel">
+          <End Type="MSEsystemModel1.User" Role="User" Multiplicity="1" />
+          <End Type="MSEsystemModel1.Personnel" Role="Personnel" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="uid" />
+            </Principal>
+            <Dependent Role="Personnel">
+              <PropertyRef Name="idPersonnel" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TicketsForEmployee_User">
+          <End Type="MSEsystemModel1.User" Role="User" Multiplicity="1" />
+          <End Type="MSEsystemModel1.TicketsForEmployee" Role="TicketsForEmployee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="uid" />
+            </Principal>
+            <Dependent Role="TicketsForEmployee">
+              <PropertyRef Name="idUser" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="TicketsToDo">
+          <Key>
+            <PropertyRef Name="idTicket" />
+            <PropertyRef Name="CategoryName" />
+            <PropertyRef Name="Building" />
+            <PropertyRef Name="Room" />
+            <PropertyRef Name="Status" />
+            <PropertyRef Name="DisplayName" />
+            <PropertyRef Name="Description" />
+          </Key>
+          <Property Name="idTicket" Type="Int32" Nullable="false" />
+          <Property Name="CategoryName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Building" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Room" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TimeOpen" Type="DateTime" Precision="3" />
+          <Property Name="Status" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DisplayName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Domain" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TimeClose" Type="DateTime" Precision="3" />
+        </EntityType>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MSEsystemModel1StoreContainer" CdmEntityContainer="MSEsystemEntities1">
+          <FunctionImportMapping FunctionImportName="spGetData" FunctionName="MSEsystemModel1.Store.spGetData">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MSEsystemModel1.spGetData_Result">
+                <ScalarProperty Name="uid" ColumnName="uid" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="TelephoneNumber" ColumnName="TelephoneNumber" />
+                <ScalarProperty Name="Department" ColumnName="Department" />
+                <ScalarProperty Name="UserPassword" ColumnName="UserPassword" />
+                <ScalarProperty Name="LoginStatus" ColumnName="LoginStatus" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="Category">
+            <EntityTypeMapping TypeName="MSEsystemModel1.Category">
+              <MappingFragment StoreEntitySet="Category">
+                <ScalarProperty Name="Domain" ColumnName="Domain" />
+                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
+                <ScalarProperty Name="idCategory" ColumnName="idCategory" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ChiefManager">
+            <EntityTypeMapping TypeName="MSEsystemModel1.ChiefManager">
+              <MappingFragment StoreEntitySet="ChiefManager">
+                <ScalarProperty Name="idChiefManager" ColumnName="idChiefManager" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Department">
+            <EntityTypeMapping TypeName="MSEsystemModel1.Department">
+              <MappingFragment StoreEntitySet="Department">
+                <ScalarProperty Name="Department1" ColumnName="Department" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Employee">
+            <EntityTypeMapping TypeName="MSEsystemModel1.Employee">
+              <MappingFragment StoreEntitySet="Employee">
+                <ScalarProperty Name="Domain" ColumnName="Domain" />
+                <ScalarProperty Name="Expertise" ColumnName="Expertise" />
+                <ScalarProperty Name="idEmployee" ColumnName="idEmployee" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Expertise">
+            <EntityTypeMapping TypeName="MSEsystemModel1.Expertise">
+              <MappingFragment StoreEntitySet="Expertise">
+                <ScalarProperty Name="ExpertiseName" ColumnName="ExpertiseName" />
+                <ScalarProperty Name="idExpertise" ColumnName="idExpertise" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Image">
+            <EntityTypeMapping TypeName="MSEsystemModel1.Image">
+              <MappingFragment StoreEntitySet="Image">
+                <ScalarProperty Name="Size" ColumnName="Size" />
+                <ScalarProperty Name="idImage" ColumnName="idImage" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Location">
+            <EntityTypeMapping TypeName="MSEsystemModel1.Location">
+              <MappingFragment StoreEntitySet="Location">
+                <ScalarProperty Name="Room" ColumnName="Room" />
+                <ScalarProperty Name="Building" ColumnName="Building" />
+                <ScalarProperty Name="idLocation" ColumnName="idLocation" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Manager">
+            <EntityTypeMapping TypeName="MSEsystemModel1.Manager">
+              <MappingFragment StoreEntitySet="Manager">
+                <ScalarProperty Name="idLocation" ColumnName="idLocation" />
+                <ScalarProperty Name="idManager" ColumnName="idManager" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Personnel">
+            <EntityTypeMapping TypeName="MSEsystemModel1.Personnel">
+              <MappingFragment StoreEntitySet="Personnel">
+                <ScalarProperty Name="idLocation" ColumnName="idLocation" />
+                <ScalarProperty Name="idPersonnel" ColumnName="idPersonnel" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="MSEsystemModel1.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="definition" ColumnName="definition" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Ticket">
+            <EntityTypeMapping TypeName="MSEsystemModel1.Ticket">
+              <MappingFragment StoreEntitySet="Ticket">
+                <ScalarProperty Name="Image" ColumnName="Image" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="idLocation" ColumnName="idLocation" />
+                <ScalarProperty Name="idCategory" ColumnName="idCategory" />
+                <ScalarProperty Name="idTicket" ColumnName="idTicket" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TicketsForEmployee">
+            <EntityTypeMapping TypeName="MSEsystemModel1.TicketsForEmployee">
+              <MappingFragment StoreEntitySet="TicketsForEmployee">
+                <ScalarProperty Name="Domain" ColumnName="Domain" />
+                <ScalarProperty Name="AnotherAsignee" ColumnName="AnotherAsignee" />
+                <ScalarProperty Name="TimeClose" ColumnName="TimeClose" />
+                <ScalarProperty Name="TimeOpen" ColumnName="TimeOpen" />
+                <ScalarProperty Name="idTicket" ColumnName="idTicket" />
+                <ScalarProperty Name="idUser" ColumnName="idUser" />
+                <ScalarProperty Name="idEmployee" ColumnName="idEmployee" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MyTickets">
+            <EntityTypeMapping TypeName="MSEsystemModel1.MyTickets">
+              <MappingFragment StoreEntitySet="MyTickets">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="TimeOpen" ColumnName="TimeOpen" />
+                <ScalarProperty Name="Room" ColumnName="Room" />
+                <ScalarProperty Name="Building" ColumnName="Building" />
+                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
+                <ScalarProperty Name="idEmployee" ColumnName="idEmployee" />
+                <ScalarProperty Name="idTicket" ColumnName="idTicket" />
+                <ScalarProperty Name="idUser" ColumnName="idUser" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Task">
+            <EntityTypeMapping TypeName="MSEsystemModel1.Task">
+              <MappingFragment StoreEntitySet="Task">
+                <ScalarProperty Name="isArchive" ColumnName="isArchive" />
+                <ScalarProperty Name="Done" ColumnName="Done" />
+                <ScalarProperty Name="TaskDescription" ColumnName="TaskDescription" />
+                <ScalarProperty Name="idTicket" ColumnName="idTicket" />
+                <ScalarProperty Name="idTask" ColumnName="idTask" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="User">
+            <EntityTypeMapping TypeName="MSEsystemModel1.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="isArchive" ColumnName="isArchive" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
+                <ScalarProperty Name="LoginStatus" ColumnName="LoginStatus" />
+                <ScalarProperty Name="UserPassword" ColumnName="UserPassword" />
+                <ScalarProperty Name="Department" ColumnName="Department" />
+                <ScalarProperty Name="TelephoneNumber" ColumnName="TelephoneNumber" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="uid" ColumnName="uid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TicketsToDo">
+            <EntityTypeMapping TypeName="MSEsystemModel1.TicketsToDo">
+              <MappingFragment StoreEntitySet="TicketsToDo">
+                <ScalarProperty Name="TimeClose" ColumnName="TimeClose" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Domain" ColumnName="Domain" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="TimeOpen" ColumnName="TimeOpen" />
+                <ScalarProperty Name="Room" ColumnName="Room" />
+                <ScalarProperty Name="Building" ColumnName="Building" />
+                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
+                <ScalarProperty Name="idTicket" ColumnName="idTicket" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
