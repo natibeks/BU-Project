@@ -1,47 +1,22 @@
 ﻿app.expandTicketController = function ($scope, $http, $timeout, $filter) {
 
-    $scope.newTicket = {
-        idTicket: 0,
-        idCategory: 0,
-        idLocation: 0,
-        Priority: false,
+    $scope.ticketTemplate = {
+        TicketID: 0,
+        UserID: 0,
+        TimeOpen: moment().toDate(),
         Description: "",
-        Status: "פתוחה",
-        Domain: "",
-        Build: "",
+        Building: "",
         Room: "",
-        Owner: 0,
-        Assignee: 0,
-        DateToDo: ""
+        Status: 1,
+        EmploeeID: "",
+        AnotherAsignee: "",
+        CategoryID: 0,
+        DomainID: 0
     };
 
-    $scope.selectedTicket = {
-        idTicket: 0,
-        Owner: "",
-        TimeOpen: "",
-        des: "",
-        build: "",
-        room: "",
-        location: "",
-        image: "",
-        status: "",
-        t: "",
-        multi: "",
-        idEmployee: "",
-        AnotherAsignee: ""
-    };
-
-    $scope.NewTask = {
-        idTask: 0,
-        idTicket: 0,
-        TaskDescription: "",
-        Done: false
-    };
-
-
-    $scope.selectedTask = {
-        idTask: 0,
-        idTicket: 0,
+    $scope.taskTemplate = {
+        TaskID: 0,
+        TicketID: 0,
         TaskDescription: "",
         Done: false
     };
@@ -55,10 +30,6 @@
         return $scope.totalCount++;
     }
 
-
-
-
-
     $scope.confirmDelete = function (x) {
         $scope.selectedTask.idTask = angular.copy(x.idTask);
         $scope.selectedTask.idTicket = angular.copy(x.idTicket);
@@ -68,21 +39,17 @@
         $('#confirmDeleteModal').modal('show');
     }
 
-    $scope.ticketsByUser = function (item) {
-        return item.idUser == $scope.currentUser.Id;
-    }
-
-
-
     $scope.filterTasks = function (item) {
-        return item.idTicket == $scope.selectedTicket.idTicket;
+        return item.TicketID == $scope.selectedTicket.TicketID;
     }
     $scope.CategoryFilter = function (item) {
-        if ($scope.newTicket.Domain == "")
-            return false;
-        else
-            return $scope.newTicket.Domain == item.Domain;
+        return item.Domain == $scope.currentUser.Domain;
     };
+
+    $scope.domainByUser = function (item) {
+        return $scope.currentUser.Domains.indexOf(item.Id) > -1;
+    }
+
     $scope.empFilter = function (item) {
         if ($scope.selectedTicket.emp == "")
             return false;
@@ -90,7 +57,7 @@
             return $scope.selectedTicket.emp == item.DisplayName;
     };
     $scope.asigneeFilter = function (item) {
-        return $scope.currentUser.Id != item.idEmployee && item.Domain == $scope.currentUser.Domain;
+        return $scope.currentUser.Id != item.EmploeeID && item.Domain == $scope.currentUser.Domain;
     };
 
     $scope.RoomFilter = function (item) {
@@ -192,7 +159,7 @@
         u['tasks'] = $scope.checkTicketTaskUpdate();
 
         if (u.Status == 'סגורה') {
-            if ($scope.oldStatus == 'ממתין' || $scope.oldStatus == 'משויכת') {
+            if ($scope.selectedTicket.oldStatus == 'ממתין' || $scope.selectedTicket.oldStatus == 'משויכת') {
                 if (!$scope.AllTasksDone($scope.data.Task)) {
                     $scope.msg = "  לא ניתן לסגור פניה";
                     $scope.error = true;

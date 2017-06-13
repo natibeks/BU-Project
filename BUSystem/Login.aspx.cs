@@ -17,7 +17,7 @@ public partial class Login : System.Web.UI.Page
         using (var db = new MSEsystemEntities1())
         {
 
-            User user = db.User.Where(i => i.uid == inputUser.Text && i.UserPassword == inputPassword.Text).FirstOrDefault();
+            User user = db.User.Where(i => i.EmailAddress == inputUser.Text && i.UserPassword == inputPassword.Text).FirstOrDefault();
             if (user == null || user.LoginStatus == true)
             {
                 pnlMessage.Visible = true;
@@ -25,9 +25,9 @@ public partial class Login : System.Web.UI.Page
             else
             {
                 Session["user"] = user.DisplayName;
-                Session["uid"] = user.uid;
-                Session["level"] = user.Role; // 0 - admin , 1 - regular , 2 - employee , 3 - manager , 4 - cheif 
-                
+                Session["uid"] = user.Id;
+                Session["level"] = user.Role; // 1 - admin , 2 - manager , 3 - employee 
+
                 Response.Redirect("Default.aspx");
             }
         }

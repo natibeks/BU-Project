@@ -1,0 +1,40 @@
+﻿app.factory('DataService', dataService);
+
+function dataService($http) {
+    var data = {
+        getAll: getAll,
+        makeGetRequest: makeGetRequest,
+        makePostRequest: makePostRequest
+    };
+    function makeGetRequest(url, params) {
+        var requestUrl = url;
+        angular.forEach(params, function (value, key) {
+            requestUrl = requestUrl + '&' + key + '=' + value;
+        });
+        return $http.get(requestUrl).then(function (response) {
+            return response.data;
+        }).catch(dataServiceError);
+    }
+
+    function makePostRequest(url, obj) {
+        var requestUrl = url;      
+        return $http.post(requestUrl, obj).then(function (response) {
+            return response.data;
+        }).catch(dataServiceError);
+    }
+
+    function getAll(id,isadmin) {
+        var url = "Tasks.aspx?tp=GetInitData";
+        return makeGetRequest(url, [{ id: id, isadmin: isadmin }]);
+    }
+
+    function prepareDate(data) {
+
+    }
+
+    return data;
+
+    function dataServiceError(errorResponse) {
+        return errorResponse;
+    }
+}

@@ -10,6 +10,14 @@
         IsArchive: false
     }
 
+    $scope.setUserWin = function (user) {
+        if (user == undefined)
+            $scope.selectedUser = angular.copy($scope.userTemplate);
+        else
+            $scope.selectedUser = angular.copy(user);
+        $("#editUserModal").show();
+    }
+
     $scope.updateUser = function () {
         var isNew = $scope.selectedUser.Id == 0;
         url = "Tasks.aspx?tp=updUser";

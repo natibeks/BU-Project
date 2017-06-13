@@ -22,7 +22,7 @@ public class Utils
     public static SqlConnection conn;
     
 
-    public static string GetInitData()
+    public static string GetInitData(int uid,bool admin)
     {
         DataSet data = new DataSet();
         var connectStr = WebConfigurationManager.AppSettings["SQLServer"];
@@ -30,13 +30,17 @@ public class Utils
         using (conn = new SqlConnection(connectStr))
         {
             SqlCommand sqlComm = new SqlCommand("spGetData", conn);
+            if(admin)
+                sqlComm.Parameters.AddWithValue("@userId", 0);
+            else
+                sqlComm.Parameters.AddWithValue("@userId", uid);
             sqlComm.CommandType = CommandType.StoredProcedure;
             SqlDataAdapter da = new SqlDataAdapter();
             da.SelectCommand = sqlComm;
             da.Fill(data);
 
             data.Tables[0].TableName = "User";
-            data.Tables[1].TableName = "Employee";
+            data.Tables[1].TableName = "EmployeeDomains";
             data.Tables[2].TableName = "Ticket";
             data.Tables[3].TableName = "TicketsForEmployee";
             data.Tables[4].TableName = "Category";
@@ -44,6 +48,8 @@ public class Utils
             data.Tables[6].TableName = "TicketsToDo";
             data.Tables[7].TableName = "MyTickets";
             data.Tables[8].TableName = "Task";
+            data.Tables[9].TableName = "Status";
+            data.Tables[10].TableName = "Role";
 
 
             return JsonConvert.SerializeObject(data, new CustomDateTimeConverter());
@@ -58,27 +64,27 @@ public class Utils
             {
 
                 var b = new Ticket();
-                b.idCategory = Convert.ToInt32(obj["idCategory"]);
-                b.idLocation = Convert.ToInt32(obj["idLocation"]);
+                b.Id = Convert.ToInt32(obj["CategoryID"]);
+                b.LocationID = Convert.ToInt32(obj["LocationID"]);
                 b.Priority = Convert.ToBoolean(obj["Priority"]);
                 b.Description = Convert.ToString(obj["Description"]);
-                b.Status = "פתוחה";
+                b.Status = 1;
 
                 db.Ticket.Add(b);
                 db.SaveChanges();
 
                 var c = new TicketsForEmployee();
-                c.idTicket = b.idTicket;
-                c.idUser = Convert.ToString(obj["Owner"]);
+                c.TicketID = b.Id;
+                c.UserID = Convert.ToString(obj["UserID"]);
                 c.TimeOpen = DateTime.Now;
-                c.Domain = Convert.ToString(obj["Domain"]);
+                c.Domain = Convert.ToString(obj["DomainID"]);
 
 
                 db.TicketsForEmployee.Add(c);
                 db.SaveChanges();
 
 
-                return b.idTicket.ToString();
+                return b.Id.ToString();
             }
         }
         catch (Exception e)
@@ -96,21 +102,21 @@ public class Utils
 
                 int id = Convert.ToInt32(obj["idTicket"]);
 
-                var w = db.Ticket.Where(i => i.idTicket == id).FirstOrDefault();
+                var w = db.Ticket.Where(i => i.Id == id).FirstOrDefault();
                 w.Status= Convert.ToString(obj["status"]);
                 foreach(var t in obj["tasks"])
                 {
                     int tid = Convert.ToInt32(t["idTask"]);
-                    var k= db.Task.Where(i => i.idTask == tid).FirstOrDefault();
+                    var k= db.Task.Where(i => i.Id == tid).FirstOrDefault();
 
                     k.Done = Convert.ToBoolean(t["Done"]);
                 }
                 
                 db.SaveChanges();
 
-                var z = db.TicketsForEmployee.Where(i => i.idTicket == id).FirstOrDefault();
+                var z = db.TicketsForEmployee.Where(i => i.TicketID == id).FirstOrDefault();
                 z.AnotherAsignee= Convert.ToString(obj["AnotherAsignee"]);
-                z.idEmployee= Convert.ToString(obj["idEmployee"]);
+                z.EmploeeID= Convert.ToString(obj["idEmployee"]);
 
                 db.SaveChanges();
 
@@ -131,13 +137,13 @@ public class Utils
             using (var db = new MSEsystemEntities1())
             {
                 var b = new Task();
-                b.idTicket = Convert.ToInt32(obj["idTicket"]);
+                b.TicketID = Convert.ToInt32(obj["idTicket"]);
                 b.TaskDescription = Convert.ToString(obj["TaskDescription"]);
                 b.Done = Convert.ToBoolean(obj["Done"]);
                 db.Task.Add(b);
                 db.SaveChanges();
 
-                return b.idTask.ToString();
+                return b.Id.ToString();
             }
         }
         catch (Exception e)
@@ -153,7 +159,7 @@ public class Utils
             {
                 int id = Convert.ToInt32(obj["idTask"]);
 
-                var w = db.Task.Where(i => i.idTask == id).FirstOrDefault();
+                var w = db.Task.Where(i => i.Id == id).FirstOrDefault();
                 w.isArchive = true;
                 db.SaveChanges();
                 return "Ok";
@@ -174,7 +180,7 @@ public class Utils
                 String t = Convert.ToString(obj);
                 string[] res = new string[1000];
                 int x = 0;
-                var w = db.TicketsToDo.Where(i => i.CategoryName == t || i.Description==t).Select(j=>j.idTicket).ToArray();
+                var w = db.TicketsToDo.Where(i => i.CategoryName == t || i.Description==t).Select(j=>j.TicketID).ToArray();
                 
                 foreach (dynamic r in w)
                 {
@@ -193,14 +199,14 @@ public class Utils
         }
     }
 
-    public static string SendForgottenPass(string user)
+    public static string SendForgottenPass(int user)
     {
         try
         {
             using (var db = new MSEsystemEntities1())
             {
                 var Unfound = false;
-                var u = db.User.Where(x => x.uid == user).FirstOrDefault();
+                var u = db.User.Where(x => x.Id == user).FirstOrDefault();
                 if (u == null)
                     Unfound = true;
                 else

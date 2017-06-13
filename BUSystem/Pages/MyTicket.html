@@ -13,23 +13,22 @@
         <thead>
             <tr>
                 <th style="width:15px">#</th>
-                <th data-ng-repeat="table in pageConfig[0].Table" data-ng-style="{'width':table.Width}" data-ng-bind="table.Label"></th>
-                <!--<th data-field="date" data-sortable="true" data-sort-name="_date_data" data-sorter="monthSorter">תאריך פתיחה</th>
-                <th data-field="type" data-sortable="true">קטגוריה</th>
-                <th data-field="type" data-sortable="true">תאור קצר</th>
-                <th data-field="type" data-sortable="true">סטטוס</th>-->
-
+                <th data-ng-repeat="table in pageConfig[0].Table" data-ng-style="{'width':table.Width}">
+                    <a href="#" data-ng-click="setSort(table.Data)" data-ng-bind="table.Label">
+                        <span class="glyphicon" data-ng-class="{true:'glyphicon-triangle-bottom red',false:'glyphicon-triangle-top green'}[sort.Desc]"
+                              style="display: inline-block; margin-left: 3px"></span>
+                    </a>
+                </th>
             </tr>
         </thead>
-        <tbody>
-         
-            <tr data-ng-repeat="u in q=(data.MyTickets |filter: ticketsByUser) | orderBy: sort.idTicket : sort.Desc | startFrom: (currPage-1)*pageSize | limitTo: pageSize">
-                <td data-ng-bind="u.idTicket"></td>
+        <tbody>        
+            <tr data-ng-repeat="u in q=(data.MyTickets |filter: ticketsByUser) | orderBy: sort.Name : sort.Desc | startFrom: (currPage-1)*pageSize | limitTo: pageSize">
+                <td data-ng-bind="u.TicketID"></td>
                 <td data-ng-repeat="col in pageConfig[0].Table">
-                    <div data-ng-bind="u[col.Data]" data-ng-if="col.Data!='Description'"></div>
-                    <div data-ng-if="col.Data=='Description'">
-                        <div data-ng-repeat="a in data.TicketsToDo" data-ng-if="a.idTicket==u.idTicket" data-ng-bind="a.Description"></div>
-                    </div>
+                    <div data-ng-bind="u[col.Data]" data-ng-if="col.Data!='Status' && col.Data!='Description'"></div>
+                    <div data-ng-bind="getStatus(u[col.Data])" data-ng-if="col.Data=='Status'"></div>
+                    <div data-ng-bind="getTicketDescription(u[TicketID])" data-ng-if="col.Data=='Description'"></div>
+                    <!--<div data-ng-bind="getCategory(u[CategoryName])" data-ng-if="col.Data=='Category'"></div>-->
                 </td>
                 <!--<td data-ng-bind="u.CategoryName"></td>
                 <td data-ng-repeat="a in data.Ticket" data-ng-show="a.idTicket==u.idTicket" data-ng-bind="a.Description"></td>

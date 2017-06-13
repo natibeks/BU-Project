@@ -18,7 +18,9 @@ public partial class Tasks : System.Web.UI.Page
         {
             case "GetInitData":
                 var pv = Request["pv"] != null;
-                Response.Write(Utils.GetInitData());
+                var id = Convert.ToInt32(Request["id"]);
+                var admin = Convert.ToBoolean(Request["isadmin"]);
+                Response.Write(Utils.GetInitData(id,admin));
                 break;
             case "addNewTicket":
                 Response.Write(Utils.AddNewTicket(obj));
@@ -33,7 +35,7 @@ public partial class Tasks : System.Web.UI.Page
             //    Response.Write(Utils.freeSearch(obj));
             //    break;
             case "ForgotPassword":
-                Response.Write(Utils.SendForgottenPass(Request["user"]));
+                Response.Write(Utils.SendForgottenPass(Convert.ToInt32(Request["user"])));
                 break;
             case "updateTicket":
                 Response.Write(Utils.updateTicket(obj));

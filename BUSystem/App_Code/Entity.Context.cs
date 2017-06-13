@@ -26,24 +26,25 @@ public partial class MSEsystemEntities1 : DbContext
     }
 
     public virtual DbSet<Category> Category { get; set; }
-    public virtual DbSet<ChiefManager> ChiefManager { get; set; }
     public virtual DbSet<Department> Department { get; set; }
-    public virtual DbSet<Employee> Employee { get; set; }
-    public virtual DbSet<Expertise> Expertise { get; set; }
-    public virtual DbSet<Image> Image { get; set; }
+    public virtual DbSet<Domain> Domain { get; set; }
     public virtual DbSet<Location> Location { get; set; }
-    public virtual DbSet<Manager> Manager { get; set; }
-    public virtual DbSet<Personnel> Personnel { get; set; }
-    public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
-    public virtual DbSet<Ticket> Ticket { get; set; }
-    public virtual DbSet<TicketsForEmployee> TicketsForEmployee { get; set; }
-    public virtual DbSet<MyTickets> MyTickets { get; set; }
+    public virtual DbSet<Role> Role { get; set; }
+    public virtual DbSet<Status> Status { get; set; }
     public virtual DbSet<Task> Task { get; set; }
+    public virtual DbSet<TicketsForEmployee> TicketsForEmployee { get; set; }
     public virtual DbSet<User> User { get; set; }
+    public virtual DbSet<EmployeeDomains> EmployeeDomains { get; set; }
+    public virtual DbSet<MyTickets> MyTickets { get; set; }
     public virtual DbSet<TicketsToDo> TicketsToDo { get; set; }
+    public virtual DbSet<Ticket> Ticket { get; set; }
 
-    public virtual ObjectResult<spGetData_Result> spGetData()
+    public virtual ObjectResult<spGetData_Result> spGetData(Nullable<int> userId)
     {
-        return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetData_Result>("spGetData");
+        var userIdParameter = userId.HasValue ?
+            new ObjectParameter("userId", userId) :
+            new ObjectParameter("userId", typeof(int));
+
+        return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetData_Result>("spGetData", userIdParameter);
     }
 }

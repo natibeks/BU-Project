@@ -11,48 +11,46 @@
                 <div class="col-lg-6">
                     <div class="form-group">
                         <label class="control-label">מספר פניה:</label>
-                        <input class="form-control" ng-model="selectedTicket.idTicket" ng-disabled="true">
+                        <input class="form-control" ng-model="selectedTicket.TicketID" ng-disabled="true">
                     </div>
                 </div>
                 <div class="col-lg-6">
                     <div class="form-group">
                         <label class="control-label">שם הפונה:</label>
-                        <input class="form-control" ng-model="selectedTicket.owner" ng-disabled="true">
+                        <input class="form-control" ng-model="selectedTicket.DisplayName" ng-disabled="true">
                     </div>
                 </div>
                 <div class="col-lg-6">
                     <div class="form-group">
                         <label class="control-label">נפתחה ב:</label>
-                        <input class="form-control" ng-model="selectedTicket.timeopen" ng-disabled="true">
+                        <input class="form-control" ng-model="selectedTicket.TimeOpen" ng-disabled="true">
                     </div>
                 </div>
                 <div class="col-lg-6">
                     <div class="form-group">
                         <label class="control-label">מיקום:</label>
-                        <input class="form-control" ng-model="selectedTicket.location" ng-disabled="true">
+                        <input class="form-control" ng-model="selectedTicket.Location" ng-disabled="true">
                     </div>
                 </div>
                 <div class="col-lg-12">
                     <div class="form-group">
                         <label class="control-label">תיאור פניה:</label>
-                        <input class="form-control" ng-model="selectedTicket.des" ng-disabled="true">
+                        <input class="form-control" ng-model="selectedTicket.Description" ng-disabled="true">
                     </div>
                 </div>
-                <div class="col-lg-6">
+                <!--<div class="col-lg-6">
                     <div class="form-group">
                         <label class="control-label">תמונה:</label>
-                        <input class="form-control" ng-model="selectedTicket.location" ng-disabled="true">
+                        <input class="form-control" ng-disabled="true">
                     </div>
-                </div>
+                </div>-->
 
                 <div class="col-lg-6">
                     <label class="control-label">סטטוס:</label>
                     <div>
-                        <select class="form-control" data-ng-model="selectedTicket.status" id="select">
-                            <option value="פתוחה">פתוחה</option>
-                            <option value="משויכת">משויכת</option>
-                            <option value="ממתין">ממתין</option>
-                            <option value="סגורה">סגורה</option>
+                        <select class="form-control" data-ng-model="selectedTicket.Status"
+                                data-ng-options="o.Id as o.StatusName for o in data.Status  | orderBy: 'Name'">
+                            <option value="">בחר</option>
                         </select>
                     </div>
                 </div>
@@ -60,7 +58,7 @@
                     <label class="control-label">עובד נוסף:</label>
                     <div>
                         <select class="form-control" data-ng-model="selectedTicket.AnotherAsignee" 
-                                data-ng-options="o.idEmployee as o.Name for o in data.Employee  | orderBy: 'Name' | filter: asigneeFilter">
+                                data-ng-options="o.Id as o.Name for o in data.Employee  | orderBy: 'Name' | filter: asigneeFilter">
                             <option value="">בחר</option>
                         </select>
 
@@ -189,12 +187,15 @@
                 </h4>
             </div>
             <div class="modal-body">
-                <div class="col-lg-12">
-                    <div class="form-group">
-                        <label class="control-label">שם מלא:</label>
-                        <input class="form-control" ng-model="selectedUser.DisplayName">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label">שם מלא:</label>
+                            <input class="form-control" ng-model="selectedUser.DisplayName">
+                        </div>
                     </div>
                 </div>
+         
                 <div class="col-lg-6">
                     <div class="form-group">
                         <label class="control-label">אימייל:</label>
@@ -211,7 +212,7 @@
                     <div class="form-group">
                         <label class="control-label">מחלקה:</label>
                         <select class="form-control" data-ng-model="selectedUser.Department"
-                                data-ng-options="o.Id as o.Department for o in data.Departments  | orderBy: 'Department'">
+                                data-ng-options="o.Id as o.Department for o in data.Department  | orderBy: 'Department'">
                             <option value="">בחר</option>
                         </select>
                     </div>
@@ -220,7 +221,7 @@
                     <div class="form-group">
                         <label class="control-label">תפקיד:</label>
                         <select class="form-control" data-ng-model="selectedUser.Role"
-                                data-ng-options="o.Id as o.Role for o in data.Roles  | orderBy: 'Role'">
+                                data-ng-options="o.Id as o.Role for o in data.Role  | orderBy: 'Role'">
                             <option value="">בחר</option>
                         </select>
                     </div>
@@ -229,7 +230,7 @@
                 <div class="col-lg-6">
                     <div class="form-group">
                         <label class="control-label">סיסמא:</label>
-                        <input class="form-control" ng-model="selectedUser.UserPassword">
+                        <input type="text" class="form-control" ng-model="selectedUser.UserPassword">
                     </div>
                 </div>
             </div>

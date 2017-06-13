@@ -141,12 +141,17 @@
             <thead>
                 <tr>
                     <th style="width:15px">#</th>
-                    <th data-ng-repeat="table in pageConfig[0].Table" data-ng-style="{'width':table.Width}" data-ng-bind="table.Label"></th>
+                    <th data-ng-repeat="table in pageConfig[0].Table" data-ng-style="{'width':table.Width}">
+                        <a href="#" data-ng-click="setSort(table.Data)" data-ng-bind="table.Label">
+                            <span class="glyphicon" data-ng-class="{true:'glyphicon-triangle-bottom red',false:'glyphicon-triangle-top green'}[sort.Desc]"
+                                  style="display: inline-block; margin-left: 3px"></span>
+                        </a>
+                    </th>
                     <th style="width:65px"></th>
                 </tr>
             </thead>
             <tbody>
-                <tr data-ng-repeat="u in q=(searchResult2)| orderBy: sort.idTicket : sort.Desc | startFrom: (currPage-1)*pageSize | limitTo: pageSize">
+                <tr data-ng-repeat="u in q=(searchResult2)| orderBy: sort.Name : sort.Desc | startFrom: (currPage-1)*pageSize | limitTo: pageSize">
                     <td data-ng-bind="u['idTicket']"></td>
                     <td data-ng-repeat="table in pageConfig[0].Table">
                         <div data-ng-bind="u[table.Data]"></div>

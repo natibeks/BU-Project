@@ -19,13 +19,15 @@
             <div class="form-group">
                 <label class="col-lg-1 control-label">שם מלא:</label>
                 <div class="col-lg-3">
-                    <input class="form-control" id="inputname" ng-model="currentUser.FullName" ng-disabled="true">
+                    <input class="form-control" id="inputname" ng-model="currentUser.DisplayName" ng-disabled="true">
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-lg-1 control-label">מחלקה:</label>
                 <div class="col-lg-3">
-                    <input class="form-control" id="inputdept" ng-model="currentUser.Department" ng-disabled="true">
+                    <select class="form-control" data-ng-options="x.Id as x.DepartmentName for x in data.Department | orderBy: 'DepartmentName'" data-ng-model="selectedTicket.CategoryID" required>
+                        <option value="">-- בחר מחלקה --</option>
+                    </select>
                 </div>
             </div>
 
@@ -49,26 +51,23 @@
             <div class="form-group">
                 <label class="col-lg-1 control-label">תחום:</label>
                 <div class="col-lg-3">
-                    <select class="form-control" name="domain" data-ng-model="newTicket.Domain" required>
+                    <select class="form-control" data-ng-options="x.Id as x.DomainName for x in data.Domain | domainByUser |orderBy: 'DomainName'" data-ng-model="selectedTicket.CategoryID" required>
                         <option value="">-- בחר תחום --</option>
-                        <option value="תחזוקה">תחזוקה</option>
-                        <option value="משק">משק</option>
-                        <option value="ביטחון">ביטחון</option>
                     </select>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-lg-1 control-label">קטגוריה:</label>
                 <div class="col-lg-3">
-                    <select class="form-control" id="categorytype" data-ng-options="x.idCategory as x.CategoryName for x in data.Category | filter: CategoryFilter | orderBy: 'CategoryName'" data-ng-model="newTicket.idCategory" data-ng-selected="Ticket.newTicket.Category==x.idCategory" required>
+                    <select class="form-control" id="categorytype" data-ng-options="x.Id as x.CategoryName for x in data.Category | filter: CategoryFilter | orderBy: 'CategoryName'" data-ng-model="selectedTicket.CategoryID" required>
                         <option value="">-- בחר קטגוריה --</option>
                     </select>
                 </div>
             </div>
-            <div class="form-group" data-ng-show="newTicket.Domain=='תחזוקה'">
+            <div class="form-group" data-ng-show="selectedTicket.Domain==1">
                 <label class="col-lg-1 control-label">מבנה:</label>
                 <div class="col-lg-3">
-                    <select class="form-control" name="build" data-ng-model="newTicket.Build" required>
+                    <select class="form-control" name="build" data-ng-model="selectedTicket.Building" required>
                         <option value="">-- בחר מבנה --</option>
                         <option value="M">M</option>
                         <option value="EM">EM</option>
@@ -76,22 +75,22 @@
                     </select>
                 </div>
             </div>
-            <div class="form-group" data-ng-show="newTicket.Domain=='תחזוקה'">
+            <div class="form-group" data-ng-show="selectedTicket.Domain==1">
 
                 <label class="col-lg-1 control-label">חדר:</label>
                 <div class="col-lg-3">
-                    <select class="form-control" id="roomtype" data-ng-options="x.idLocation as x.Room for x in data.Location | filter: RoomFilter | orderBy: 'Room'" data-ng-model="newTicket.idLocation" data-ng-selected="newTicket.Room==x.idLocation" required>
+                    <!--<select class="form-control" id="roomtype" data-ng-options="x.idLocation as x.Room for x in data.Location | filter: RoomFilter | orderBy: 'Room'" data-ng-model="newTicket.idLocation" data-ng-selected="newTicket.Room==x.idLocation" required>
                         <option value="">-- בחר חדר --</option>
-                    </select>
+                    </select>-->
                 </div>
             </div>
             <div class="checkbox" data-ng-show="currentUser.Permission =='0'">
-                <label data-ng-model="newTicket.Priority">האם הפניה קריטית?<input type="checkbox"></label>
+                <label data-ng-model="selectedTicket.Priority">האם הפניה קריטית?<input type="checkbox"></label>
             </div>
             <div class="form-group">
                 <label class="col-lg-1 control-label">תיאור הפניה:</label>
                 <div class="col-lg-6">
-                    <textarea data-ng-model="newTicket.Description" class="form-control" rows="4" i placeholder="כתוב כאן..." required></textarea>
+                    <textarea data-ng-model="selectedTicket.Description" class="form-control" rows="4" i placeholder="כתוב כאן..." required></textarea>
                 </div>
             </div>
             <!--<label class="custom-file">
@@ -102,7 +101,7 @@
                 <label class="col-lg-1 control-label">תאריך לביצוע</label>
                 <div class="col-lg-3">
                     <div class="input-group"
-                         data-moment-picker="newTicket.DateToDo"
+                         data-moment-picker="selectedTicket.DateToDo"
                          data-locale="he"
                          data-start-view="day"
                          data-format="DD-MM-YYYY">
@@ -111,7 +110,7 @@
                         </span>
                         <input class="form-control inp-d"
                                placeholder="בחר תאריך"
-                               data-ng-model="newTicket.DateToDo"
+                               data-ng-model="selectedTicket.DateToDo"
                                data-ng-model-options="{ updateOn: 'blur' }" />
                     </div>
                 </div>
