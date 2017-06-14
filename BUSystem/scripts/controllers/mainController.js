@@ -11,7 +11,7 @@
     $scope.currPage = 1;
     $scope.appMenu = AppMenu;
     $scope.sort = { Name: 'Id', Desc: true };
-      
+
     angular.element(document).ready(function () {
         if (typeof ($scope.UserId) == 'undefined') return;
         var isAdmin = $scope.UserLevel == 0;
@@ -19,6 +19,7 @@
         DataService.getAll($scope.UserId, isAdmin).then(function (response) {
             $scope.data = angular.copy(response);
             console.log($scope.data);
+            //$scope.prepareData();
             $scope.initUserValues();
             //$scope.updateEmployeeTable();
         });
@@ -29,15 +30,37 @@
     //    })
     //}
 
-    $scope.initUserValues = function() {
+    $scope.initUserValues = function () {
         $scope.currentUser = Enumerable.From($scope.data.User).Where(function (j) { return j.Id == $scope.UserId }).FirstOrDefault();
         $scope.currentUser["Permission"] = $scope.currentUser.Role;
-        $scope.currentUser.Domains = Enumerable.From($scope.data.EmployeeDomains).Where(function (j) { return j.EmployeeID ==$scope.currentUser.Id }).Select(function (i) { return i.Domain}).ToArray();
+        $scope.currentUser.DomainID = Enumerable.From($scope.data.EmployeeDomains).Where(function (j) { return j.EmployeeID == $scope.currentUser.Id }).Select(function (i) { return i.Domain }).FirstOrDefault();
+        $scope.currentUser.DomainName = Enumerable.From($scope.data.Domain).Where(function (j) { return j.Id == $scope.currentUser.DomainID }).Select(function (i) { return i.DomainName }).FirstOrDefault();
     }
 
     $scope.setSort = function (c) {
         $scope.sort.Name = c;
         $scope.sort.Desc = !$scope.sort.Desc;
+    }
+
+    $scope.isHomeTab = function () {
+        return ['createTicket', 'MyTicket', 'TicketsToDo', 'Search'].indexOf($scope.currentPage) > -1;
+    }
+
+    //getters
+
+    $scope.getTicketTasks = function (tid) {
+        var a = Enumerable.From($scope.data.Task).Where(function (j) { return j.TicketID == $scope.selectedTicket.TicketID }).ToArray();
+        return a;
+    }
+
+    $scope.getUserDisplayName = function (uid) {
+        return Enumerable.From($scope.data.User).Where(function (x) { return x.Id == uid }).Select(function (y) { return y.DisplayName }).FirstOrDefault();
+    }
+
+    $scope.getLocationName = function (loc, flag) {
+        if (!flag)
+            loc = Enumerable.From($scope.data.Location).Where(function (x) { return loc == x.Id }).FirstOrDefault();
+        return loc.Building.toString() + ' ' + loc.Room + ' - ' + loc.RoomDescription;
     }
 
     $scope.getDepartment = function (id) {
@@ -58,53 +81,43 @@
         return e;
     }
 
+    //filters
+
     $scope.ticketsByDomain = function (item) {
-        return (item.Domain == $scope.currentUser.Domain && item.Status!=4);
+        return (item.Domain == $scope.currentUser.Domain && item.Status != 4);
     }
+
+    $scope.domainByUser = function (item) {
+        return $scope.currentUser.Domains.indexOf(item.Id) > -1;
+    }
+
+    $scope.asigneeFilter = function (item) {
+        return $scope.currentUser.Id != item.UserID && item.DomainID == $scope.currentUser.Domain;
+    };
 
     $scope.ticketsByUser = function (item) {
         return item.UserID == $scope.currentUser.Id;
     }
-      
-    $scope.openTicketWindow = function (x) {
-        $scope.selectedTicket = angular.copy(x);
-        $scope.selectedTicket["oldStatus"] = x.Status;
-        $scope.selectedTicket["Location"] = x.Building + " " + x.Room;
 
-        //$scope.selectedTicket.idTicket = x.idTicket;
-        //$scope.selectedTicket.Owner = x.DisplayName;
-        //$scope.selectedTicket.timeopen = x.TimeOpen;
-        //$scope.selectedTicket.des = x.Description;
-        //$scope.selectedTicket.build = x.Building;
-        //$scope.selectedTicket.room = x.Room;
-        //$scope.selectedTicket.location = $scope.selectedTicket.build + "" + $scope.selectedTicket.room;
-        //$scope.selectedTicket.status = x.Status;
-        //$scope.selectedTicket.oldStatus = x.Status;
-        //$scope.tmp = Enumerable.From($scope.data.Task).Where(function (j) { return j.idTicket == $scope.selectedTicket.idTicket }).ToArray();
-        //$scope.ticketTasks = angular.copy($scope.tmp);
-        $('#editTicketModal').modal('show');
+    $scope.departmentFilter = function (item) {
+        if ($scope.currentUser.Permission == 0) return true;
+        return $scope.currentUser.Department == item.Id;
     }
 
-    $scope.getTicketTasks = function (tid) {
-        var a = Enumerable.From($scope.data.Task).Where(function (j) { return j.TicketID == $scope.selectedTicket.TicketID }).ToArray();
-        return a;
+    $scope.filterTasks = function (item) {
+        return item.TicketID == $scope.selectedTicket.TicketID;
     }
 
-    $scope.calculateData = function (list)
-    {
+    $scope.categoryFilter = function (item) {
+        return item.Domain == $scope.currentUser.Domain;
+    };
 
-            
-    }
-
-    $scope.isHomeTab = function () {
-        return ['createTicket', 'MyTicket', 'TicketsToDo', 'Search'].indexOf($scope.currentPage) > -1;
-    }
+    //Paging
 
     $scope.setPage = function (n) {
         $scope.currentPage = n;
-        $scope.currPage=1;
-        switch(n)
-        {
+        $scope.currPage = 1;
+        switch (n) {
             case 'MyTicket':
                 var myTickets = ($scope.data.MyTickets).filter(function (item) {
                     return item.idUser == $scope.currentUser.Id
@@ -113,7 +126,7 @@
                 break;
             case 'TicketsToDo':
                 var myTickets = ($scope.data.TicketsToDo).filter(function (item) {
-                    return (item.Domain == $scope.currentUser.Domain && item.Status!='סגורה')
+                    return (item.Domain == $scope.currentUser.Domain && item.Status != 'סגורה')
                 })
                 $scope.dataLength = myTickets.length;
                 break;
@@ -159,6 +172,7 @@
         return Math.ceil($scope.dataLength / $scope.pageSize) - 1;
     };
 
+
     $scope.safeApply = function (fn) {
         var phase = this.$root.$$phase;
         if (phase == '$apply' || phase == '$digest') {
@@ -170,10 +184,7 @@
         }
     };
 
-           
-
-        })
-
+})
 
 app.filter('startFrom', function () {
     return function (input, start) {

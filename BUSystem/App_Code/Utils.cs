@@ -50,6 +50,7 @@ public class Utils
             data.Tables[8].TableName = "Task";
             data.Tables[9].TableName = "Status";
             data.Tables[10].TableName = "Role";
+            data.Tables[11].TableName = "Domain";
 
 
             return JsonConvert.SerializeObject(data, new CustomDateTimeConverter());

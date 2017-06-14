@@ -20,7 +20,7 @@
     $scope.searchResult2 = "";
 
     $scope.CategoryToSearchFilter = function (item) {
-        if ($scope.currentUser.Permission != '4')
+        if ($scope.currentUser.Permission == 0)
             return $scope.currentUser.Domain == item.Domain;
         else
             return true;
@@ -47,8 +47,8 @@
         }
         else {
             $scope.searchResult2 = Enumerable.From($scope.data.TicketsToDo).Where(function (i) {
-                return ((i.Description).includes($scope.key) || (i.idTicket.toString()).includes($scope.key)) ||
-                    i.CategoryName.includes($scope.key) || i.Building.includes($scope.key) || i.Building.includes($scope.Room)
+                return ((i.Description).includes($scope.key) || (i.TicketID.toString()).includes($scope.key)) ||
+                    i.CategoryName.includes($scope.key) || i.Building.includes($scope.key) || i.Room.includes($scope.Room) || i.RoomDescription.includes($scope.Room)
             }).ToArray();
 
             $scope.dataLength = $scope.searchResult2.length;
@@ -88,7 +88,7 @@
                     return i.CategoryName.includes(c) && i.Status.includes(s)
                         && ((f1 == null && t1 == null) || (f1 != null && t1 != null && dateOpen.isBetween(f1, t1, 'days', '[]')) || (f1 != null && t1 == null && dateOpen.isSameOrAfter(f1)) || (t1 != null && f1 == null && dateOpen.isSameOrBefore(t1)))
                         && ((f2 == null && t2 == null) || (f2 != null && t2 != null && dateOpen.isBetween(f2, t2, 'days', '[]')) || (f2 != null && t2 == null && dateOpen.isSameOrAfter(f2)) || (t2 != null && f2 == null && dateOpen.isSameOrBefore(t2)))
-                        && i.Domain==$scope.currentUser.Domain
+                        && i.DomainID==$scope.currentUser.DomainID
                 }).ToArray();
 
                 $scope.dataLength = $scope.searchResult2.length;

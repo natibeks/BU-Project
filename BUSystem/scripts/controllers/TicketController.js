@@ -1,12 +1,10 @@
-﻿app.expandTicketController = function ($scope, $http, $timeout, $filter) {
+﻿app.expandTicketController = function ($scope, DataService, $timeout, $filter) {
 
     $scope.ticketTemplate = {
         TicketID: 0,
-        UserID: 0,
+        UserID: $scope.currentUser.Id,
         TimeOpen: moment().toDate(),
         Description: "",
-        Building: "",
-        Room: "",
         Status: 1,
         EmploeeID: "",
         AnotherAsignee: "",
@@ -15,19 +13,18 @@
     };
 
     $scope.taskTemplate = {
-        TaskID: 0,
+        Id: 0,
         TicketID: 0,
         TaskDescription: "",
         Done: false
     };
 
-    $scope.error = true;
+    $scope.openTicketWindow = function (x) {
+        $scope.selectedTicket = angular.copy(x);
+        $scope.selectedTicket["oldStatus"] = x.Status;
+        //$scope.selectedTicket.Department = $scope.currentUser.Department;
 
-    $scope.msg = "";
-
-    $scope.totalCount = 0;
-    $scope.countInit = function () {
-        return $scope.totalCount++;
+        $('#editTicketModal').modal('show');
     }
 
     $scope.confirmDelete = function (x) {
@@ -39,33 +36,6 @@
         $('#confirmDeleteModal').modal('show');
     }
 
-    $scope.filterTasks = function (item) {
-        return item.TicketID == $scope.selectedTicket.TicketID;
-    }
-    $scope.CategoryFilter = function (item) {
-        return item.Domain == $scope.currentUser.Domain;
-    };
-
-    $scope.domainByUser = function (item) {
-        return $scope.currentUser.Domains.indexOf(item.Id) > -1;
-    }
-
-    $scope.empFilter = function (item) {
-        if ($scope.selectedTicket.emp == "")
-            return false;
-        else
-            return $scope.selectedTicket.emp == item.DisplayName;
-    };
-    $scope.asigneeFilter = function (item) {
-        return $scope.currentUser.Id != item.EmploeeID && item.Domain == $scope.currentUser.Domain;
-    };
-
-    $scope.RoomFilter = function (item) {
-        if ($scope.newTicket.Build == "")
-            return false;
-        else
-            return $scope.newTicket.Build == item.Building;
-    };
     $scope.displayNewTask = false;
 
     $scope.addTask = function () {
@@ -73,63 +43,50 @@
 
     }
     $scope.updateTask = function () {
-        url = "Tasks.aspx?tp=addTask";
-        $scope.NewTask.idTicket = $scope.selectedTicket.idTicket;
-        $http.post(url, $scope.NewTask, null).then(
-            function (d) {
-                var ID = parseInt(d.data);
-                $scope.NewTask.idTask = ID;
-                $scope.data.Task.push($scope.NewTask);
-                $scope.displayNewTask = false;
-                $scope.error = false;
-            },
-            function (e) {
-                console.log(e);
-                $scope.error = true;
-            }
-            )
+        var url = "Tasks.aspx?tp=addTask";
+        DataService.makePostRequest(url, $scope.selectedTicket).then(function (response) {
+            var id = parseInt(response);
+            $scope.selectedTicket.Id = id;
+            $scope.data.Task.push($scope.selectedTicket);
+            $scope.displayNewTask = false;
+            $scope.error = false;
+        },
+        function (e) {
+            console.log(e);
+            $scope.error = true;
+        });
 
     };
 
-    $scope.DeleteTask = function () {
+    $scope.deleteTask = function () {
         url = "Tasks.aspx?tp=delTask";
-        $http.post(url, $scope.selectedTask, null).then(
-                function (d) {
-                    if (d.data == "Ok") {//is tasks were deleted from DB
+        DataService.makePostRequest(url, $scope.selectedTicket).then(function (response) {
+            if (d.data == "Ok") {//is tasks were deleted from DB
+                $scope.error = false;
+                $scope.msg = 'Deleting Succeeded'
 
-                        $scope.error = false;
-                        $scope.msg = 'Deleting Succeeded'
+                $timeout(function () {
+                    $scope.msg = "";
+                    $('#confirmDeleteModal').modal('hide');
+                }, 2500);
+            }
+            else {//if deleting failed
+                $scope.error = true;
+                $scope.msg = 'Something went wrong'
 
-                        $timeout(function () {
-                            $scope.msg = "";
-                            $('#confirmDeleteModal').modal('hide');
-                        }, 2500);
-                    }
-                    else {//if deleting failed
-                        $scope.error = true;
-                        $scope.msg = 'Something went wrong'
-
-                        $timeout(function () {
-                            $scope.msg = "";
-                            $('#confirmDeleteModal').modal('hide');
-                        }, 2500);
-
-                    }
-
-                    $scope.safeApply();
-                },
-                function (e) {
-                    $scope.error = true;
-                    $scope.msg = 'Deleting failed'
-
-                    $timeout(function () {
-                        $scope.msg = "";
-                        $('#confirmDeleteModal').modal('hide');
-                    }, 2500);
-
-                }
-            )
+                $timeout(function () {
+                    $scope.msg = "";
+                    $('#confirmDeleteModal').modal('hide');
+                }, 2500);
+            }
+            $scope.safeApply();
+        },
+        function (e) {
+            console.log(e);
+            $scope.error = true;
+        });
     };
+
     $scope.checkTicketTaskUpdate = function () {
         var temp = [];
         $.each($scope.ticketTasks, function (i, o) {
@@ -153,8 +110,8 @@
     }
 
     $scope.updateTicket = function () {
-        url = "Tasks.aspx?tp=updateTicket";
-        $scope.selectedTicket.idEmployee = $scope.currentUser.Id;
+        var url = "Tasks.aspx?tp=updateTicket";
+        $scope.selectedTicket.UserID = $scope.currentUser.Id;
         var u = angular.copy($scope.selectedTicket);
         u['tasks'] = $scope.checkTicketTaskUpdate();
 
@@ -172,17 +129,14 @@
                 //to display confirmation
             }
         }
-
-        $http.post(url, u, null).then(
+        DataService.makePostRequest(url, u).then(
             function (d) {
                 if (d.data == 'OK') {
-
                     $.each($scope.data.Ticket, function (i, o) {
-                        if (o.idTicket == $scope.selectedTicket.idTicket)
+                        if (o.Id == $scope.selectedTicket.TaskID)
                             $scope.data.Ticket[i] = angular.copy($scope.selectedTicket);
                     })
                     $scope.setPage($scope.currentPage);
-
 
                     $('#editTicketModal').modal('hide');
                     $scope.error = false;
@@ -209,57 +163,57 @@
             $('#ShowErrorMsg').modal('show');
 
         }
-       if ($scope.newTicket.Domain == 'תחזוקה' && ($scope.newTicket.idCategory == 0 || $scope.newTicket.Build == "" || $scope.newTicket.idLocation == 0 ||
-         $scope.newTicket.Description == "")) {
-                $scope.error = true;
-                $scope.msg = "אנא מלא את כל השדות.";
-                $('#ShowErrorMsg').modal('show');
-            }
-            else if ($scope.newTicket.Domain != 'תחזוקה' && ($scope.newTicket.idCategory == 0 || $scope.newTicket.Description == "")) {
-                $scope.error = true;
-                $scope.msg = "אנא מלא את כל השדות.";
-                $('#ShowErrorMsg').modal('show');
-            }
+        if ($scope.newTicket.Domain == 'תחזוקה' && ($scope.newTicket.idCategory == 0 || $scope.newTicket.Build == "" || $scope.newTicket.idLocation == 0 ||
+          $scope.newTicket.Description == "")) {
+            $scope.error = true;
+            $scope.msg = "אנא מלא את כל השדות.";
+            $('#ShowErrorMsg').modal('show');
+        }
+        else if ($scope.newTicket.Domain != 'תחזוקה' && ($scope.newTicket.idCategory == 0 || $scope.newTicket.Description == "")) {
+            $scope.error = true;
+            $scope.msg = "אנא מלא את כל השדות.";
+            $('#ShowErrorMsg').modal('show');
+        }
 
-            else {
-                u.Owner = $scope.currentUser.Id;
-                $http.post(url, u, null).then(
-                    function (d) {
-                        var ID = parseInt(d.data);
-                        var temp1 = {
-                            idTicket: ID,
-                            idCategory: u.idCategory,
-                            idLocation: u.idLocation,
-                            Priority: u.Priority,
-                            Description: u.Description,
-                            Status: "פתוחה",
-                            Image: 0
-                        }
-                        $scope.data.Ticket.push(temp1);
-
-                        var temp2 = {
-                            idTicket: parseInt(d.data),
-                            idUser: u.Owner,
-                            idEmployee: 0,
-                            TimeOpen: moment().format('dd/mm/yyyy hh:mm'),
-                            TimeClose: 0,
-                            AnotherAssignee: 0,
-                            Domain: u.Domain
-                        }
-                        $scope.data.TicketsForEmployee.push(temp2);
-
-
-                        $scope.error = false;
-                        $('#confirmOpenTicketModal').modal('show');
-                        $scope.resetFields();
-
+        else {
+            u.Owner = $scope.currentUser.Id;
+            DataService.makePostRequest(url, u).then(
+                function (d) {
+                    var ID = parseInt(d.data);
+                    var temp1 = {
+                        idTicket: ID,
+                        idCategory: u.idCategory,
+                        idLocation: u.idLocation,
+                        Priority: u.Priority,
+                        Description: u.Description,
+                        Status: "פתוחה",
+                        Image: 0
                     }
-                    , function (e) {
-                        console.log(e);
-                        $scope.error = true;
+                    $scope.data.Ticket.push(temp1);
+
+                    var temp2 = {
+                        idTicket: parseInt(d.data),
+                        idUser: u.Owner,
+                        idEmployee: 0,
+                        TimeOpen: moment().format('dd/mm/yyyy hh:mm'),
+                        TimeClose: 0,
+                        AnotherAssignee: 0,
+                        Domain: u.Domain
                     }
-                    )
-            }
+                    $scope.data.TicketsForEmployee.push(temp2);
+
+
+                    $scope.error = false;
+                    $('#confirmOpenTicketModal').modal('show');
+                    $scope.resetFields();
+
+                }
+                , function (e) {
+                    console.log(e);
+                    $scope.error = true;
+                }
+                )
+        }
 
     };
 
@@ -269,6 +223,13 @@
         $scope.newTicket.Priority = 0;
         $scope.newTicket.DateToDo = "";
         $scope.error = "";
+    }
+
+    $scope.error = true;
+    $scope.msg = "";
+    $scope.totalCount = 0;
+    $scope.countInit = function () {
+        return $scope.totalCount++;
     }
 
 }

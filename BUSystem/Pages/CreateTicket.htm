@@ -25,7 +25,9 @@
             <div class="form-group">
                 <label class="col-lg-1 control-label">מחלקה:</label>
                 <div class="col-lg-3">
-                    <select class="form-control" data-ng-options="x.Id as x.DepartmentName for x in data.Department | orderBy: 'DepartmentName'" data-ng-model="selectedTicket.CategoryID" required>
+                    <select class="form-control" 
+                            data-ng-options="x.Id as x.DepartmentName for x in data.Department | filter: departmentFilter |orderBy: 'DepartmentName'" 
+                            data-ng-model="selectedTicket.CategoryID" data-ng-disabled="currentUser.Permission == 0" required>
                         <option value="">-- בחר מחלקה --</option>
                     </select>
                 </div>
@@ -34,14 +36,14 @@
             <div class="form-group">
                 <label class="col-lg-1 control-label">מייל:</label>
                 <div class="col-lg-3">
-                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" ng-model="currentUser.EMail" ng-disabled="true">
+                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" ng-model="currentUser.EmailAddress" ng-disabled="true">
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="col-lg-1 control-label">טלפון:</label>
                 <div class="col-lg-3">
-                    <input class="form-control" id="tel" ng-model="currentUser.Tel" ng-disabled="true">
+                    <input class="form-control" id="tel" ng-model="currentUser.TelephoneNumber" ng-disabled="true">
                 </div>
             </div>
 
@@ -51,41 +53,37 @@
             <div class="form-group">
                 <label class="col-lg-1 control-label">תחום:</label>
                 <div class="col-lg-3">
-                    <select class="form-control" data-ng-options="x.Id as x.DomainName for x in data.Domain | domainByUser |orderBy: 'DomainName'" data-ng-model="selectedTicket.CategoryID" required>
-                        <option value="">-- בחר תחום --</option>
+                    <select class="form-control" 
+                            data-ng-options="x.Id as x.DomainName for x in data.Domain | domainByUser | orderBy: 'DomainName'" 
+                            data-ng-model="selectedTicket.DomainID" required>
+                        <option value="0">-- בחר תחום --</option>
                     </select>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-lg-1 control-label">קטגוריה:</label>
                 <div class="col-lg-3">
-                    <select class="form-control" id="categorytype" data-ng-options="x.Id as x.CategoryName for x in data.Category | filter: CategoryFilter | orderBy: 'CategoryName'" data-ng-model="selectedTicket.CategoryID" required>
+                    <select class="form-control" id="categorytype" 
+                            data-ng-options="x.Id as x.CategoryName for x in data.Category | filter: categoryFilter | orderBy: 'CategoryName'" 
+                            data-ng-model="selectedTicket.CategoryID" data-ng-disabled="selectedTicket.CategoryID=0" required>
                         <option value="">-- בחר קטגוריה --</option>
                     </select>
                 </div>
             </div>
-            <div class="form-group" data-ng-show="selectedTicket.Domain==1">
+            <div class="form-group" data-ng-if="selectedTicket.Domain==1">
                 <label class="col-lg-1 control-label">מבנה:</label>
                 <div class="col-lg-3">
-                    <select class="form-control" name="build" data-ng-model="selectedTicket.Building" required>
+                    <select class="form-control" id="categorytype"
+                            data-ng-options="x.Id as getLocationName(x,true) for x in data.Location | orderBy: 'Id'"
+                            data-ng-model="selectedTicket.LocationID" required>
                         <option value="">-- בחר מבנה --</option>
-                        <option value="M">M</option>
-                        <option value="EM">EM</option>
-                        <option value="L">L</option>
                     </select>
                 </div>
             </div>
-            <div class="form-group" data-ng-show="selectedTicket.Domain==1">
-
-                <label class="col-lg-1 control-label">חדר:</label>
-                <div class="col-lg-3">
-                    <!--<select class="form-control" id="roomtype" data-ng-options="x.idLocation as x.Room for x in data.Location | filter: RoomFilter | orderBy: 'Room'" data-ng-model="newTicket.idLocation" data-ng-selected="newTicket.Room==x.idLocation" required>
-                        <option value="">-- בחר חדר --</option>
-                    </select>-->
+            <div class="form-group">
+                <div class="checkbox" data-ng-show="currentUser.Permission =='0'">
+                    <label data-ng-model="selectedTicket.Priority">האם הפניה קריטית?<input type="checkbox"></label>
                 </div>
-            </div>
-            <div class="checkbox" data-ng-show="currentUser.Permission =='0'">
-                <label data-ng-model="selectedTicket.Priority">האם הפניה קריטית?<input type="checkbox"></label>
             </div>
             <div class="form-group">
                 <label class="col-lg-1 control-label">תיאור הפניה:</label>
@@ -97,11 +95,12 @@
                 <input type="file" id="file" class="custom-file-input">
                 <span class="custom-file-control"></span>
             </label>-->
-            <div data-ng-show="currentUser.Permission =='2' || currentUser.Permission =='3' || currentUser.Permission =='0'">
-                <label class="col-lg-1 control-label">תאריך לביצוע</label>
+            <!--<div data-ng-show="currentUser.Permission =='2' || currentUser.Permission =='3' || currentUser.Permission =='0'">-->
+            <div class="form-group">
+                <label class="col-lg-1 control-label">תאריך לביצוע:</label>
                 <div class="col-lg-3">
                     <div class="input-group"
-                         data-moment-picker="selectedTicket.DateToDo"
+                         data-moment-picker="selectedTicket.Date"
                          data-locale="he"
                          data-start-view="day"
                          data-format="DD-MM-YYYY">
@@ -110,13 +109,14 @@
                         </span>
                         <input class="form-control inp-d"
                                placeholder="בחר תאריך"
-                               data-ng-model="selectedTicket.DateToDo"
+                               data-ng-model="selectedTicket.Date"
                                data-ng-model-options="{ updateOn: 'blur' }" />
                     </div>
                 </div>
             </div>
         </div>
-
-        <div><a href="#" class="btn btn-success" data-ng-click="addNewTicket()">שלח</a></div>
+        <div class="form-group">
+            <div><a href="#" class="btn btn-success" data-ng-click="updateTicket()">שלח</a></div>
+        </div>
     </form>
 </div>
