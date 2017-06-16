@@ -21,7 +21,7 @@
 
     $scope.CategoryToSearchFilter = function (item) {
         if ($scope.currentUser.Permission == 0)
-            return $scope.currentUser.Domain == item.Domain;
+            return $scope.currentUser.Domain.indexOf(item.DomainID)>-1;
         else
             return true;
     }
@@ -88,7 +88,7 @@
                     return i.CategoryName.includes(c) && i.Status.includes(s)
                         && ((f1 == null && t1 == null) || (f1 != null && t1 != null && dateOpen.isBetween(f1, t1, 'days', '[]')) || (f1 != null && t1 == null && dateOpen.isSameOrAfter(f1)) || (t1 != null && f1 == null && dateOpen.isSameOrBefore(t1)))
                         && ((f2 == null && t2 == null) || (f2 != null && t2 != null && dateOpen.isBetween(f2, t2, 'days', '[]')) || (f2 != null && t2 == null && dateOpen.isSameOrAfter(f2)) || (t2 != null && f2 == null && dateOpen.isSameOrBefore(t2)))
-                        && i.DomainID==$scope.currentUser.DomainID
+                        && $scope.currentUser.Domains.indexOf(i.DomainID) > -1;
                 }).ToArray();
 
                 $scope.dataLength = $scope.searchResult2.length;

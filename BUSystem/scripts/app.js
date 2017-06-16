@@ -1,1 +1,1 @@
-﻿var app = angular.module('myApp', ['moment-picker', "ng-fusioncharts"]);
+﻿var app = angular.module('myApp', ['moment-picker', "ng-fusioncharts", 'angular.filter']);

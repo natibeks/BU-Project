@@ -27,23 +27,15 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="DomainName" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'MSE_System.dbo.EmployeeDomains' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-        <EntityType Name="EmployeeDomains">
-          <Key>
-            <PropertyRef Name="EmployeeID" />
-            <PropertyRef Name="DomainID" />
-          </Key>
-          <Property Name="EmployeeID" Type="int" Nullable="false" />
-          <Property Name="DomainID" Type="int" Nullable="false" />
-        </EntityType>
         <EntityType Name="Location">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Building" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Room" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Room" Type="int" />
+          <Property Name="Description" Type="nvarchar" MaxLength="50" />
+          <Property Name="IsArchive" Type="bit" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -79,20 +71,8 @@ warning 6002: The table/view 'MSE_System.dbo.EmployeeDomains' does not have a pr
           <Property Name="Priority" Type="bit" Nullable="false" />
           <Property Name="Description" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Status" Type="int" Nullable="false" />
-          <Property Name="Image" Type="int" />
-        </EntityType>
-        <EntityType Name="TicketsForEmployee">
-          <Key>
-            <PropertyRef Name="UserID" />
-            <PropertyRef Name="TicketID" />
-          </Key>
-          <Property Name="EmploeeID" Type="nvarchar" MaxLength="50" />
-          <Property Name="UserID" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="TicketID" Type="int" Nullable="false" />
           <Property Name="TimeOpen" Type="datetime" />
           <Property Name="TimeClose" Type="datetime" />
-          <Property Name="AnotherAsignee" Type="nvarchar" MaxLength="50" />
-          <Property Name="Domain" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -109,51 +89,23 @@ warning 6002: The table/view 'MSE_System.dbo.EmployeeDomains' does not have a pr
           <Property Name="Department" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'MSE_System.dbo.MyTickets' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-        <EntityType Name="MyTickets">
+warning 6002: The table/view 'MSE_System.dbo.UserDomain' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="UserDomain">
           <Key>
             <PropertyRef Name="UserID" />
-            <PropertyRef Name="Id" />
-            <PropertyRef Name="CategoryName" />
-            <PropertyRef Name="Building" />
-            <PropertyRef Name="Room" />
-            <PropertyRef Name="Status" />
+            <PropertyRef Name="DomainID" />
           </Key>
-          <Property Name="UserID" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Id" Type="int" Nullable="false" />
-          <Property Name="EmploeeID" Type="nvarchar" MaxLength="50" />
-          <Property Name="CategoryName" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Building" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Room" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="TimeOpen" Type="datetime" />
-          <Property Name="Status" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="DomainID" Type="int" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'MSE_System.dbo.TicketsToDo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-        <EntityType Name="TicketsToDo">
+        <EntityType Name="UserTicket">
           <Key>
-            <PropertyRef Name="TicketID" />
-            <PropertyRef Name="CategoryName" />
-            <PropertyRef Name="Building" />
-            <PropertyRef Name="Room" />
-            <PropertyRef Name="Status" />
-            <PropertyRef Name="Expr1" />
-            <PropertyRef Name="Description" />
             <PropertyRef Name="UserID" />
-            <PropertyRef Name="Id" />
+            <PropertyRef Name="TicketID" />
           </Key>
+          <Property Name="UserID" Type="int" Nullable="false" />
           <Property Name="TicketID" Type="int" Nullable="false" />
-          <Property Name="CategoryName" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Building" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Room" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="TimeOpen" Type="datetime" />
-          <Property Name="Status" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Expr1" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Domain" Type="nvarchar" MaxLength="50" />
-          <Property Name="Description" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="TimeClose" Type="datetime" />
-          <Property Name="UserID" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Id" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="MainUser" Type="bit" />
         </EntityType>
         <Function Name="spGetData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="userId" Type="int" Mode="In" />
@@ -167,41 +119,13 @@ warning 6002: The table/view 'MSE_System.dbo.TicketsToDo' does not have a primar
           <EntitySet Name="Status" EntityType="Self.Status" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Task" EntityType="Self.Task" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Ticket" EntityType="Self.Ticket" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="TicketsForEmployee" EntityType="Self.TicketsForEmployee" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="EmployeeDomains" EntityType="Self.EmployeeDomains" store:Type="Tables" store:Schema="dbo">
+          <EntitySet Name="UserTicket" EntityType="Self.UserTicket" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserDomain" EntityType="Self.UserDomain" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
-    [EmployeeDomains].[EmployeeID] AS [EmployeeID], 
-    [EmployeeDomains].[DomainID] AS [DomainID]
-    FROM [dbo].[EmployeeDomains] AS [EmployeeDomains]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="MyTickets" EntityType="Self.MyTickets" store:Type="Views" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [MyTickets].[UserID] AS [UserID], 
-    [MyTickets].[Id] AS [Id], 
-    [MyTickets].[EmploeeID] AS [EmploeeID], 
-    [MyTickets].[CategoryName] AS [CategoryName], 
-    [MyTickets].[Building] AS [Building], 
-    [MyTickets].[Room] AS [Room], 
-    [MyTickets].[TimeOpen] AS [TimeOpen], 
-    [MyTickets].[Status] AS [Status]
-    FROM [dbo].[MyTickets] AS [MyTickets]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="TicketsToDo" EntityType="Self.TicketsToDo" store:Type="Views" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [TicketsToDo].[TicketID] AS [TicketID], 
-    [TicketsToDo].[CategoryName] AS [CategoryName], 
-    [TicketsToDo].[Building] AS [Building], 
-    [TicketsToDo].[Room] AS [Room], 
-    [TicketsToDo].[TimeOpen] AS [TimeOpen], 
-    [TicketsToDo].[Status] AS [Status], 
-    [TicketsToDo].[Expr1] AS [Expr1], 
-    [TicketsToDo].[Domain] AS [Domain], 
-    [TicketsToDo].[Description] AS [Description], 
-    [TicketsToDo].[TimeClose] AS [TimeClose], 
-    [TicketsToDo].[UserID] AS [UserID], 
-    [TicketsToDo].[Id] AS [Id]
-    FROM [dbo].[TicketsToDo] AS [TicketsToDo]</DefiningQuery>
+    [UserDomain].[UserID] AS [UserID], 
+    [UserDomain].[DomainID] AS [DomainID]
+    FROM [dbo].[UserDomain] AS [UserDomain]</DefiningQuery>
           </EntitySet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -219,12 +143,10 @@ warning 6002: The table/view 'MSE_System.dbo.TicketsToDo' does not have a primar
           <EntitySet Name="Role" EntityType="MSEsystemModel1.Role" />
           <EntitySet Name="Status" EntityType="MSEsystemModel1.Status" />
           <EntitySet Name="Task" EntityType="MSEsystemModel1.Task" />
-          <EntitySet Name="TicketsForEmployee" EntityType="MSEsystemModel1.TicketsForEmployee" />
-          <EntitySet Name="User" EntityType="MSEsystemModel1.User" />
-          <EntitySet Name="EmployeeDomains" EntityType="MSEsystemModel1.EmployeeDomains" />
-          <EntitySet Name="MyTickets" EntityType="MSEsystemModel1.MyTickets" />
-          <EntitySet Name="TicketsToDo" EntityType="MSEsystemModel1.TicketsToDo" />
           <EntitySet Name="Ticket" EntityType="MSEsystemModel1.Ticket" />
+          <EntitySet Name="User" EntityType="MSEsystemModel1.User" />
+          <EntitySet Name="UserTicket" EntityType="MSEsystemModel1.UserTicket" />
+          <EntitySet Name="UserDomain" EntityType="MSEsystemModel1.UserDomain" />
           </EntityContainer>
         <ComplexType Name="spGetData_Result">
           <Property Type="String" Name="uid" Nullable="false" MaxLength="50" />
@@ -262,9 +184,11 @@ warning 6002: The table/view 'MSE_System.dbo.TicketsToDo' does not have a primar
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Building" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Room" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Room" Type="Int32" />
+          <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IsArchive" Type="Boolean" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -290,18 +214,18 @@ warning 6002: The table/view 'MSE_System.dbo.TicketsToDo' does not have a primar
           <Property Name="Done" Type="Boolean" />
           <Property Name="isArchive" Type="Boolean" />
         </EntityType>
-        <EntityType Name="TicketsForEmployee">
+        <EntityType Name="Ticket">
           <Key>
-            <PropertyRef Name="UserID" />
-            <PropertyRef Name="TicketID" />
+            <PropertyRef Name="Id" />
           </Key>
-          <Property Name="EmploeeID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="UserID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="TicketID" Type="Int32" Nullable="false" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CategoryID" Type="Int32" Nullable="false" />
+          <Property Name="LocationID" Type="Int32" />
+          <Property Name="Priority" Type="Boolean" Nullable="false" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
           <Property Name="TimeOpen" Type="DateTime" Precision="3" />
           <Property Name="TimeClose" Type="DateTime" Precision="3" />
-          <Property Name="AnotherAsignee" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Domain" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -317,68 +241,22 @@ warning 6002: The table/view 'MSE_System.dbo.TicketsToDo' does not have a primar
           <Property Name="isArchive" Type="Boolean" />
           <Property Name="Department" Type="Int32" />
         </EntityType>
-        <EntityType Name="EmployeeDomains">
+        <EntityType Name="UserTicket">
           <Key>
-            <PropertyRef Name="EmployeeID" />
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="TicketID" />
+          </Key>
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="TicketID" Type="Int32" Nullable="false" />
+          <Property Name="MainUser" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="UserDomain">
+          <Key>
+            <PropertyRef Name="UserID" />
             <PropertyRef Name="DomainID" />
           </Key>
-          <Property Name="EmployeeID" Type="Int32" Nullable="false" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
           <Property Name="DomainID" Type="Int32" Nullable="false" />
-        </EntityType>
-        <EntityType Name="MyTickets">
-          <Key>
-            <PropertyRef Name="UserID" />
-            <PropertyRef Name="Id" />
-            <PropertyRef Name="CategoryName" />
-            <PropertyRef Name="Building" />
-            <PropertyRef Name="Room" />
-            <PropertyRef Name="Status" />
-          </Key>
-          <Property Name="UserID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Id" Type="Int32" Nullable="false" />
-          <Property Name="EmploeeID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="CategoryName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Building" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Room" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="TimeOpen" Type="DateTime" Precision="3" />
-          <Property Name="Status" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="TicketsToDo">
-          <Key>
-            <PropertyRef Name="TicketID" />
-            <PropertyRef Name="CategoryName" />
-            <PropertyRef Name="Building" />
-            <PropertyRef Name="Room" />
-            <PropertyRef Name="Status" />
-            <PropertyRef Name="Expr1" />
-            <PropertyRef Name="Description" />
-            <PropertyRef Name="UserID" />
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="TicketID" Type="Int32" Nullable="false" />
-          <Property Name="CategoryName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Building" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Room" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="TimeOpen" Type="DateTime" Precision="3" />
-          <Property Name="Status" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Expr1" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Domain" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Description" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="TimeClose" Type="DateTime" Precision="3" />
-          <Property Name="UserID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="Ticket">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CategoryID" Type="Int32" Nullable="false" />
-          <Property Name="LocationID" Type="Int32" />
-          <Property Name="Priority" Type="Boolean" Nullable="false" />
-          <Property Name="Description" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Status" Type="Int32" Nullable="false" />
-          <Property Name="Image" Type="Int32" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -428,6 +306,8 @@ warning 6002: The table/view 'MSE_System.dbo.TicketsToDo' does not have a primar
           <EntitySetMapping Name="Location">
             <EntityTypeMapping TypeName="MSEsystemModel1.Location">
               <MappingFragment StoreEntitySet="Location">
+                <ScalarProperty Name="IsArchive" ColumnName="IsArchive" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Room" ColumnName="Room" />
                 <ScalarProperty Name="Building" ColumnName="Building" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
@@ -461,16 +341,17 @@ warning 6002: The table/view 'MSE_System.dbo.TicketsToDo' does not have a primar
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="TicketsForEmployee">
-            <EntityTypeMapping TypeName="MSEsystemModel1.TicketsForEmployee">
-              <MappingFragment StoreEntitySet="TicketsForEmployee">
-                <ScalarProperty Name="Domain" ColumnName="Domain" />
-                <ScalarProperty Name="AnotherAsignee" ColumnName="AnotherAsignee" />
+          <EntitySetMapping Name="Ticket">
+            <EntityTypeMapping TypeName="MSEsystemModel1.Ticket">
+              <MappingFragment StoreEntitySet="Ticket">
                 <ScalarProperty Name="TimeClose" ColumnName="TimeClose" />
                 <ScalarProperty Name="TimeOpen" ColumnName="TimeOpen" />
-                <ScalarProperty Name="TicketID" ColumnName="TicketID" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
-                <ScalarProperty Name="EmploeeID" ColumnName="EmploeeID" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="LocationID" ColumnName="LocationID" />
+                <ScalarProperty Name="CategoryID" ColumnName="CategoryID" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -489,56 +370,20 @@ warning 6002: The table/view 'MSE_System.dbo.TicketsToDo' does not have a primar
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="EmployeeDomains">
-            <EntityTypeMapping TypeName="MSEsystemModel1.EmployeeDomains">
-              <MappingFragment StoreEntitySet="EmployeeDomains">
-                <ScalarProperty Name="DomainID" ColumnName="DomainID" />
-                <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="MyTickets">
-            <EntityTypeMapping TypeName="MSEsystemModel1.MyTickets">
-              <MappingFragment StoreEntitySet="MyTickets">
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="TimeOpen" ColumnName="TimeOpen" />
-                <ScalarProperty Name="Room" ColumnName="Room" />
-                <ScalarProperty Name="Building" ColumnName="Building" />
-                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
-                <ScalarProperty Name="EmploeeID" ColumnName="EmploeeID" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="TicketsToDo">
-            <EntityTypeMapping TypeName="MSEsystemModel1.TicketsToDo">
-              <MappingFragment StoreEntitySet="TicketsToDo">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
-                <ScalarProperty Name="TimeClose" ColumnName="TimeClose" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="Domain" ColumnName="Domain" />
-                <ScalarProperty Name="Expr1" ColumnName="Expr1" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="TimeOpen" ColumnName="TimeOpen" />
-                <ScalarProperty Name="Room" ColumnName="Room" />
-                <ScalarProperty Name="Building" ColumnName="Building" />
-                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
+          <EntitySetMapping Name="UserTicket">
+            <EntityTypeMapping TypeName="MSEsystemModel1.UserTicket">
+              <MappingFragment StoreEntitySet="UserTicket">
+                <ScalarProperty Name="MainUser" ColumnName="MainUser" />
                 <ScalarProperty Name="TicketID" ColumnName="TicketID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Ticket">
-            <EntityTypeMapping TypeName="MSEsystemModel1.Ticket">
-              <MappingFragment StoreEntitySet="Ticket">
-                <ScalarProperty Name="Image" ColumnName="Image" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="Priority" ColumnName="Priority" />
-                <ScalarProperty Name="LocationID" ColumnName="LocationID" />
-                <ScalarProperty Name="CategoryID" ColumnName="CategoryID" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
+          <EntitySetMapping Name="UserDomain">
+            <EntityTypeMapping TypeName="MSEsystemModel1.UserDomain">
+              <MappingFragment StoreEntitySet="UserDomain">
+                <ScalarProperty Name="DomainID" ColumnName="DomainID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

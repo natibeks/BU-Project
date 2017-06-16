@@ -12,12 +12,10 @@
         <EntityTypeShape EntityType="MSEsystemModel1.Role" Width="1.5" PointX="4.75" PointY="0.75" />
         <EntityTypeShape EntityType="MSEsystemModel1.Status" Width="1.5" PointX="4.75" PointY="3.75" />
         <EntityTypeShape EntityType="MSEsystemModel1.Task" Width="1.5" PointX="6.75" PointY="0.75" />
-        <EntityTypeShape EntityType="MSEsystemModel1.TicketsForEmployee" Width="1.5" PointX="2.75" PointY="6.75" />
-        <EntityTypeShape EntityType="MSEsystemModel1.User" Width="1.5" PointX="6.75" PointY="3.75" />
-        <EntityTypeShape EntityType="MSEsystemModel1.EmployeeDomains" Width="1.5" PointX="4.75" PointY="7.75" />
-        <EntityTypeShape EntityType="MSEsystemModel1.MyTickets" Width="1.5" PointX="6.75" PointY="7.75" />
-        <EntityTypeShape EntityType="MSEsystemModel1.TicketsToDo" Width="1.5" PointX="8.75" PointY="0.75" />
-        <EntityTypeShape EntityType="MSEsystemModel1.Ticket" Width="1.5" PointX="9.375" PointY="5.75" />
+        <EntityTypeShape EntityType="MSEsystemModel1.Ticket" Width="1.5" PointX="0.75" PointY="6.75" />
+        <EntityTypeShape EntityType="MSEsystemModel1.User" Width="1.5" PointX="2.75" PointY="6.75" />
+        <EntityTypeShape EntityType="MSEsystemModel1.UserTicket" Width="1.5" PointX="6.75" PointY="3.75" />
+        <EntityTypeShape EntityType="MSEsystemModel1.UserDomain" Width="1.5" PointX="4.75" PointY="6.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

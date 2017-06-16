@@ -46,8 +46,8 @@
             </div>
         </nav>
 
-        <div data-ng-include="'Pages/home.htm'"></div>
-        <div data-ng-include="'Pages/modals.htm'"></div>
+        <div data-ng-include="'Pages/home.htm'" data-ng-if="loaded"></div>
+        <div data-ng-include="'Pages/modals.htm'" data-ng-if="loaded"></div>
     </div>
 
 </asp:Content>

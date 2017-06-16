@@ -10,39 +10,48 @@ public partial class Tasks : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Request["tp"] == null) Response.End();
-        var tp = Request["tp"] as string;
-        var postData = new System.IO.StreamReader(Request.InputStream).ReadToEnd();
-        dynamic obj = postData == "" ? null : JObject.Parse(postData);
-        switch (tp)
+        try
         {
-            case "GetInitData":
-                var pv = Request["pv"] != null;
-                var id = Convert.ToInt32(Request["id"]);
-                var admin = Convert.ToBoolean(Request["isadmin"]);
-                Response.Write(Utils.GetInitData(id,admin));
-                break;
-            case "addNewTicket":
-                Response.Write(Utils.AddNewTicket(obj));
-                break;
-            case "addTask":
-                Response.Write(Utils.AddNewTask(obj));
-                break;
-            case "delTask":
-                Response.Write(Utils.DeleteTask(obj));
-                break;
-            //case "freeSearch":
-            //    Response.Write(Utils.freeSearch(obj));
-            //    break;
-            case "ForgotPassword":
-                Response.Write(Utils.SendForgottenPass(Convert.ToInt32(Request["user"])));
-                break;
-            case "updateTicket":
-                Response.Write(Utils.updateTicket(obj));
-                break;
-                
+            if (Request["tp"] == null) Response.End();
+            var tp = Request["tp"] as string;
+            var postData = new System.IO.StreamReader(Request.InputStream).ReadToEnd();
+            dynamic obj = postData == "" ? null : JObject.Parse(postData);
+            switch (tp)
+            {
+                case "GetInitData":
+                    var pv = Request["pv"] != null;
+                    var id = Convert.ToInt32(Request["id"]);
+                    var admin = Convert.ToBoolean(Request["isadmin"]);
+                    Response.Write(Utils.GetInitData(id, admin));
+                    break;
+                case "addNewTicket":
+                    Response.Write(Utils.AddNewTicket(obj));
+                    break;
+                //case "addTask":
+                //    Response.Write(Utils.AddNewTask(obj));
+                //    break;
+                //case "delTask":
+                //    Response.Write(Utils.DeleteTask(obj));
+                //    break;
+                //case "freeSearch":
+                //    Response.Write(Utils.freeSearch(obj));
+                //    break;
+                case "ForgotPassword":
+                    Response.Write(Utils.SendForgottenPass(Convert.ToInt32(Request["user"])));
+                    break;
+                case "updateTicket":
+                    Response.Write(Utils.updateTicket(obj));
+                    break;
 
-            default: break;
+
+                default: break;
+            }
         }
+        catch (Exception ex)
+        {
+            Response.StatusCode = 500;
+            Response.Write(ex.Message);
+        }
+
     }
 }

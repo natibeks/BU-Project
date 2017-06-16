@@ -12,14 +12,14 @@ function dataService($http) {
             requestUrl = requestUrl + '&' + key + '=' + value;
         });
         return $http.get(requestUrl).then(function (response) {
-            return response.data;
+            return { RequestSucceed: true, Data: response.data };
         }).catch(dataServiceError);
     }
 
     function makePostRequest(url, obj) {
         var requestUrl = url;      
         return $http.post(requestUrl, obj).then(function (response) {
-            return response.data;
+            return { RequestSucceed: true, Data: response.data };
         }).catch(dataServiceError);
     }
 
@@ -35,6 +35,11 @@ function dataService($http) {
     return data;
 
     function dataServiceError(errorResponse) {
-        return errorResponse;
+        if (errorResponse.status == 500) {
+            $("#errorModalText").html("קרתה שגיאה במהלך שמירת הנתונים בשרת. בדוק נתונים או נסה שנית.");
+        }
+        $('#ShowResponseErrorMsg').modal('show');
+        console.log("ERROR TEXT: " + errorResponse.data);
+        return { RequestSucceed: false };
     }
 }

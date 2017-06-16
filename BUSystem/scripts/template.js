@@ -55,7 +55,7 @@ var PageConfig = [
             {
                 Label: "תאריך פתיחה",
                 Width: "150px",
-                Data: "TimeOpen",
+                Data: "TimeClose",
             }, {
                 Label: "שם הפונה",
                 Width: "150px",
@@ -63,7 +63,7 @@ var PageConfig = [
             }, {
                 Label: "קטגוריה",
                 Width: "150px",
-                Data: "CategoryName",
+                Data: "Category",
             }, {
                 Label: "תיאור קצר",
                 Width: "auto",
@@ -72,11 +72,7 @@ var PageConfig = [
                 Label: "סטטוס",
                 Width: "150px",
                 Data: "Status",
-            }, {
-                Label: "שם הפונה",
-                Width: "150px",
-                Data: "EmployeeName",
-            },
+            }
         ]
 
     },

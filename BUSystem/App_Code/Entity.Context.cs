@@ -32,12 +32,10 @@ public partial class MSEsystemEntities1 : DbContext
     public virtual DbSet<Role> Role { get; set; }
     public virtual DbSet<Status> Status { get; set; }
     public virtual DbSet<Task> Task { get; set; }
-    public virtual DbSet<TicketsForEmployee> TicketsForEmployee { get; set; }
-    public virtual DbSet<User> User { get; set; }
-    public virtual DbSet<EmployeeDomains> EmployeeDomains { get; set; }
-    public virtual DbSet<MyTickets> MyTickets { get; set; }
-    public virtual DbSet<TicketsToDo> TicketsToDo { get; set; }
     public virtual DbSet<Ticket> Ticket { get; set; }
+    public virtual DbSet<User> User { get; set; }
+    public virtual DbSet<UserTicket> UserTicket { get; set; }
+    public virtual DbSet<UserDomain> UserDomain { get; set; }
 
     public virtual ObjectResult<spGetData_Result> spGetData(Nullable<int> userId)
     {

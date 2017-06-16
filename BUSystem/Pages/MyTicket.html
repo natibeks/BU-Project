@@ -12,12 +12,11 @@
     <table class="table table-striped table-hover table-responsive" style="margin-top:15px">
         <thead>
             <tr>
-                <th style="width:15px">#</th>
+                <th style="width:15px"><a href="#" data-ng-click="setSort('TicketID')" data-ng-bind="table.Id"></a></th>
                 <th data-ng-repeat="table in pageConfig[0].Table" data-ng-style="{'width':table.Width}">
-                    <a href="#" data-ng-click="setSort(table.Data)" data-ng-bind="table.Label">
-                        <span class="glyphicon" data-ng-class="{true:'glyphicon-triangle-bottom red',false:'glyphicon-triangle-top green'}[sort.Desc]"
-                              style="display: inline-block; margin-left: 3px"></span>
-                    </a>
+                    <a href="#" data-ng-click="setSort(table.Data)" data-ng-bind="table.Label"></a>
+                    <span data-ng-if="sort.Name==table.Data" data-ng-class="{true:'ion-arrow-down-b text-danger',false:'ion-arrow-up-b text-success'}[sort.Desc]"
+                          style="display: inline-block; margin-left: 3px"></span>
                 </th>
             </tr>
         </thead>
@@ -27,7 +26,7 @@
                 <td data-ng-repeat="col in pageConfig[0].Table">
                     <div data-ng-bind="u[col.Data]" data-ng-if="col.Data!='Status' && col.Data!='Description'"></div>
                     <div data-ng-bind="getStatus(u[col.Data])" data-ng-if="col.Data=='Status'"></div>
-                    <div data-ng-bind="getTicketDescription(u[TicketID])" data-ng-if="col.Data=='Description'"></div>
+                    <div data-ng-bind="getTicketDescription(u.TicketID)" data-ng-if="col.Data=='Description'"></div>
                     <!--<div data-ng-bind="getCategory(u[CategoryName])" data-ng-if="col.Data=='Category'"></div>-->
                 </td>
                 <!--<td data-ng-bind="u.CategoryName"></td>

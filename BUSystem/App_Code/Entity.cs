@@ -29,29 +29,13 @@ public partial class Domain
     public string DomainName { get; set; }
 }
 
-public partial class EmployeeDomains
-{
-    public int EmployeeID { get; set; }
-    public int DomainID { get; set; }
-}
-
 public partial class Location
 {
     public int Id { get; set; }
     public string Building { get; set; }
-    public string Room { get; set; }
-}
-
-public partial class MyTickets
-{
-    public string UserID { get; set; }
-    public int Id { get; set; }
-    public string EmploeeID { get; set; }
-    public string CategoryName { get; set; }
-    public string Building { get; set; }
-    public string Room { get; set; }
-    public Nullable<System.DateTime> TimeOpen { get; set; }
-    public string Status { get; set; }
+    public Nullable<int> Room { get; set; }
+    public string Description { get; set; }
+    public Nullable<bool> IsArchive { get; set; }
 }
 
 public partial class Role
@@ -83,34 +67,8 @@ public partial class Ticket
     public bool Priority { get; set; }
     public string Description { get; set; }
     public int Status { get; set; }
-    public Nullable<int> Image { get; set; }
-}
-
-public partial class TicketsForEmployee
-{
-    public string EmploeeID { get; set; }
-    public string UserID { get; set; }
-    public int TicketID { get; set; }
     public Nullable<System.DateTime> TimeOpen { get; set; }
     public Nullable<System.DateTime> TimeClose { get; set; }
-    public string AnotherAsignee { get; set; }
-    public string Domain { get; set; }
-}
-
-public partial class TicketsToDo
-{
-    public int TicketID { get; set; }
-    public string CategoryName { get; set; }
-    public string Building { get; set; }
-    public string Room { get; set; }
-    public Nullable<System.DateTime> TimeOpen { get; set; }
-    public string Status { get; set; }
-    public string Expr1 { get; set; }
-    public string Domain { get; set; }
-    public string Description { get; set; }
-    public Nullable<System.DateTime> TimeClose { get; set; }
-    public string UserID { get; set; }
-    public string Id { get; set; }
 }
 
 public partial class User
@@ -124,6 +82,19 @@ public partial class User
     public Nullable<int> Role { get; set; }
     public Nullable<bool> isArchive { get; set; }
     public Nullable<int> Department { get; set; }
+}
+
+public partial class UserDomain
+{
+    public int UserID { get; set; }
+    public int DomainID { get; set; }
+}
+
+public partial class UserTicket
+{
+    public int UserID { get; set; }
+    public int TicketID { get; set; }
+    public Nullable<bool> MainUser { get; set; }
 }
 
 public partial class spGetData_Result
