@@ -26,11 +26,6 @@
             //$scope.updateEmployeeTable();
         });
     })
-    //$scope.updateEmployeeTable = function () {
-    //    $.each($scope.data.Employee, function (i, o) {
-    //        $scope.data.Employee[i]["Name"] = Enumerable.From($scope.data.User).Where(function (j) { return j.Id == o.idEmployee }).Select('$.DisplayName').FirstOrDefault();
-    //    })
-    //}
 
     $scope.initUserValues = function () {
         $scope.currentUser = Enumerable.From($scope.data.User).Where(function (j) { return j.Id == $scope.UserId }).FirstOrDefault();
@@ -52,11 +47,6 @@
 
     $scope.getDomainByCategory = function (cid) {
         return Enumerable.From($scope.data.Category).Where(function (j) { return j.Id == cid }).Select(function (y) { return y.DomainID }).FirstOrDefault();
-    }
-
-    $scope.getTicketTasks = function (tid) {
-        var a = Enumerable.From($scope.data.Task).Where(function (j) { return j.TicketID == $scope.selectedTicket.TicketID }).ToArray();
-        return a;
     }
 
     $scope.getUserDisplayName = function (uid) {
@@ -128,69 +118,6 @@
         return item.DomainID == $scope.selectedTicket.DomainID;
     };
 
-    //Functions
-
-    $scope.addNewTicketToMyTicket = function () {
-        var lastTicket = $scope.data.Ticket[$scope.data.Ticket.length-1];
-        var temp = {};
-        temp['DomainID'] = Enumerable.From($scope.data.Category).Where(function (x) { return lastTicket.CategoryID == x.Id }).Select(function(y) { return y.DomainID }).FirstOrDefault();
-        temp['TicketID'] = lastTicket.Id;
-        temp['UserID'] = $scope.currentUser.Id;
-        temp['MainUser'] = Enumerable.From($scope.data.UserTicket).Where(function (x) { return x.UserID == $scope.currentUser.Id && x.TicketID == lastTicket.Id }).Select(function(y) { return y.MainUser }).FirstOrDefault();
-        temp['TimeClose'] = lastTicket.TimeClose;
-        temp['TimeOpen'] = lastTicket.TimeOpen;
-        temp['Status'] = lastTicket.Status;
-        temp['Priority'] = lastTicket.Priority;
-        temp['LocationID'] = lastTicket.LocationID;
-        temp['Description'] = lastTicket.Description;
-        temp['CategoryID'] = lastTicket.CategoryID;
-        temp['AnotherAsignee'] = Enumerable.From($scope.data.UserTicket).Where(function (x) { return x.MainUser == false && x.TicketID == lastTicket.Id }).Select(function (y) { return y.UserID }).FirstOrDefault();
-        $scope.data.MyTickets.push(temp);
-    }
-
-    $scope.updateExistingTicketOfMyTicket = function (tid) {
-        var lastTicket = Enumerable.From($scope.data.Ticket).Where(function (x) { return tid == x.Id }).FirstOrDefault();
-        angular.forEach($scope.data.MyTicket, function (i, o) {
-            if (o.TicketID == tid) {
-                $scope.data.MyTicket[i]['DomainID'] = Enumerable.From($scope.data.Category).Where(function (x) { return lastTicket.CategoryID == x.Id }).Select(function (y) { return y.DomainID }).FirstOrDefault();
-                $scope.data.MyTicket[i]['TicketID'] = lastTicket.Id;
-                $scope.data.MyTicket[i]['UserID'] = $scope.currentUser.Id;
-                $scope.data.MyTicket[i]['MainUser'] = Enumerable.From($scope.data.UserTicket).Where(function (x) { return x.UserID == $scope.currentUser.Id && x.TicketID == lastTicket.Id }).Select(function (y) { return y.MainUser }).FirstOrDefault();
-                $scope.data.MyTicket[i]['TimeClose'] = lastTicket.TimeClose;
-                $scope.data.MyTicket[i]['TimeOpen'] = lastTicket.TimeOpen;
-                $scope.data.MyTicket[i]['Status'] = lastTicket.Status;
-                $scope.data.MyTicket[i]['Priority'] = lastTicket.Priority;
-                $scope.data.MyTicket[i]['LocationID'] = lastTicket.LocationID;
-                $scope.data.MyTicket[i]['Description'] = lastTicket.Description;
-                $scope.data.MyTicket[i]['CategoryID'] = lastTicket.CategoryID;
-                $scope.data.MyTicket[i]['AnotherAsignee'] = Enumerable.From($scope.data.UserTicket).Where(function (x) { return x.MainUser == false && x.TicketID == lastTicket.Id }).Select(function (y) { return y.UserID }).FirstOrDefault();
-
-            }
-
-        })
-    }
-
-    $scope.createTicketsToDo = function () {
-        var s = Enumerable.From($scope.data.Ticket).Where(function (x) {
-            var TicketDomain = $scope.getDomainByCategory(x.CategoryID);
-            return $scope.currentUser.Domains.indexOf(TicketDomain)>-1;
-        }).ToArray();
-        var ttd=[];
-        angular.forEach(s,function(o,i){
-            var temp={};
-            temp["TicketID"] = o.Id;
-            temp["LocationID"] = o.LocationID;
-            temp['Description'] = o.Description;
-            temp['CategoryID'] = o.CategoryID;
-            temp['TimeClose'] = o.TimeClose;
-            temp['TimeOpen'] = o.TimeOpen;
-            temp['Status'] = o.Status;
-            temp['UserID'] = Enumerable.From($scope.data.UserTicket).Where(function (x) { return x.MainUser == true && x.TicketID == o.Id }).Select(function (y) { return y.UserID }).FirstOrDefault();
-            temp['AnotherAsignee'] = Enumerable.From($scope.data.UserTicket).Where(function (x) { return x.MainUser == false && x.TicketID == x.TicketID.Id }).Select(function (y) { return y.UserID }).FirstOrDefault();
-            ttd.push(temp);
-        });
-        $scope.data.TicketsToDo = angular.copy(ttd);
-     }
 
     //Paging
 
@@ -258,7 +185,6 @@
     $scope.pageCount = function () {
         return Math.ceil($scope.dataLength / $scope.pageSize) - 1;
     };
-
 
     $scope.safeApply = function (fn) {
         var phase = this.$root.$$phase;

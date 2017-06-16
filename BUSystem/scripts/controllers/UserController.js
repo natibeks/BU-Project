@@ -20,10 +20,10 @@
 
     $scope.updateUser = function () {
         var isNew = $scope.selectedUser.Id == 0;
-        url = "Tasks.aspx?tp=updUser";
-        $http.post(url, $scope.selectedUser, null).then(
-            function (d) {
-                var res = d.data;
+        DataService.makePostRequest("Tasks.aspx?tp=updUser", $scope.selectedUser).then(
+            function (response) {
+                if (!response.RequestSucceed) return;
+                var res = response.Data;
                 if (isNew) {
                     $scope.selectedUser.Id = res.Id;
                     $scope.data.User.push($scope.selectedUser);
@@ -34,15 +34,9 @@
                             $scope.data.User[i] = angular.copy($scope.selectedUser);
                     })
                 }
-                
-                $scope.error = false;
-            },
-            function (e) {
-                console.log(e);
-                $scope.error = true;
-            }
-            )
 
+                $scope.error = false;
+            })
     };
 
     $scope.deleteUser = function () {
