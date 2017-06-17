@@ -56,7 +56,7 @@ public partial class Task
     public int TicketID { get; set; }
     public string TaskDescription { get; set; }
     public Nullable<bool> Done { get; set; }
-    public Nullable<bool> isArchive { get; set; }
+    public Nullable<bool> IsArchive { get; set; }
 }
 
 public partial class Ticket
@@ -69,6 +69,7 @@ public partial class Ticket
     public int Status { get; set; }
     public Nullable<System.DateTime> TimeOpen { get; set; }
     public Nullable<System.DateTime> TimeClose { get; set; }
+    public Nullable<bool> IsArchive { get; set; }
 }
 
 public partial class User
@@ -80,7 +81,7 @@ public partial class User
     public string UserPassword { get; set; }
     public Nullable<bool> LoginStatus { get; set; }
     public Nullable<int> Role { get; set; }
-    public Nullable<bool> isArchive { get; set; }
+    public Nullable<bool> IsArchive { get; set; }
     public Nullable<int> Department { get; set; }
 }
 
@@ -88,6 +89,7 @@ public partial class UserDomain
 {
     public int UserID { get; set; }
     public int DomainID { get; set; }
+    public Nullable<bool> IsArchive { get; set; }
 }
 
 public partial class UserTicket
@@ -95,6 +97,7 @@ public partial class UserTicket
     public int UserID { get; set; }
     public int TicketID { get; set; }
     public Nullable<bool> MainUser { get; set; }
+    public Nullable<bool> IsArchive { get; set; }
 }
 
 public partial class spGetData_Result

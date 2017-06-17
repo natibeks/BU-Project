@@ -28,7 +28,7 @@ public partial class Login : System.Web.UI.Page
                 Session["uid"] = user.Id;
                 Session["level"] = user.Role; // 1 - admin , 2 - manager , 3 - employee 
 
-                Response.Redirect("Default.aspx");
+                Response.Redirect("Default.aspx?log=in");
             }
         }
     }

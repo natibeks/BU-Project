@@ -3,6 +3,7 @@
 function dataService($http) {
     var data = {
         getAll: getAll,
+        setLogged: setLogged,
         makeGetRequest: makeGetRequest,
         makePostRequest: makePostRequest
     };
@@ -26,6 +27,11 @@ function dataService($http) {
     function getAll(id,isadmin) {
         var url = "Tasks.aspx?tp=GetInitData";
         return makeGetRequest(url, { id: id, isadmin: isadmin });
+    }
+
+    function setLogged(uid) {
+        var url = "Tasks.aspx?tp=setUserAsLogged";
+        return makeGetRequest(url, { uid: uid });
     }
 
     function prepareDate(data) {

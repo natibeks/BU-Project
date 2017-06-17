@@ -45,14 +45,14 @@
             })
     };
 
-    $scope.delUser = function () {
+    $scope.deleteUser = function () {
         DataService.makeGetRequest("Tasks.aspx?tp=delUser", {user: $scope.selectedUser.Id}).then(
             function (response) {
                 if (!response.RequestSucceed) return;
                 var res = parseInt(response.Data);
                 angular.forEach($scope.data.User, function (o, i) {
-                    if (o.Id == res.Id)
-                        $scope.data.User[i] = $scope.data.User[i].IsArchive = true;
+                    if (o.Id == $scope.selectedUser.Id)
+                        $scope.data.User[i].IsArchive = true;
                 })
                 $scope.setPage('ManageUsers');
                 $("#editUserModal").modal('hide');

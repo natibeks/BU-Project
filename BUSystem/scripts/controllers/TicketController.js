@@ -161,13 +161,10 @@
 
         if (u.Status == 4) {
             if ($scope.selectedTicket.oldStatus == 3 || $scope.selectedTicket.oldStatus == 2) {
-                if (!$scope.AllTasksDone($scope.data.Task)) {
+                if (!$scope.isAllTasksDone()) {
                     $scope.msg = "  לא ניתן לסגור פניה";
+                    $("#ShowErrorMsg").modal('show');
                     $scope.error = true;
-                    $timeout(function () {
-                        $scope.msg = "";
-                        $('#confirmDeleteModal').modal('hide');
-                    }, 2500);
 
                 }
                 //to display confirmation
@@ -205,6 +202,26 @@
             });
     }
 
+    $scope.deleteTicket = function () {
+        url = "Tasks.aspx?tp=delTicket";
+        DataService.makeGetRequest(url, { task: $scope.selectedTicket }).then(
+            function (response) {
+                if (!response.RequestSucceed) return; {//is tasks were deleted from DB
+                    $scope.error = false;
+                    angular.forEach($scope.data.Ticket, function (o, i) {
+                        if (o.Id == $scope.selectedTicket.Id)
+                            $scope.data.Ticket[i].IsArchive = true;
+                    })
+                    angular.forEach($scope.data.Task, function (o, i) {
+                        if (o.TicketID == $scope.selectedTicket.Id)
+                            $scope.data.Task[i].IsArchive = true;
+                    })
+                    $scope.setPage($scope.currentPage);
+                    $("#editTicketModal").modal('hide');
+                }
+            })
+    };
+
     $scope.confirmDelete = function (x) {
         $scope.selectedTask.idTask = angular.copy(x.idTask);
         $scope.selectedTask.idTicket = angular.copy(x.idTicket);
@@ -217,6 +234,11 @@
     $scope.setTaskEditMode = function (o) {
         $scope.taskEditMode = true;
         $scope.initSelectedTask(o);
+    }
+
+    $scope.unsetTaskEditMode = function () {
+        $scope.taskEditMode = !$scope.taskEditMode;
+
     }
 
     $scope.initSelectedTask = function (o) {
@@ -266,16 +288,17 @@
 
     $scope.deleteTask = function () {
         url = "Tasks.aspx?tp=delTask";
-        DataService.makePostRequest(url, $scope.selectedTicket).then(
+        DataService.makeGetRequest(url, { task: $scope.selectedTask.Id }).then(
             function (response) {
                 if (!response.RequestSucceed) return; {//is tasks were deleted from DB
                     $scope.error = false;
-                    $scope.msg = 'Deleting Succeeded'
-
-                    $timeout(function () {
-                        $scope.msg = "";
-                        $('#confirmDeleteModal').modal('hide');
-                    }, 2500);
+                    $scope.msg = 'המשימה נמחקה';
+                    angular.forEach($scope.data.Task, function (o, i) {
+                        if (o.Id == $scope.selectedTask.Id)
+                            $scope.data.Task[i].IsArchive = true;
+                    })
+                    $scope.taskEditMode = false;
+                    $scope.updateTaskCounter();
                 }
             })
     };
@@ -293,7 +316,7 @@
         return temp;
     }
 
-    $scope.AllTasksDone = function () {
+    $scope.isAllTasksDone = function () {
         var cnt = Enumerable.From($scope.data.Task).Where(function (x) { return x.TicketID == $scope.selectedTicket.Id && x.Done == false; }).Count();
         return cnt > 0;
     }

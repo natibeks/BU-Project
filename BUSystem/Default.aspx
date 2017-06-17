@@ -14,7 +14,7 @@
     </script>
 </asp:Content>
 <asp:Content ID="System" ContentPlaceHolderID="SystemPlaceHolder1" runat="Server">
-    <div >
+    <div>
         <nav class="navbar navbar-inverse">
             <div class="container-fluid">
                 <div class="navbar-header">
@@ -29,7 +29,7 @@
 
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
                     <ul class="nav navbar-nav">
-
+                        <li><a href="#" data-ng-click="setPage('MyTicket')">ניהול פניות</a></li>
                         <li><a href="#" data-ng-click="setPage('Reports')" data-ng-show="currentUser.Permission<2">דוחות</a></li>
                         <li><a href="#" data-ng-click="setPage('ManageUsers')" data-ng-if="currentUser.Permission<2">ניהול משתמשים</a></li>
                     </ul>
@@ -45,9 +45,13 @@
 
             </div>
         </nav>
-
-        <div data-ng-include="'Pages/home.htm'"></div>
-        <div data-ng-include="'Pages/modals.htm'"></div>
+        <div data-ng-show="loaded!=true">
+            <div style="width: 100px; margin: 200px auto; text-align: center">
+                <div class="loader"></div>
+            </div>
+        </div>
+        <div data-ng-show="loaded" data-ng-include="'Pages/home.htm'"></div>
+        <div data-ng-show="loaded" data-ng-include="'Pages/modals.htm'"></div>
     </div>
 
 </asp:Content>

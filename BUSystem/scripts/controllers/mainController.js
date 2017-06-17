@@ -21,10 +21,9 @@
             if (!response.RequestSucceed) return;
             $scope.data = angular.copy(response.Data);
             console.log($scope.data);
-            //$scope.prepareData();
             $scope.initUserValues();
+            $scope.setPage('MyTicket');
             $scope.loaded = true;
-            //$scope.updateEmployeeTable();
         });
     })
 
@@ -32,7 +31,6 @@
         $scope.currentUser = Enumerable.From($scope.data.User).Where(function (j) { return j.Id == $scope.UserId }).FirstOrDefault();
         $scope.currentUser["Permission"] = $scope.currentUser.Role;
         $scope.currentUser.Domains = Enumerable.From($scope.data.UserDomain).Where(function (j) { return j.UserID == $scope.currentUser.Id }).Select(function (i) { return i.DomainID }).ToArray();
-        //$scope.currentUser.DomainName = Enumerable.From($scope.data.Domain).Where(function (j) { return j.Id == $scope.currentUser.DomainID }).Select(function (i) { return i.DomainName }).FirstOrDefault();
         $scope.createTicketsToDo();
     }
 
@@ -50,13 +48,13 @@
     $scope.delConfirmed = function () {
         switch ($scope.delType) {
             case 1:
-                $scope.delTicket();
+                $scope.deleteTicket();
                 break;
             case 2:
-                $scope.delTask();
+                $scope.deleteTask();
                 break;
             case 3:
-                $scope.delUser();
+                $scope.deleteUser();
                 break;
         }
     }

@@ -21,7 +21,6 @@ public class Utils
 
     public static SqlConnection conn;
 
-
     public static string GetInitData(int uid, bool admin)
     {
         DataSet data = new DataSet();
@@ -55,8 +54,27 @@ public class Utils
 
             return JsonConvert.SerializeObject(data, new CustomDateTimeConverter());
         }
-
     }
+
+    public static bool SetUserAsLogged(int uid)
+    {
+        try
+        {
+            using (var db = new MSEsystemEntities1())
+            {
+                var b = db.User.Where(i => i.Id == uid).FirstOrDefault();
+                b.LoginStatus = true;
+                db.SaveChanges();
+
+                return true;
+            }
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
+    }
+
     public static string AddNewTicket(dynamic obj)
     {
         try
@@ -100,8 +118,7 @@ public class Utils
             throw e;
         }
     }
-
-    public static string updateTicket(dynamic obj)
+    public static string UpdateTicket(dynamic obj)
     {
         try
         {
@@ -124,12 +141,12 @@ public class Utils
                     b.TimeClose = DateTime.Now;
                 b.Status = Convert.ToInt32(obj["Status"]);
 
-                foreach (var t in obj["tasks"])
-                {
-                    int tid = Convert.ToInt32(t["TaskID"]);
-                    var k = db.Task.Where(i => i.Id == tid).FirstOrDefault();
-                    k.Done = Convert.ToBoolean(t["Done"]);
-                }
+                //foreach (var t in obj["tasks"])
+                //{
+                //    int tid = Convert.ToInt32(t["TaskID"]);
+                //    var k = db.Task.Where(i => i.Id == tid).FirstOrDefault();
+                //    k.Done = Convert.ToBoolean(t["Done"]);
+                //}
 
                 db.SaveChanges();
 
@@ -163,16 +180,34 @@ public class Utils
             throw e;
         }
     }
+    public static string DeleteTicket(int id)
+    {
+        try
+        {
+            using (var db = new MSEsystemEntities1())
+            {
+                var b = db.Ticket.Where(i => i.Id == id).FirstOrDefault();
+                b.IsArchive = true;
+                db.SaveChanges();
 
+                return "ok";
+            }
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
+    }
     public static string UpdateTask(dynamic obj)
     {
         try
         {
             using (var db = new MSEsystemEntities1())
             {
-                var b = new Task();
+                int id = Convert.ToInt32(obj["Id"]);
+                var b = id==0 ? new Task(): db.Task.Where(i => i.Id == id).FirstOrDefault();
                 var isNew = false;
-                if (Convert.ToInt32(obj["Id"]) == 0)
+                if (id == 0)
                     isNew = true;
                 b.TicketID = Convert.ToInt32(obj["TicketID"]);
                 b.TaskDescription = Convert.ToString(obj["TaskDescription"]);
@@ -189,7 +224,24 @@ public class Utils
             throw e;
         }
     }
+    public static string DeleteTask(int id)
+    {
+        try
+        {
+            using (var db = new MSEsystemEntities1())
+            {
+                var b = db.Task.Where(i => i.Id == id).FirstOrDefault();
+                b.IsArchive = true;
+                db.SaveChanges();
 
+                return "ok";
+            }
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
+    }
     public static string UpdateUser(dynamic obj)
     {
         try
@@ -220,6 +272,23 @@ public class Utils
             throw e;
         }
     }
+    public static string DeleteUser(int id)
+    {
+        try
+        {
+            using (var db = new MSEsystemEntities1())
+            {
+                var b = db.User.Where(i => i.Id == id).FirstOrDefault();
+                b.IsArchive = true;
+                db.SaveChanges();
+                return "ok";
+            }
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
+    }
     public static string CheckTask(int tid)
     {
         try
@@ -237,7 +306,6 @@ public class Utils
             throw e;
         }
     }
-
     //public static string DeleteTask(dynamic obj)
     //{
     //    try
@@ -313,7 +381,6 @@ public class Utils
             throw e;
         }
     }
-
     public static bool SendEmail(dynamic obj)
 {
     try

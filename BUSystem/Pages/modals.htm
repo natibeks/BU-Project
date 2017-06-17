@@ -98,9 +98,9 @@
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="form-group">
-                                        <button type="button" class="btn btn-danger pull-right" data-ng-click="showDelConfirmMsg(2)">מחק</button>
-                                        <button type="button" class="btn btn-default pull-left" data-ng-click="taskEditMode=false">בטל</button>
-                                        <button type="button" class="btn btn-primary pull-left" data-ng-disabled="selectedTask.TaskDescription.length == 0" data-ng-click="updateTask()">שמור</button>
+                                        <button type="button" class="btn btn-danger btn-xs pull-right" data-ng-click="showDelConfirmMsg(2)">מחק</button>
+                                        <button type="button" class="btn btn-success btn-xs pull-left" data-ng-disabled="selectedTask.TaskDescription.length == 0" data-ng-click="updateTask()" style="margin-right:5px">שמור</button>
+                                        <button type="button" class="btn btn-default btn-xs pull-left" data-ng-click="unsetTaskEditMode()">בטל</button>
                                     </div>
                                 </div>
                             </div>
@@ -134,7 +134,7 @@
     </div>
 </div>
 
-<div id="confirmDeleteModal" class="modal fade small-sm" role="dialog">
+<div id="confirmDeleteModal" class="modal fade small-sm" role="dialog" style="z-index:1100">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -151,7 +151,7 @@
     </div>
 </div>
 
-<div id="ShowErrorMsg" class="modal fade small-sm" role="dialog">
+<div id="ShowErrorMsg" class="modal fade small-sm" role="dialog" style="z-index:1200">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -168,7 +168,7 @@
     </div>
 </div>
 
-<div id="ShowResponseErrorMsg" class="modal fade small-sm" role="dialog">
+<div id="ShowResponseErrorMsg" class="modal fade small-sm" role="dialog" style="z-index:1200">
     <div class="modal-dialog">
         <div class="modal-content panel-danger">
             <div class="modal-header panel-heading">
@@ -265,10 +265,9 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-ng-click="showDelConfirmMsg(3)">מחק</button>
-
-                    <button type="button" class="btn btn-success" data-ng-click="updateUser()">שמור</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">ביטול</button>
+                <button type="button" class="btn btn-danger pull-right" data-ng-click="showDelConfirmMsg(3)">מחק</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">ביטול</button>             
+                <button type="button" class="btn btn-success" data-ng-click="updateUser()">שמור</button>
             </div>
         </div>
 

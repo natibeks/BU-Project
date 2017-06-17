@@ -59,7 +59,7 @@
           <Property Name="TicketID" Type="int" Nullable="false" />
           <Property Name="TaskDescription" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Done" Type="bit" />
-          <Property Name="isArchive" Type="bit" />
+          <Property Name="IsArchive" Type="bit" />
         </EntityType>
         <EntityType Name="Ticket">
           <Key>
@@ -73,6 +73,7 @@
           <Property Name="Status" Type="int" Nullable="false" />
           <Property Name="TimeOpen" Type="datetime" />
           <Property Name="TimeClose" Type="datetime" />
+          <Property Name="IsArchive" Type="bit" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -85,7 +86,7 @@
           <Property Name="UserPassword" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="LoginStatus" Type="bit" />
           <Property Name="Role" Type="int" />
-          <Property Name="isArchive" Type="bit" />
+          <Property Name="IsArchive" Type="bit" />
           <Property Name="Department" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
@@ -97,6 +98,7 @@ warning 6002: The table/view 'MSE_System.dbo.UserDomain' does not have a primary
           </Key>
           <Property Name="UserID" Type="int" Nullable="false" />
           <Property Name="DomainID" Type="int" Nullable="false" />
+          <Property Name="IsArchive" Type="bit" />
         </EntityType>
         <EntityType Name="UserTicket">
           <Key>
@@ -106,6 +108,7 @@ warning 6002: The table/view 'MSE_System.dbo.UserDomain' does not have a primary
           <Property Name="UserID" Type="int" Nullable="false" />
           <Property Name="TicketID" Type="int" Nullable="false" />
           <Property Name="MainUser" Type="bit" />
+          <Property Name="IsArchive" Type="bit" />
         </EntityType>
         <Function Name="spGetData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="userId" Type="int" Mode="In" />
@@ -124,7 +127,8 @@ warning 6002: The table/view 'MSE_System.dbo.UserDomain' does not have a primary
           <EntitySet Name="UserDomain" EntityType="Self.UserDomain" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [UserDomain].[UserID] AS [UserID], 
-    [UserDomain].[DomainID] AS [DomainID]
+    [UserDomain].[DomainID] AS [DomainID], 
+    [UserDomain].[IsArchive] AS [IsArchive]
     FROM [dbo].[UserDomain] AS [UserDomain]</DefiningQuery>
           </EntitySet>
         </EntityContainer>
@@ -212,7 +216,7 @@ warning 6002: The table/view 'MSE_System.dbo.UserDomain' does not have a primary
           <Property Name="TicketID" Type="Int32" Nullable="false" />
           <Property Name="TaskDescription" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Done" Type="Boolean" />
-          <Property Name="isArchive" Type="Boolean" />
+          <Property Name="IsArchive" Type="Boolean" />
         </EntityType>
         <EntityType Name="Ticket">
           <Key>
@@ -226,6 +230,7 @@ warning 6002: The table/view 'MSE_System.dbo.UserDomain' does not have a primary
           <Property Name="Status" Type="Int32" Nullable="false" />
           <Property Name="TimeOpen" Type="DateTime" Precision="3" />
           <Property Name="TimeClose" Type="DateTime" Precision="3" />
+          <Property Name="IsArchive" Type="Boolean" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -238,7 +243,7 @@ warning 6002: The table/view 'MSE_System.dbo.UserDomain' does not have a primary
           <Property Name="UserPassword" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="LoginStatus" Type="Boolean" />
           <Property Name="Role" Type="Int32" />
-          <Property Name="isArchive" Type="Boolean" />
+          <Property Name="IsArchive" Type="Boolean" />
           <Property Name="Department" Type="Int32" />
         </EntityType>
         <EntityType Name="UserTicket">
@@ -249,6 +254,7 @@ warning 6002: The table/view 'MSE_System.dbo.UserDomain' does not have a primary
           <Property Name="UserID" Type="Int32" Nullable="false" />
           <Property Name="TicketID" Type="Int32" Nullable="false" />
           <Property Name="MainUser" Type="Boolean" />
+          <Property Name="IsArchive" Type="Boolean" />
         </EntityType>
         <EntityType Name="UserDomain">
           <Key>
@@ -257,6 +263,7 @@ warning 6002: The table/view 'MSE_System.dbo.UserDomain' does not have a primary
           </Key>
           <Property Name="UserID" Type="Int32" Nullable="false" />
           <Property Name="DomainID" Type="Int32" Nullable="false" />
+          <Property Name="IsArchive" Type="Boolean" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -333,7 +340,7 @@ warning 6002: The table/view 'MSE_System.dbo.UserDomain' does not have a primary
           <EntitySetMapping Name="Task">
             <EntityTypeMapping TypeName="MSEsystemModel1.Task">
               <MappingFragment StoreEntitySet="Task">
-                <ScalarProperty Name="isArchive" ColumnName="isArchive" />
+                <ScalarProperty Name="IsArchive" ColumnName="IsArchive" />
                 <ScalarProperty Name="Done" ColumnName="Done" />
                 <ScalarProperty Name="TaskDescription" ColumnName="TaskDescription" />
                 <ScalarProperty Name="TicketID" ColumnName="TicketID" />
@@ -344,6 +351,7 @@ warning 6002: The table/view 'MSE_System.dbo.UserDomain' does not have a primary
           <EntitySetMapping Name="Ticket">
             <EntityTypeMapping TypeName="MSEsystemModel1.Ticket">
               <MappingFragment StoreEntitySet="Ticket">
+                <ScalarProperty Name="IsArchive" ColumnName="IsArchive" />
                 <ScalarProperty Name="TimeClose" ColumnName="TimeClose" />
                 <ScalarProperty Name="TimeOpen" ColumnName="TimeOpen" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
@@ -359,7 +367,7 @@ warning 6002: The table/view 'MSE_System.dbo.UserDomain' does not have a primary
             <EntityTypeMapping TypeName="MSEsystemModel1.User">
               <MappingFragment StoreEntitySet="User">
                 <ScalarProperty Name="Department" ColumnName="Department" />
-                <ScalarProperty Name="isArchive" ColumnName="isArchive" />
+                <ScalarProperty Name="IsArchive" ColumnName="IsArchive" />
                 <ScalarProperty Name="Role" ColumnName="Role" />
                 <ScalarProperty Name="LoginStatus" ColumnName="LoginStatus" />
                 <ScalarProperty Name="UserPassword" ColumnName="UserPassword" />
@@ -373,6 +381,7 @@ warning 6002: The table/view 'MSE_System.dbo.UserDomain' does not have a primary
           <EntitySetMapping Name="UserTicket">
             <EntityTypeMapping TypeName="MSEsystemModel1.UserTicket">
               <MappingFragment StoreEntitySet="UserTicket">
+                <ScalarProperty Name="IsArchive" ColumnName="IsArchive" />
                 <ScalarProperty Name="MainUser" ColumnName="MainUser" />
                 <ScalarProperty Name="TicketID" ColumnName="TicketID" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
@@ -382,6 +391,7 @@ warning 6002: The table/view 'MSE_System.dbo.UserDomain' does not have a primary
           <EntitySetMapping Name="UserDomain">
             <EntityTypeMapping TypeName="MSEsystemModel1.UserDomain">
               <MappingFragment StoreEntitySet="UserDomain">
+                <ScalarProperty Name="IsArchive" ColumnName="IsArchive" />
                 <ScalarProperty Name="DomainID" ColumnName="DomainID" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
               </MappingFragment>
