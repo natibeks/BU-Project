@@ -1,8 +1,8 @@
-﻿app.expandUserController = function ($scope, $http) {
+﻿app.expandUserController = function ($scope, DataService) {
     $scope.userTemplate = {
         Id: 0,
         DisplayName: "",
-        EmailAddress: "a@b.com",
+        EmailAddress: "",
         TelephoneNumber: "",
         Department: "",
         Role: "",
@@ -15,32 +15,55 @@
             $scope.selectedUser = angular.copy($scope.userTemplate);
         else
             $scope.selectedUser = angular.copy(user);
-        $("#editUserModal").show();
+        $("#editUserModal").modal('show');
     }
 
     $scope.updateUser = function () {
+        if (!$scope.validUserForm()) {
+            $scope.msg = "אנא מלא כנדרש את כל השדות";
+            $("#ShowErrorMsg").modal('show');
+            return;
+        }
         var isNew = $scope.selectedUser.Id == 0;
         DataService.makePostRequest("Tasks.aspx?tp=updUser", $scope.selectedUser).then(
             function (response) {
                 if (!response.RequestSucceed) return;
-                var res = response.Data;
+                var res = parseInt(response.Data);
                 if (isNew) {
                     $scope.selectedUser.Id = res.Id;
                     $scope.data.User.push($scope.selectedUser);
                 }
                 else {
-                    angular.forEach($scope.data.User, function (i, o) {
+                    angular.forEach($scope.data.User, function (o,i) {
                         if (o.Id == res.Id)
                             $scope.data.User[i] = angular.copy($scope.selectedUser);
                     })
                 }
-
+                $scope.setPage('ManageUsers');
+                $("#editUserModal").modal('hide');
                 $scope.error = false;
             })
     };
 
     $scope.deleteUser = function () {
 
+    }
+
+    $scope.validUserForm = function () {
+        var valid= true;
+        if ($scope.selectedUser.DisplayName.length == 0)
+            valid = false;
+        if ($scope.selectedUser.EmailAddress.length == 0)
+            valid = false;
+        if ($scope.selectedUser.TelephoneNumber.length == 0)
+            valid = false;
+        if ($scope.selectedUser.Department == '')
+            valid = false;
+        if ($scope.selectedUser.Role == '')
+            valid = false;
+        if ($scope.selectedUser.UserPassword.length == 0)
+            valid = false;
+        return valid;
     }
 
 }

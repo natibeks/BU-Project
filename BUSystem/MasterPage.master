@@ -40,6 +40,8 @@
     <script src="scripts/pack/ng-file-upload.min.js"></script>
     <script src="scripts/pack/select2.js"></script>
     <script src="scripts/pack/select2.full.js"></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+
     <script src="scripts/template.js"></script>
     <script src="scripts/app.js"></script>
     <script src="scripts/services.js"></script>
@@ -48,7 +50,7 @@
     <script src="scripts/controllers/TicketController.js"></script>
     <script src="scripts/controllers/SearchController.js"></script>
     <script src="scripts/controllers/ReportsController.js"></script>
-
+    <script src="scripts/controllers/UserController.js"></script>
 
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>

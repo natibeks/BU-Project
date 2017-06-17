@@ -25,7 +25,7 @@ function dataService($http) {
 
     function getAll(id,isadmin) {
         var url = "Tasks.aspx?tp=GetInitData";
-        return makeGetRequest(url, [{ id: id, isadmin: isadmin }]);
+        return makeGetRequest(url, { id: id, isadmin: isadmin });
     }
 
     function prepareDate(data) {

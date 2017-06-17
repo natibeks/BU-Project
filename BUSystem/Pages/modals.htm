@@ -39,12 +39,6 @@
                             <input class="form-control" ng-model="selectedTicket.Description" ng-disabled="true">
                         </div>
                     </div>
-                    <!--<div class="col-lg-6">
-                        <div class="form-group">
-                            <label class="control-label">תמונה:</label>
-                            <input class="form-control" ng-disabled="true">
-                        </div>
-                    </div>-->
 
                     <div class="col-lg-6">
                         <label class="control-label">סטטוס:</label>
@@ -66,59 +60,68 @@
 
                         </div>
                     </div>
-                    <!--<div>
-                        <div class="form-group col-lg-6" data-ng-show="selectedTicket.status=='משויכת'">
-                            <label for="select" class="col-lg-4 control-label">עובד נוסף:</label>
-                            <div class="col-lg-8">
-                                <select class="form-control" data-ng-model="selectedTicket.AnotherAsignee" data-ng-options="o.idEmployee as o.Name for o in data.Employee  | orderBy: 'Name' | filter: asigneeFilter">
-                                    <option value="">בחר</option>
-                                </select>
-                            </div>
-                        </div>
-
-                    </div>-->
-                    <!--<div class="col-lg-12">
-                        <label class="control-label">משימות לפניה</label>
-                        <table class="table table-striped table-hover " data-ng-show="tf.length>0 && !displayNewTask">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th style="width: 80%">תיאור</th>
-                                    <th>בוצע</th>
-                                    <th></th>
-                                </tr>
-
-                            </thead>
-                            <tbody>
-                                <tr data-ng-repeat="t in tf=(data.Task | filter: filterTasks)">
-                                    <td>{{t.idTask}}</td>
-                                    <td>{{t.TaskDescription}}</td>
-                                    <td>
-                                        <div class="checkbox">
-                                            <input style="position: relative; top: -7px;" type="checkbox" data-ng-model="t.Done">
-                                        </div>
-                                    </td>
-                                    <td style="padding: 10px; text-align: left">
-                                        <button style="top: -7px;" type="button" class="btn btn-primary btn-xs hid-icon icon-btn" title="מחק משימה" data-ng-click="confirmDelete(t)">
-                                            <i class="icon ion-ios-trash-outline"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <button type="button" data-ng-click="addTask()" data-ng-show="!displayNewTask" class="btn btn-primary btn-xs">הוסף משימה</button>
-                        <textarea class="form-control" data-ng-show="displayNewTask" rows="2" data-ng-model="NewTask.TaskDescription"></textarea>
-                        <button type="button" data-ng-click="updateTask()" data-ng-show="displayNewTask" class="btn btn-primary btn-xs">שמור משימה</button>
-
-                    </div>-->
-
                 </div>
 
+                <div class="row" style="margin-top:10px" data-ng-if="selectedTicket.Id>0">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#taskToDo" data-toggle="tab">משימות לביצוע</a></li>
+                        <li><a href="#newTask" data-toggle="tab" data-ng-click="initSelectedTask()"><i class="icon ion-ios-plus-outline"></i> משימה חדשה</a></li>
+                    </ul>
+                    <div id="myTabContent" class="tab-content">
+                        <div class="tab-pane fade active in" id="taskToDo" style="padding-right:15px;padding-left:15px;">
+                            <table class="table table-striped table-hover" data-ng-show="taskCounter>0">
+                                <thead>
+                                    <tr>
+                                        <th data-ng-repeat="table in pageConfig[4].Table" data-ng-style="{'width':table.Width}" data-ng-bind="table.Label"></th>
+                                        <th style="width:30px"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-ng-repeat="u in data.Task | filter: {TicketID: selectedTicket.Id}">
+                                        <td data-ng-bind="u.TaskDescription"></td>
+                                        <td><input type="checkbox" data-ng-change="setTaskAsChecked(u.Id)" data-ng-model="u.Done" /></td>
+                                        <td style="padding: 5px; text-align: left">
+                                            <button type="button" class="btn btn-primary btn-xs hid-icon icon-btn" title="ערוך פניה" data-ng-click="setTaskEditMode(u)">
+                                                <i class="icon ion-edit"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <label class="col-lg-6 control-label text-danger" data-ng-show="taskCounter==0">אין משימות לביצוע</label>
+                            <div data-ng-if="taskEditMode">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label class="control-label">פרטי המשימה:</label>
+                                        <textarea class="form-control" rows="3" data-ng-model="selectedTask.TaskDescription"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-lg-offset-10">
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-primary" data-ng-disabled="selectedTask.TaskDescription.length == 0" data-ng-click="updateTask()">שמור</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="newTask">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label class="control-label">פרטי המשימה:</label>
+                                    <textarea class="form-control" rows="3" data-ng-model="selectedTask.TaskDescription"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-lg-offset-10">
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-primary" data-ng-disabled="selectedTask.TaskDescription.length == 0" data-ng-click="updateTask()">שמור</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
-                <div class="alert alert-dismissible alert-success pull-right" data-ng-show="error">
-                    <!--<button type="button" class="close" data-dismiss="alert" data-ng-click="setPage('MyTicket')">&times;</button>-->
-                    המשימה עודכנה בהצלחה!
+                <div class="alert alert-dismissible alert-success pull-right" style="margin-bottom: 0;padding: 15px;" data-ng-show="error">
+                    הפניה עודכנה בהצלחה!
                 </div>
                 <button type="button" class="btn btn-success" data-ng-click="updateTicket()">שמור</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">ביטול</button>
@@ -145,12 +148,12 @@
     </div>
 </div>
 
-
 <div id="ShowErrorMsg" class="modal fade small-sm" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">שגיאה</h4>
             </div>
             <div class="modal-body">
                 <label>{{msg}}</label>
@@ -166,7 +169,7 @@
     <div class="modal-dialog">
         <div class="modal-content panel-danger">
             <div class="modal-header panel-heading">
-                <h3>שגיאה בתהליך שמירה</h3>
+                <h4 class="modal-title">שגיאה</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
@@ -210,52 +213,57 @@
                     <div class="col-lg-6">
                         <div class="form-group">
                             <label class="control-label">שם מלא:</label>
-                            <input class="form-control" ng-model="selectedUser.DisplayName">
+                            <input type="text" class="form-control" ng-model="selectedUser.DisplayName">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label">אימייל:</label>
+                            <input type="email" class="form-control" ng-model="selectedUser.EmailAddress">
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label">מספר טלפון:</label>
+                            <input type="text" class="form-control" ng-model="selectedUser.TelephoneNumber">
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label">מחלקה:</label>
+                            <select class="form-control" data-ng-model="selectedUser.Department"
+                                    data-ng-options="o.Id as o.DepartmentName for o in data.Department  | orderBy: 'Department'">
+                                <option value="">בחר</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label">תפקיד:</label>
+                            <select class="form-control" data-ng-model="selectedUser.Role"
+                                    data-ng-options="o.Id as o.Role for o in data.Role  | orderBy: 'Role'">
+                                <option value="">בחר</option>
+                            </select>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-lg-6">
-                    <div class="form-group">
-                        <label class="control-label">אימייל:</label>
-                        <input class="form-control" ng-model="selectedUser.EmailAddress">
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="form-group">
-                        <label class="control-label">מספר טלפון:</label>
-                        <input class="form-control" ng-model="selectedUser.TelephoneNumber">
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="form-group">
-                        <label class="control-label">מחלקה:</label>
-                        <select class="form-control" data-ng-model="selectedUser.Department"
-                                data-ng-options="o.Id as o.Department for o in data.Department  | orderBy: 'Department'">
-                            <option value="">בחר</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="form-group">
-                        <label class="control-label">תפקיד:</label>
-                        <select class="form-control" data-ng-model="selectedUser.Role"
-                                data-ng-options="o.Id as o.Role for o in data.Role  | orderBy: 'Role'">
-                            <option value="">בחר</option>
-                        </select>
-                    </div>
-                </div>
                 <hr />
-                <div class="col-lg-6">
-                    <div class="form-group">
-                        <label class="control-label">סיסמא:</label>
-                        <input type="text" class="form-control" ng-model="selectedUser.UserPassword">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label">סיסמא:</label>
+                            <input type="text" class="form-control" ng-model="selectedUser.UserPassword">
+                        </div>
                     </div>
+
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-ng-click="updateUser()">שמור</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">ביטול</button>
+                    <button type="button" class="btn btn-success" data-ng-click="updateUser()">שמור</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">ביטול</button>
             </div>
         </div>
 

@@ -12,18 +12,17 @@
     <table class="table table-striped table-hover table-responsive" style="margin-top:15px">
         <thead>
             <tr>
-                <th style="width:15px"><a href="#" data-ng-click="setSort('TicketID')" data-ng-bind="table.Id"></a></th>
+                <th style="width:15px"><a href="#" data-ng-click="setSort('TicketID')">#</a></th>
                 <th data-ng-repeat="table in pageConfig[1].Table" data-ng-style="{'width':table.Width}">
                     <a href="#" data-ng-click="setSort(table.Data)" data-ng-bind="table.Label"></a>
                     <span data-ng-if="sort.Name==table.Data" data-ng-class="{true:'ion-arrow-down-b text-danger',false:'ion-arrow-up-b text-success'}[sort.Desc]"
                           style="display: inline-block; margin-left: 3px"></span>
                 </th>
                 <th style="width:65px"></th>
-
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="u in q=data.TicketsToDo | orderBy: sort.Name : sort.Desc | startFrom: (currPage-1)*pageSize | limitTo: pageSize">
+            <tr data-ng-repeat="u in q=data.TicketsToDo | orderBy: sort.Name : sort.Desc | startFrom: (currPage-1)*pageSize | limitTo: pageSize" data-ng-class="getTicketClass(u)">
                 <td data-ng-bind="u.TicketID"></td>
                 <td data-ng-repeat="col in pageConfig[1].Table">
                     <div data-ng-bind="u.TimeClose" data-ng-if="col.Data=='TimeClose'"></div>

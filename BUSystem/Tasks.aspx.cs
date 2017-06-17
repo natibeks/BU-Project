@@ -27,9 +27,12 @@ public partial class Tasks : System.Web.UI.Page
                 case "addNewTicket":
                     Response.Write(Utils.AddNewTicket(obj));
                     break;
-                //case "addTask":
-                //    Response.Write(Utils.AddNewTask(obj));
-                //    break;
+                case "addTask":
+                    Response.Write(Utils.UpdateTask(obj));
+                    break;
+                case "checkTask":
+                    Response.Write(Utils.CheckTask(Convert.ToInt32(Request["TaskID"])));
+                    break;
                 //case "delTask":
                 //    Response.Write(Utils.DeleteTask(obj));
                 //    break;
@@ -37,12 +40,14 @@ public partial class Tasks : System.Web.UI.Page
                 //    Response.Write(Utils.freeSearch(obj));
                 //    break;
                 case "ForgotPassword":
-                    Response.Write(Utils.SendForgottenPass(Convert.ToInt32(Request["user"])));
+                    Response.Write(Utils.SendForgottenPass(Convert.ToString(Request["email"])));
                     break;
                 case "updateTicket":
                     Response.Write(Utils.updateTicket(obj));
                     break;
-
+                case "updUser":
+                    Response.Write(Utils.UpdateUser(obj));
+                    break;
 
                 default: break;
             }

@@ -3,6 +3,7 @@
     app.expandTicketController($scope, DataService, $timeout, $filter);
     app.expandSearchController($scope, $http, $timeout, $filter);
     app.expandReportsController($scope, $http, $timeout, $filter, $window);
+    app.expandUserController($scope, DataService);
 
     $scope.pageConfig = PageConfig;
     $scope.pageSize = 10;
@@ -10,7 +11,7 @@
     $scope.noOfPages;
     $scope.currPage = 1;
     $scope.appMenu = AppMenu;
-    $scope.sort = { Name: 'Id', Desc: true };
+    $scope.sort = { Name: 'Id', Desc: false };
 
     angular.element(document).ready(function () {
         if (typeof ($scope.UserId) == 'undefined') return;
@@ -32,6 +33,7 @@
         $scope.currentUser["Permission"] = $scope.currentUser.Role;
         $scope.currentUser.Domains = Enumerable.From($scope.data.UserDomain).Where(function (j) { return j.UserID == $scope.currentUser.Id }).Select(function (i) { return i.DomainID }).ToArray();
         //$scope.currentUser.DomainName = Enumerable.From($scope.data.Domain).Where(function (j) { return j.Id == $scope.currentUser.DomainID }).Select(function (i) { return i.DomainName }).FirstOrDefault();
+        $scope.createTicketsToDo();
     }
 
     $scope.setSort = function (c) {
@@ -118,6 +120,12 @@
         return item.DomainID == $scope.selectedTicket.DomainID;
     };
 
+    $scope.CategoryToSearchFilter = function (item) {
+        if ($scope.currentUser.Permission == 0)
+            return $scope.currentUser.Domains.indexOf(item.DomainID) > -1;
+        else
+            return true;
+    }
 
     //Paging
 

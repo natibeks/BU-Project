@@ -20,9 +20,9 @@ public class Utils
     // public static SqlConnection conn;
 
     public static SqlConnection conn;
-    
 
-    public static string GetInitData(int uid,bool admin)
+
+    public static string GetInitData(int uid, bool admin)
     {
         DataSet data = new DataSet();
         var connectStr = WebConfigurationManager.AppSettings["SQLServer"];
@@ -30,7 +30,7 @@ public class Utils
         using (conn = new SqlConnection(connectStr))
         {
             SqlCommand sqlComm = new SqlCommand("spGetData", conn);
-            if(admin)
+            if (admin)
                 sqlComm.Parameters.AddWithValue("@userId", 0);
             else
                 sqlComm.Parameters.AddWithValue("@userId", uid);
@@ -76,7 +76,7 @@ public class Utils
                 var formats = new[] { "dd-MM-yyyy", "dd/MM/yyyy", "yyyy-MM-dd HH:mm:ss", "dd-MM-yyyy HH:mm:ss", "dd-MM-yyyy HH:mm" };
                 if (DateTime.TryParseExact(s, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out dateValue))
                     b.TimeClose = dateValue;
-                else 
+                else
                     b.TimeClose = DateTime.Now;
 
                 b.Status = 1;
@@ -123,8 +123,9 @@ public class Utils
                 else
                     b.TimeClose = DateTime.Now;
                 b.Status = Convert.ToInt32(obj["Status"]);
-         
-                foreach (var t in obj["tasks"]){
+
+                foreach (var t in obj["tasks"])
+                {
                     int tid = Convert.ToInt32(t["TaskID"]);
                     var k = db.Task.Where(i => i.Id == tid).FirstOrDefault();
                     k.Done = Convert.ToBoolean(t["Done"]);
@@ -132,15 +133,16 @@ public class Utils
 
                 db.SaveChanges();
 
-                if(Convert.ToInt32(obj["AnotherAsignee"]) > 0)
+                if (Convert.ToInt32(obj["AnotherAsignee"]) > 0)
                 {
                     var isNew = false;
-                    var z = db.UserTicket.Where(i => i.TicketID == id && i.MainUser==false).FirstOrDefault();
-                    if (z == null){
+                    var z = db.UserTicket.Where(i => i.TicketID == id && i.MainUser == false).FirstOrDefault();
+                    if (z == null)
+                    {
                         isNew = true;
                         z = new UserTicket();
                     }
-                        
+
                     z.TicketID = id;
                     z.UserID = Convert.ToInt32(obj["AnotherAsignee"]);
                     z.MainUser = false;
@@ -158,31 +160,84 @@ public class Utils
         }
         catch (Exception e)
         {
-            return e.Message;
+            throw e;
         }
     }
 
-    //public static string AddNewTask(dynamic obj)
-    //{
-    //    try
-    //    {
-    //        using (var db = new MSEsystemEntities1())
-    //        {
-    //            var b = new Task();
-    //            b.TicketID = Convert.ToInt32(obj["idTicket"]);
-    //            b.TaskDescription = Convert.ToString(obj["TaskDescription"]);
-    //            b.Done = Convert.ToBoolean(obj["Done"]);
-    //            db.Task.Add(b);
-    //            db.SaveChanges();
+    public static string UpdateTask(dynamic obj)
+    {
+        try
+        {
+            using (var db = new MSEsystemEntities1())
+            {
+                var b = new Task();
+                var isNew = false;
+                if (Convert.ToInt32(obj["Id"]) == 0)
+                    isNew = true;
+                b.TicketID = Convert.ToInt32(obj["TicketID"]);
+                b.TaskDescription = Convert.ToString(obj["TaskDescription"]);
+                b.Done = Convert.ToBoolean(obj["Done"]);
+                if (isNew)
+                    db.Task.Add(b);
+                db.SaveChanges();
 
-    //            return b.Id.ToString();
-    //        }
-    //    }
-    //    catch (Exception e)
-    //    {
-    //        return e.Message;
-    //    }
-    //}
+                return b.Id.ToString();
+            }
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
+    }
+
+    public static string UpdateUser(dynamic obj)
+    {
+        try
+        {
+            using (var db = new MSEsystemEntities1())
+            {
+                int id = Convert.ToInt32(obj["Id"]);
+                var b = id == 0 ? new User() : db.User.Where(i => i.Id == id).FirstOrDefault();
+                var isNew = false;
+                if (Convert.ToInt32(obj["Id"]) == 0)
+                    isNew = true;
+                b.Role = Convert.ToInt32(obj["Role"]);
+                b.DisplayName = Convert.ToString(obj["DisplayName"]);
+                b.EmailAddress = Convert.ToString(obj["EmailAddress"]);
+                b.TelephoneNumber = Convert.ToString(obj["TelephoneNumber"]);
+                b.Department = Convert.ToInt32(obj["Department"]);
+                b.UserPassword = Convert.ToString(obj["UserPassword"]);
+
+                if (isNew)
+                    db.User.Add(b);
+                db.SaveChanges();
+
+                return b.Id.ToString();
+            }
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
+    }
+    public static string CheckTask(int tid)
+    {
+        try
+        {
+            using (var db = new MSEsystemEntities1())
+            {
+                var z = db.Task.Where(i => i.Id == tid).FirstOrDefault();
+                z.Done = !z.Done;
+                db.SaveChanges();
+                return z.Id.ToString();
+            }
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
+    }
+
     //public static string DeleteTask(dynamic obj)
     //{
     //    try
@@ -230,69 +285,61 @@ public class Utils
     //        return res2;
     //    }
     //}
-    public static string SendForgottenPass(int user)
+    public static string SendForgottenPass(string email)
     {
         try
         {
             using (var db = new MSEsystemEntities1())
             {
-                var Unfound = false;
-                var u = db.User.Where(x => x.Id == user).FirstOrDefault();
+                var u = db.User.Where(x => x.EmailAddress == email).FirstOrDefault();
                 if (u == null)
-                    Unfound = true;
+                    return "error";
                 else
                 {
                     string temp = @"{  
-                  'Username': '" + user + @"',
-                  'mailBody': '  הסיסמא שלך היא: " + u.UserPassword + @"',  
-                  'mailTitle': 'שיחזור סיסמא'  
-                   }";
+                  'Username': '" + email + @"',
+                  'mailBody': 'הסיסמא שלך היא: " + u.UserPassword + @"',
+                  'mailTitle': 'שיחזור סיסמא'
+                   }
+                ";
                     dynamic obj = JObject.Parse(temp);
-                    Utils.SendEmail(obj);
-
-                }
-                var res = new
-                {
-                    Status = "Error",
-                    Message = "No such user"
-                };
-                db.SaveChanges();
-
-                return JsonConvert.SerializeObject(res);
+                Utils.SendEmail(obj);
+                return "ok";
             }
+        }
         }
         catch (Exception e)
         {
-            return e.Message;
+            throw e;
         }
     }
 
     public static bool SendEmail(dynamic obj)
+{
+    try
     {
-        try
-        {
-            var to = Convert.ToString(obj["Username"]);
-            var attach = new List<string>();
-            string body = "";
-            string title = "";
-            title = Convert.ToString(obj["mailTitle"]);
-            body = Convert.ToString(obj["mailBody"]);
-            var ms = new MailSender();
-            ms.Send(to, title, body);
-            return true;
+        var to = Convert.ToString(obj["Username"]);
+        var attach = new List<string>();
+        string body = "";
+        string title = "";
+        title = Convert.ToString(obj["mailTitle"]);
+        body = Convert.ToString(obj["mailBody"]);
+        var ms = new MailSender();
+        ms.Send(to, title, body);
+        return true;
 
-        }
-        catch (Exception ex)
-        {
-
-            return false;
-        }
     }
-    class CustomDateTimeConverter : IsoDateTimeConverter
+    catch (Exception ex)
     {
-        public CustomDateTimeConverter()
-        {
-            base.DateTimeFormat = "dd-MM-yyyy hh:mm";
-        }
+
+        return false;
     }
+}
+class CustomDateTimeConverter : IsoDateTimeConverter
+{
+    public CustomDateTimeConverter()
+    {
+        base.DateTimeFormat = "dd-MM-yyyy hh:mm";
+    }
+}
 }

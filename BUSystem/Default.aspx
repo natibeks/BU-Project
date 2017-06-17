@@ -30,8 +30,8 @@
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
                     <ul class="nav navbar-nav">
 
-                        <li><a href="#" data-ng-click="setPage('Reports')" data-ng-show="currentUser.Permission!='1' || currentUser.Permission!='2'">דוחות</a></li>
-                        <li><a href="#" data-ng-click="setPage('ManageUsers')" data-ng-if="currentUser.Permission=='0'">ניהול משתמשים</a></li>
+                        <li><a href="#" data-ng-click="setPage('Reports')" data-ng-show="currentUser.Permission<2">דוחות</a></li>
+                        <li><a href="#" data-ng-click="setPage('ManageUsers')" data-ng-if="currentUser.Permission<2">ניהול משתמשים</a></li>
                     </ul>
 
                     <ul class="nav navbar-nav navbar-left">
@@ -46,8 +46,8 @@
             </div>
         </nav>
 
-        <div data-ng-include="'Pages/home.htm'" data-ng-if="loaded"></div>
-        <div data-ng-include="'Pages/modals.htm'" data-ng-if="loaded"></div>
+        <div data-ng-include="'Pages/home.htm'"></div>
+        <div data-ng-include="'Pages/modals.htm'"></div>
     </div>
 
 </asp:Content>

@@ -35,7 +35,7 @@ var PageConfig = [
             }, {
                 Label: "קטגוריה",
                 Width: "150px",
-                Data: "CategoryName",
+                Data: "Category",
             }, {
                 Label: "תיאור קצר",
                 Width: "auto",
@@ -120,6 +120,22 @@ var PageConfig = [
                 Width: "150px",
                 Data: "Department",
             },
+        ]
+
+    },
+    {
+        Id: 4,
+        Name: 'Tasks',
+        Table: [
+            {
+                Label: "תיאור",
+                Width: "auto",
+                Data: "TaskDescription",
+            }, {
+                Label: "בוצע",
+                Width: "60px",
+                Data: "Done",
+            }
         ]
 
     }

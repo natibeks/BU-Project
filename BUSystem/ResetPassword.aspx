@@ -2,19 +2,20 @@
 
 <asp:Content ID="ResetPass" ContentPlaceHolderID="ResetPassPlaceHolder" runat="Server">
 
-    <div class="panel panel-warning"  style="width: 500px; margin: 100px auto 0px;" data-ng-contoller="forgotPassController">
+    <div class="panel panel-warning" style="width: 500px; margin: 100px auto 0px;" data-ng-contoller="forgotPassController">
         <div class="panel-heading">
             <h3 class="panel-title">שחזור סיסמא</h3>
         </div>
         <div class="panel-body">
-            <form class="form-horizontal" name="passRecoveryForm" data-ng-submit="sendPassToEmail(passRecoveryForm.$valid)">
+            <form class="form-horizontal" name="passRecoveryForm" data-ng-submit="sendPasswordToEmail(passRecoveryForm.$valid)">
                 <fieldset>
                     <div data-ng-if="!isSucceed">
                         <div class="form-group">
-                            <label for="userName" data-ng-model="userName" class="col-lg-3 control-label">שם משתמש</label>
+                            <label for="userName" class="col-lg-3 control-label">שם משתמש</label>
                             <div class="col-lg-5" data-ng-class="{'has-error':passRecoveryForm.username.$error.required}">
-                                <input type="text" class="form-control" id="userName" name="username" placeholder="שם משתמש" required data-ng-minlength="1">
-                            </div>
+                                <input type="text" class="form-control" id="userName" name="username" 
+                                    placeholder="דואר אלקטרוני" required />
+                            </div>   
                         </div>
                         <div class="form-group">
                             <div class="col-lg-4 col-lg-offset-7">
@@ -23,19 +24,19 @@
                             </div>
                         </div>
                     </div>
-                    <div data-ng-if="isSucceed">
-                        <h3>בוצע בהצלחה
-                        </h3>
-                        <div class="col-lg-2 col-lg-offset-6">
-                            <a href="Login.aspx" style="color: grey; float: right;">חזור לעמוד התחברות</a>
-                        </div>
+                    <div class="alert alert-dismissible alert-success" style="text-align:center" data-ng-if="isSucceed">
+                        <h4>בוצע בהצלחה</h4>
+                        <h4><a href="Login.aspx" style="color: grey;"><strong>חזור לעמוד התחברות</strong></a></h4>
+                    </div>
+                    <div class="alert alert-dismissible alert-warning" style="text-align:center" data-ng-if="isFailed">
+                        <h4>לא נמצא משתמש</h4>
                     </div>
                 </fieldset>
             </form>
         </div>
     </div>
 
-<%--    <div>
+    <%--    <div>
         <fieldset style="width: 350px;">
             <legend>Change password example in asp.net</legend>
             <table>

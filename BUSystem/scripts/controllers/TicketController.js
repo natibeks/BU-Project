@@ -21,6 +21,21 @@
         Done: false
     };
 
+    $scope.openTicketWindow = function (x) {
+        $scope.selectedTicket = angular.copy(x);
+        $scope.selectedTicket.Id = x.TicketID;
+        $scope.selectedTicket["oldStatus"] = x.Status;
+        $scope.selectedTicket["DomainID"] = $scope.getDomainByCategory(x.CategoryID);
+        //$scope.selectedTicket.Department = $scope.currentUser.Department;
+        $scope.updateTaskCounter();
+        $scope.taskEditMode = false;
+        $('#editTicketModal').modal('show');
+    }
+
+    $scope.updateTaskCounter = function () {
+        $scope.taskCounter = Enumerable.From($scope.data.Task).Where(function (x) { return x.TicketID == $scope.selectedTicket.Id }).Count();
+    }
+
     $scope.getTicketTasks = function (tid) {
         var a = Enumerable.From($scope.data.Task).Where(function (j) { return j.TicketID == $scope.selectedTicket.TicketID }).ToArray();
         return a;
@@ -199,48 +214,70 @@
         $('#confirmDeleteModal').modal('show');
     }
 
-    $scope.displayNewTask = false;
+    $scope.setTaskEditMode = function (o) {
+        $scope.taskEditMode = true;
+        $scope.initSelectedTask(o);
+    }
 
-    $scope.addTask = function () {
-        $scope.displayNewTask = true;
+    $scope.initSelectedTask = function (o) {
+        if (o == undefined){
+            $scope.selectedTask = angular.copy($scope.taskTemplate);
+            $scope.selectedTask.TicketID = $scope.selectedTicket.Id;
+        }
+        else
+            $scope.selectedTask = angular.copy(o);
+
+    }
+
+    $scope.setTaskAsChecked = function (tid) {
+        DataService.makeGetRequest("Tasks.aspx?tp=checkTask", { TaskID: tid}).then(
+        function (response) {
+            if (!response.RequestSucceed) {
+                angular.forEach($scope.data.Task, function (o, i) {
+                    if ($scope.data.Task[i].Id == id)
+                        $scope.data.Task[i].Done = !$scope.data.Task[i].Done;
+                })
+            }
+    });
     }
 
     $scope.updateTask = function () {
+        var isNew = $scope.selectedTask.Id == 0;
         var url = "Tasks.aspx?tp=addTask";
-        DataService.makePostRequest(url, $scope.selectedTicket).then(
+        DataService.makePostRequest(url, $scope.selectedTask).then(
             function (response) {
                 if (!response.RequestSucceed) return;
-                var id = parseInt(response.Data);
-                $scope.selectedTicket.Id = id;
-                $scope.data.Task.push($scope.selectedTicket);
-                $scope.displayNewTask = false;
+                if(isNew){
+                    var id = parseInt(response.Data);
+                    $scope.selectedTask.Id = id;
+                    $scope.data.Task.push($scope.selectedTask);
+                }                  
+                else
+                    angular.forEach($scope.data.Task, function (o, i) {
+                        if ($scope.data.Task[i].Id == id)
+                            $scope.data.Task[i] = angular.copy($scope.selectedTask);
+                    })
+                $scope.updateTaskCounter();
+                $scope.taskEditMode = false;
+                $('.nav-tabs a[href="#taskToDo"]').tab('show');
                 $scope.error = false;
             });
     }
 
     $scope.deleteTask = function () {
         url = "Tasks.aspx?tp=delTask";
-        DataService.makePostRequest(url, $scope.selectedTicket).then(function (response) {
-            if (!response.RequestSucceed) return; {//is tasks were deleted from DB
-                $scope.error = false;
-                $scope.msg = 'Deleting Succeeded'
+        DataService.makePostRequest(url, $scope.selectedTicket).then(
+            function (response) {
+                if (!response.RequestSucceed) return; {//is tasks were deleted from DB
+                    $scope.error = false;
+                    $scope.msg = 'Deleting Succeeded'
 
-                $timeout(function () {
-                    $scope.msg = "";
-                    $('#confirmDeleteModal').modal('hide');
-                }, 2500);
-            }
-            //else {//if deleting failed
-            //    $scope.error = true;
-            //    $scope.msg = 'Something went wrong'
-
-            //    $timeout(function () {
-            //        $scope.msg = "";
-            //        $('#confirmDeleteModal').modal('hide');
-            //    }, 2500);
-            //}
-            $scope.safeApply();
-        })
+                    $timeout(function () {
+                        $scope.msg = "";
+                        $('#confirmDeleteModal').modal('hide');
+                    }, 2500);
+                }
+            })
     };
 
     $scope.checkTicketTaskUpdate = function () {
@@ -256,13 +293,20 @@
         return temp;
     }
 
-    $scope.AllTasksDone = function (tasks) {
-        var done = true;
-        $.each(tasks, function (i, o) {
-            if (!o.Done && o.TicketID == $scope.selectedTicket.Id)
-                done = false;
-        })
-        return done;
+    $scope.AllTasksDone = function () {
+        var cnt = Enumerable.From($scope.data.Task).Where(function (x) { return x.TicketID == $scope.selectedTicket.Id && x.Done == false; }).Count();
+        return cnt > 0;
+    }
+
+    $scope.getTicketClass = function (t) {
+        if (moment(t.TimeOpen, "DD-MM-YYYY HH:mm").diff(moment(), "hours") < 24)
+            return "warning";
+
+        if (moment(t.TimeClose, "DD-MM-YYYY HH:mm").diff(moment(), "days") > 0)
+            return "info";
+
+        if (moment(t.TimeClose, "DD-MM-YYYY HH:mm").diff(moment(), "days") > 0)
+            return "danger";
     }
 
     $scope.resetFields = function () {
@@ -270,12 +314,11 @@
 
     }
 
-    $scope.error = true;
+    $scope.error = false;
     $scope.msg = "";
     $scope.totalCount = 0;
     $scope.countInit = function () {
         return $scope.totalCount++;
     }
 
-}
 }
