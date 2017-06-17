@@ -45,6 +45,39 @@
         return ['createTicket', 'MyTicket', 'TicketsToDo', 'Search'].indexOf($scope.currentPage) > -1;
     }
 
+    //deleting config
+    $scope.delType = 0;
+    $scope.delConfirmed = function () {
+        switch ($scope.delType) {
+            case 1:
+                $scope.delTicket();
+                break;
+            case 2:
+                $scope.delTask();
+                break;
+            case 3:
+                $scope.delUser();
+                break;
+        }
+    }
+    $scope.showDelConfirmMsg = function (dtype) {
+        $scope.delType = dtype;
+        $("#confirmDeleteModal").modal('show');
+    }
+    $scope.getDelObjectName = function () {
+        if ($scope.delType == 0) return "";
+        switch ($scope.delType) {
+            case 1:
+                return "פניה זו";
+                break;
+            case 2:
+                return "משימה זו";
+                break;
+            case 3:
+                return "משתמש זה";
+                break;
+        }
+    }
     //getters
 
     $scope.getDomainByCategory = function (cid) {
