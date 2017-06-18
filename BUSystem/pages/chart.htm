@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+	<meta charset="utf-8" />
+    <script src="scripts/pack/jquery-2.0.0.min.js"></script>
+    <link href="css/angular-moment-picker.css" rel="stylesheet" />
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/bootstrap-dialog.min.css" rel="stylesheet" />
+    <link href="css/bootstrap-rtl.css" rel="stylesheet" />
+    <link href="css/ionicons.min.css" rel="stylesheet" />
+
+    <script src="scripts/pack/linq.min.js"></script>
+    <script src="scripts/pack/angular.min.js"></script>
+    <script src="scripts/pack/bootstrap.min.js"></script>
+    <script src="scripts/pack/moment.min.js"></script>
+    <script src="scripts/pack/moment-with-locales.js"></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+</head>
+<body data-ng-app="chartApp" data-ng-controller="chartController" style="text-align:center">
+    <div class="row">
+        <div class="col-md-10">
+            <highchart id="mychart" config="chartConfig"></highchart>
+        </div>
+    </div>
+    <script>
+        var app = angular.module('chartApp', ["highcharts-ng"]);
+        app.run(function () {
+            $scope.chartConfig = {
+                chart: {
+                    polar: true
+                },
+
+                title: {
+                    text: 'Highcharts Polar Chart'
+                },
+
+                pane: {
+                    startAngle: 0,
+                    endAngle: 360
+                },
+
+                xAxis: {
+                    tickInterval: 45,
+                    min: 0,
+                    max: 360,
+                    labels: {
+                        formatter: function () {
+                            return this.value + '°';
+                        }
+                    }
+                },
+
+                yAxis: {
+                    min: 0
+                },
+
+                plotOptions: {
+                    series: {
+                        pointStart: 0,
+                        pointInterval: 45
+                    },
+                    column: {
+                        pointPadding: 0,
+                        groupPadding: 0
+                    }
+                },
+
+                series: [{
+                    type: 'column',
+                    name: 'Column',
+                    data: [8, 7, 6, 5, 4, 3, 2, 1],
+                    pointPlacement: 'between'
+                }, {
+                    type: 'line',
+                    name: 'Line',
+                    data: [1, 2, 3, 4, 5, 6, 7, 8]
+                }, {
+                    type: 'area',
+                    name: 'Area',
+                    data: [1, 8, 2, 7, 3, 6, 4, 5]
+                }]
+            }
+
+        });
+
+        app.controller('chartController', function ($scope) {
+            
+
+
+        })
+    </script>
+</body>
+</html>

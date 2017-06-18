@@ -1,5 +1,5 @@
-﻿app.expandReportsController = function ($scope, $http, $timeout, $filter,$window) {
-    
+﻿app.expandReportsController = function ($scope, $http, $timeout, $filter, $window) {
+
     $scope.toProduce = {
         status: false,
         category: false,
@@ -8,7 +8,7 @@
         dept: false,
         From: "",
         To: ""
-       
+
     }
 
     $scope.chartReady = false;
@@ -89,7 +89,7 @@
             init();
         });
 
-       
+
     });
     $scope.printReport = function () {
 
@@ -100,15 +100,15 @@
         popupWin.document.close();
 
     }
- 
+
     $scope.resetReport = function () {
-        $scope.toProduce.status=false;
-        $scope.toProduce.category= false;
-        $scope.toProduce.emp=false;
-        $scope.toProduce.build= false;
-        $scope.toProduce.dept=false;
+        $scope.toProduce.status = false;
+        $scope.toProduce.category = false;
+        $scope.toProduce.emp = false;
+        $scope.toProduce.build = false;
+        $scope.toProduce.dept = false;
         $scope.toProduce.From = "";
-        $scope.toProduce.To="";
+        $scope.toProduce.To = "";
 
         $scope.chartReady = false;
         $scope.countOpen = 0;
@@ -117,46 +117,56 @@
     }
 
     $scope.produceReport = function () {
-     
+
         if ($scope.toProduce.status == true) {
-            if ($scope.currentUser.Permission != '4') { 
-                $scope.cntOpen = Enumerable.From($scope.data.TicketsForEmployee).Where(function (i) {
+            if ($scope.currentUser.Permission != 0) {
+                $scope.cntOpen = Enumerable.From($scope.data.MyTicket).Where(function (i) {
                     var dateOpen = moment(i.TimeOpen, 'DD-MM-YYYY');
                     var f1 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
                     var t1 = $scope.toProduce.To == "" ? null : moment($scope.toProduce.To, 'DD-MM-YYYY');
                     return i.Domain == $scope.currentUser.Domain && ((f1 == null && t1 == null) || (f1 != null && t1 != null && dateOpen.isBetween(f1, t1, 'days', '[]')) || (f1 != null && t1 == null && dateOpen.isSameOrAfter(f1)) || (t1 != null && f1 == null && dateOpen.isSameOrBefore(t1)))
 
-                }).ToArray();
+                }).Count();
 
-                $scope.cntClose = Enumerable.From($scope.data.TicketsForEmployee).Where(function (i) {
+                $scope.cntClose = Enumerable.From($scope.data.MyTicket).Where(function (i) {
                     var dateClose = i.TimeClose == null ? null : moment(i.TimeClose, 'DD-MM-YYYY');
                     var f2 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
                     var t2 = $scope.toProduce.To == "" ? null : moment($scope.toProduce.To, 'DD-MM-YYYY');
                     return i.Domain == $scope.currentUser.Domain && dateClose != null && ((f2 == null && t2 == null) || (f2 != null && t2 != null && dateClose.isBetween(f2, t2, 'days', '[]')) || (f2 != null && t2 == null && dateClose.isSameOrAfter(f2)) || (t2 != null && f2 == null && dateClose.isSameOrBefore(t2)))
 
 
-                }).ToArray();
+                }).Count();
             }
             else {          //for CEO
-                $scope.cntOpen = Enumerable.From($scope.data.TicketsForEmployee).Where(function (i) {
+                $scope.cntOpen = Enumerable.From($scope.data.Ticket).Where(function (i) {
                     var dateOpen = moment(i.TimeOpen, 'DD-MM-YYYY');
                     var f1 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
                     var t1 = $scope.toProduce.To == "" ? null : moment($scope.toProduce.To, 'DD-MM-YYYY');
                     return ((f1 == null && t1 == null) || (f1 != null && t1 != null && dateOpen.isBetween(f1, t1, 'days', '[]')) || (f1 != null && t1 == null && dateOpen.isSameOrAfter(f1)) || (t1 != null && f1 == null && dateOpen.isSameOrBefore(t1)))
-                }).ToArray();
+                }).Count();
 
-                $scope.cntClose = Enumerable.From($scope.data.TicketsForEmployee).Where(function (i) {
+                $scope.cntClose = Enumerable.From($scope.data.Ticket).Where(function (i) {
                     var dateClose = moment(i.TimeClose, 'DD-MM-YYYY');
                     var f2 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
                     var t2 = $scope.toProduce.To == "" ? null : moment($scope.toProduce.To, 'DD-MM-YYYY');
                     return dateClose != null && ((f2 == null && t2 == null) || (f2 != null && t2 != null && dateClose.isBetween(f2, t2, 'days', '[]')) || (f2 != null && t2 == null && dateClose.isSameOrAfter(f2)) || (t2 != null && f2 == null && dateClose.isSameOrBefore(t2)))
 
 
-                }).ToArray();
+                }).Count();
             }
-            $scope.countOpen = $scope.cntOpen.length;
-            $scope.countClose = $scope.cntClose.length;
+
+            $scope.initChartWin({
+                ToProduce: $scope.toProduce,
+                Data: {
+                    CountOpen: $scope.cntOpen, CountClose: $scope.cntClose,
+                }
+            });
             $scope.chartReady = true;
+        }
+
+        $scope.initChartWin = function (data) {
+            var popupWindow = window.open('Pages/chart.htm');
+            popupWindow.myChartData = data;
         }
 
 
@@ -173,7 +183,7 @@
                 ]
             }
         });
-       
+
         if ($scope.toProduce.category == true) {
             if ($scope.currentUser.Permission != '4') {
                 $scope.cntOpen = Enumerable.From($scope.data.TicketsToDo).Where(function (i) {
@@ -211,10 +221,10 @@
             $scope.countClose = $scope.cntClose.length;
             $scope.chartReady = true;
         }
-      
+
     }
 
-   
+
 
 }
 
