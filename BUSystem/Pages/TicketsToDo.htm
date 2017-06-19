@@ -22,7 +22,8 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="u in q=data.TicketsToDo | orderBy: sort.Name : sort.Desc | startFrom: (currPage-1)*pageSize | limitTo: pageSize" data-ng-class="getTicketClass(u)">
+            <tr data-ng-repeat="u in q=data.TicketsToDo | filter: isTicketOpened | orderBy: sort.Name : sort.Desc | startFrom: (currPage-1)*pageSize | limitTo: pageSize" 
+                data-ng-class="getTicketClass(u)">
                 <td data-ng-bind="u.TicketID"></td>
                 <td data-ng-repeat="col in pageConfig[1].Table">
                     <div data-ng-bind="u.TimeClose" data-ng-if="col.Data=='TimeClose'"></div>
@@ -36,21 +37,7 @@
                         <i class="icon ion-edit"></i>
                     </button>
                 </td>
-                <!--<td data-ng-bind="u.idTicket"></td>
-                <td data-ng-bind="u.TimeOpen"></td>
-                <td data-ng-bind="u.DisplayName"></td>
-                <td data-ng-bind="u.CategoryName"></td>
-                <td data-ng-bind="u.Description"></td>
-                <td data-ng-bind="u.Status"></td>
-                <td data-ng-repeat="z in data.TicketsForEmployee" data-ng-show="z.idTicket==u.idTicket" data-ng-bind="z.idEmployee"></td>
-                <td style="padding: 5px; text-align: left">
-                    <button type="button" class="btn btn-primary btn-xs hid-icon icon-btn" title="ערוך פניה" data-ng-click="openTicketWindow(u)">
-                        <i class="icon ion-edit"></i>
-                    </button>
-                </td>-->
-
             </tr>
-
         </tbody>
 
     </table>

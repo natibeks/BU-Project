@@ -27,6 +27,7 @@
         });
     })
 
+    // Init currentUser object and create his TicketsToDo Table
     $scope.initUserValues = function () {
         $scope.currentUser = Enumerable.From($scope.data.User).Where(function (j) { return j.Id == $scope.UserId }).FirstOrDefault();
         $scope.currentUser["Permission"] = $scope.currentUser.Role;
@@ -237,13 +238,3 @@
     };
 
 })
-
-app.filter('startFrom', function () {
-    return function (input, start) {
-        if (input) {
-            start = +start;
-            return input.slice(start);
-        }
-        return [];
-    };
-});

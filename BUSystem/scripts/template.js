@@ -23,6 +23,7 @@
 }
 ]
 
+// JSON include all the system table configuratin
 var PageConfig = [
     {
         Id: 1,

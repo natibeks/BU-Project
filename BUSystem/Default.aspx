@@ -53,5 +53,4 @@
         <div data-ng-show="loaded" data-ng-include="'Pages/home.htm'"></div>
         <div data-ng-show="loaded" data-ng-include="'Pages/modals.htm'"></div>
     </div>
-
 </asp:Content>

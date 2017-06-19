@@ -97,7 +97,7 @@
             temp['TimeOpen'] = o.TimeOpen;
             temp['Status'] = o.Status;
             temp['UserID'] = Enumerable.From($scope.data.UserTicket).Where(function (x) { return x.MainUser == true && x.TicketID == o.Id }).Select(function (y) { return y.UserID }).FirstOrDefault();
-            temp['AnotherAsignee'] = Enumerable.From($scope.data.UserTicket).Where(function (x) { return x.MainUser == false && x.TicketID == x.TicketID.Id }).Select(function (y) { return y.UserID }).FirstOrDefault();
+            temp['AnotherAsignee'] = Enumerable.From($scope.data.UserTicket).Where(function (x) { return x.MainUser == false && x.TicketID == o.Id }).Select(function (y) { return y.UserID }).FirstOrDefault();
             ttd.push(temp);
         });
         $scope.data.TicketsToDo = angular.copy(ttd);
@@ -108,6 +108,10 @@
         $scope.selectedTicket.UserID = $scope.currentUser.Id;
         $scope.selectedTicket.DomainID = $scope.currentUser.Domains[0];
 
+    }
+
+    $scope.setTicketStatus = function (status) {
+        $scope.selectedTicket.Status = 2;
     }
 
     $scope.addNewTicket = function () {
@@ -157,7 +161,7 @@
     $scope.updateTicket = function () {
         var url = "Tasks.aspx?tp=updateTicket";
         var u = angular.copy($scope.selectedTicket);
-        u['tasks'] = $scope.checkTicketTaskUpdate();
+        //u['tasks'] = $scope.checkTicketTaskUpdate();
 
         if (u.Status == 4) {
             if ($scope.selectedTicket.oldStatus == 3 || $scope.selectedTicket.oldStatus == 2) {
@@ -171,7 +175,7 @@
             }
         }
         DataService.makePostRequest(url, u).then(
-            function (d) {
+            function (response) {
                 if (!response.RequestSucceed) return;
                 $.each($scope.data.Ticket, function (i, o) {
                     if (o.Id == $scope.selectedTicket.Id)
@@ -330,6 +334,10 @@
 
         if (moment(t.TimeClose, "DD-MM-YYYY HH:mm").diff(moment(), "days") > 0)
             return "danger";
+    }
+
+    $scope.isTicketOpened = function (t) {
+        return t.Status < 4;
     }
 
     $scope.resetFields = function () {

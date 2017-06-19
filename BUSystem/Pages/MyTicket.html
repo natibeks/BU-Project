@@ -27,11 +27,7 @@
                     <div data-ng-bind="u[col.Data]" data-ng-if="col.Data!='Status' && col.Data!='Description'"></div>
                     <div data-ng-bind="getStatus(u[col.Data])" data-ng-if="col.Data=='Status'"></div>
                     <div data-ng-bind="getTicketDescription(u.TicketID)" data-ng-if="col.Data=='Description'"></div>
-                    <!--<div data-ng-bind="getCategory(u[CategoryName])" data-ng-if="col.Data=='Category'"></div>-->
                 </td>
-                <!--<td data-ng-bind="u.CategoryName"></td>
-                <td data-ng-repeat="a in data.Ticket" data-ng-show="a.idTicket==u.idTicket" data-ng-bind="a.Description"></td>
-                <td data-ng-bind="u.Status"></td>-->
             </tr>
         </tbody>
     </table>

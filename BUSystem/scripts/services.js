@@ -1,4 +1,6 @@
-﻿app.factory('DataService', dataService);
+﻿//DataService controls on http request to server including handle server errors
+
+app.factory('DataService', dataService);
 
 function dataService($http) {
     var data = {
@@ -34,9 +36,6 @@ function dataService($http) {
         return makeGetRequest(url, { uid: uid });
     }
 
-    function prepareDate(data) {
-
-    }
 
     return data;
 

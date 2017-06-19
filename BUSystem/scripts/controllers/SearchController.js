@@ -31,7 +31,7 @@
         $scope.searchResult2 = "";
     }
 
-   
+   // generate result for free text search
     $scope.freeSearch = function () {
         $scope.key = $scope.toSearch.text.trim();
         if ($scope.key == "") {
@@ -50,10 +50,10 @@
             $scope.searchResultExist = true;
 
         }
-
-
     }
 
+
+    // generate result for advanced search
     $scope.customSearch = function () {
         if (["", null].indexOf($scope.toSearch.status) > -1 && ["", null].indexOf($scope.toSearch.category) > -1 && $scope.toSearch.OpenFrom == "" && $scope.toSearch.OpenTo == ""
             && $scope.toSearch.CloseFrom == "" && $scope.toSearch.CloseTo == "") {

@@ -7,7 +7,7 @@
             padding-right:15px;
         }
     </style>
-    <form class="form-horizontal newticketform"><!--newticketform-->
+    <form class="form-horizontal newticketform">
         <div class="row">
             <legend>פרטי עובד</legend>
             <div ng-show="currentUser.Permission==1">
@@ -25,11 +25,6 @@
             <div class="form-group">
                 <label class="col-lg-1 control-label">מחלקה:</label>
                 <div class="col-lg-3">
-                    <!--<select class="form-control" 
-                            data-ng-options="x.Id as x.DepartmentName for x in data.Department | filter: departmentFilter |orderBy: 'DepartmentName'" 
-                            data-ng-model="selectedTicket.CategoryID" data-ng-disabled="currentUser.Permission == 0" required>
-                        <option value="">-- בחר מחלקה --</option>
-                    </select>-->
                     <input type="text" class="form-control" ng-value="getDepartment(currentUser.Department)" disabled>
                 </div>
             </div>
@@ -92,11 +87,6 @@
                     <textarea data-ng-model="selectedTicket.Description" class="form-control" rows="4" i placeholder="כתוב כאן..." required></textarea>
                 </div>
             </div>
-            <!--<label class="custom-file">
-                <input type="file" id="file" class="custom-file-input">
-                <span class="custom-file-control"></span>
-            </label>-->
-            <!--<div data-ng-show="currentUser.Permission =='2' || currentUser.Permission =='3' || currentUser.Permission =='0'">-->
             <div class="form-group">
                 <label class="col-lg-1 control-label">תאריך לביצוע:</label>
                 <div class="col-lg-3">
@@ -118,7 +108,7 @@
             </div>
         </div>
         <div class="form-group">
-            <div><a href="#" class="btn btn-success" data-ng-click="addNewTicket()">שלח</a></div>
+            <div class="col-lg-2 col-lg-offset-3"><a href="#" class="btn btn-success" data-ng-click="addNewTicket()">שלח</a></div>
         </div>
     </form>
 </div>
