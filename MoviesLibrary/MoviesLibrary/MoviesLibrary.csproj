@@ -79,6 +79,9 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="inc\movie.html" />
+    <Content Include="inc\newest.html" />
+    <Content Include="inc\table.html" />
     <Content Include="packages.config" />
     <EntityDeploy Include="App_Code\Blockbuster.edmx">
       <Generator>EntityModelCodeGenerator</Generator>

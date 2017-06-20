@@ -19,13 +19,14 @@ function dataService($http) {
 
     dataService.makePostRequest = function (url, obj) {
         var requestUrl = url;
+        var url = "RequestsHandler.aspx?key=" + keyVal;
         return $http.post(requestUrl, obj).then(function (response) {
             return { RequestSucceed: true, Data: response.data };
         }).catch(dataServiceError);
     }
 
     dataService.getAllData = function (id, isadmin) {
-        var url = "RequestsHandler.aspx?tp=GetData";
+        var url = "RequestsHandler.aspx?key=getdata";
         loadingStatus = true;
         dataObject = makeGetRequest(url, { id: id, isadmin: isadmin });
         dataObject = dataObject.Data;
@@ -56,7 +57,7 @@ function authService(DataService) {
     var authService = {};
 
     authService.login = function (userObj) {
-        return DataService.makePostRequest("RequestsHandler.aspx?tp=login", userObj).then(
+        return DataService.makePostRequest("RequestsHandler.aspx?key=login", userObj).then(
             function (response) {
                 if (!response.RequestSucceed) return;
                 authService.user = response.Data;

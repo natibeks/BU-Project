@@ -48,6 +48,7 @@
                     <ul class="nav navbar-nav">
                         <li class="active"><a href="#Home">Main<span class="sr-only">(current)</span></a></li>
                         <li><a href="#Movies">Movies</a></li>
+                        <li><a href="#AdminManagment">Managment</a></li>
                     </ul>
                 </div>
             </div>

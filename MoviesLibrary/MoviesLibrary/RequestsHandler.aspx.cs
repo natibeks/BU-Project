@@ -20,13 +20,13 @@ namespace MoviesLibrary
                 dynamic obj = postData == "" ? null : JObject.Parse(postData);
                 switch (tp)
                 {
-                    case "GetInitData":
+                    case "getdata":
                         var pv = Request["pv"] != null;
                         var id = Convert.ToInt32(Request["id"]);
                         var admin = Convert.ToBoolean(Request["isadmin"]);
                         Response.Write(Utils.GetInitData(id, admin));
                         break;
-                    case "setUserAsLogged":
+                    case "login":
                         Response.Write(Utils.SetUserAsLogged(Convert.ToInt32(Request["uid"])));
                         break;
                     case "addNewTicket":

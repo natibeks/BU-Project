@@ -1,0 +1,27 @@
+﻿<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th data-ng-repeat="field in tableFields" data-ng-bind="field.Title"></th>
+            <th style="width: 70px;"> </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr data-ng-repeat="movie in data.Movie | pagination: pager.curr * pager.size | limitTo: pager.size" data-ng-mouseover="hoverInBookRow(book)" data-ng-mouseleave="hoverOutBookRow(book)">
+            <td data-ng-repeat="field in tableFields" data-ng-style="{'width':field.Width}">
+                <div data-ng-bind="movie.Id" data-ng-if="field.Title == '#'"></div>
+                <div data-ng-if="field.Title == 'Actors'">
+                    <div data-ng-repeat="ma in data.MovieActor | filter:{MovieID: selectedMovie.Id, MainActor: true} | limitTo: 3">
+                        <div data-ng-bind="getActorName(ma.ActorID)+', '"></div>
+                    </div>
+                </div>
+                <div data-ng-bind="getDirector(movie.Director)" data-ng-if="field.Title == 'Director'"></div>
+                <div data-ng-bind="getGenre(movie.Genre)" data-ng-if="field.Title == 'Genre'"></div>
+            </td>
+            <td>
+                <div data-ng-if="isUserFreeToRent()">
+                        <a href="" title="Rent It" data-ng-click="rentMovie(movie)"><span class="ion-ios-download-outline text-primary"></span></a>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>

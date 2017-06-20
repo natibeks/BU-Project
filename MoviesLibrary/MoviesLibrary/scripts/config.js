@@ -1,16 +1,16 @@
 ﻿app.config(function ($routeProvider) {
     $routeProvider.when('/Home', {
         templateUrl: "inc/home.html",
-        controller: "HomeController",
+        controller: "MovieController",
         resolve: {
             data: function (DataService) {
-                return DataService.getAll();
+                return DataService.getAllData();
             }
         }
     })
     .when('Movies', {
-        templateUrl: "inc/movies.html",
-        controller: "HomeController",
+        templateUrl: "inc/table.html",
+        controller: "TableController",
         resolve: {
             data: function (DataService) {
                 return DataService.getData();
@@ -23,7 +23,7 @@
     })
     .when('AdminManagment', {
         templateUrl: "inc/adminman.html",
-        controller: "HomeController",
+        controller: "AdminController",
     })
     .otherwise({ redirectTo: '/Home' });
 });
