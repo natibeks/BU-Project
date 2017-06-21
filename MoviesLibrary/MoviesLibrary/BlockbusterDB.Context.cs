@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MoviesLibrary.App_Code
+namespace MoviesLibrary
 {
     using System;
     using System.Data.Entity;

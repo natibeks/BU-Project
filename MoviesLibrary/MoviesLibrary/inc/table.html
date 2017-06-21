@@ -6,7 +6,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr data-ng-repeat="movie in data.Movie | pagination: pager.curr * pager.size | limitTo: pager.size" data-ng-mouseover="hoverInBookRow(book)" data-ng-mouseleave="hoverOutBookRow(book)">
+        <tr data-ng-repeat="movie in data.Movie | filter: tableFilter | pagination: pager.curr * pager.size | limitTo: pager.size" data-ng-mouseover="hoverInBookRow(book)" data-ng-mouseleave="hoverOutBookRow(book)">
             <td data-ng-repeat="field in tableFields" data-ng-style="{'width':field.Width}">
                 <div data-ng-bind="movie.Id" data-ng-if="field.Title == '#'"></div>
                 <div data-ng-if="field.Title == 'Actors'">

@@ -7,20 +7,20 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MoviesLibrary.App_Code
+namespace MoviesLibrary
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class Movie
+    public partial class User
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Plot { get; set; }
-        public int Genre { get; set; }
-        public int Year { get; set; }
-        public int Director { get; set; }
-        public Nullable<int> WhoRent { get; set; }
+        public string Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Password { get; set; }
+        public string Email { get; set; }
+        public Nullable<int> MovieID { get; set; }
+        public Nullable<bool> Admin { get; set; }
         public Nullable<bool> IsArchive { get; set; }
     }
 }

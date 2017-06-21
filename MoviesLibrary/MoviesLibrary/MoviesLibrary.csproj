@@ -79,16 +79,26 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="BlockbusterDB.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>BlockbusterDB.edmx</DependentUpon>
+      <LastGenOutput>BlockbusterDB.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="BlockbusterDB.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>BlockbusterDB.edmx</DependentUpon>
+      <LastGenOutput>BlockbusterDB.cs</LastGenOutput>
+    </Content>
     <Content Include="inc\movie.html" />
     <Content Include="inc\newest.html" />
     <Content Include="inc\table.html" />
     <Content Include="packages.config" />
-    <EntityDeploy Include="App_Code\Blockbuster.edmx">
+    <EntityDeploy Include="BlockbusterDB.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>Blockbuster.Designer.cs</LastGenOutput>
+      <LastGenOutput>BlockbusterDB.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <Content Include="App_Code\Blockbuster.edmx.diagram">
-      <DependentUpon>Blockbuster.edmx</DependentUpon>
+    <Content Include="BlockbusterDB.edmx.diagram">
+      <DependentUpon>BlockbusterDB.edmx</DependentUpon>
     </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -99,16 +109,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Blockbuster.aspx" />
-    <Content Include="App_Code\Blockbuster.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>Blockbuster.edmx</DependentUpon>
-      <LastGenOutput>Blockbuster.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="App_Code\Blockbuster.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>Blockbuster.edmx</DependentUpon>
-      <LastGenOutput>Blockbuster.cs</LastGenOutput>
-    </Content>
     <Content Include="inc\adminman.html" />
     <Content Include="inc\forgot.html" />
     <Content Include="inc\home.html" />
@@ -120,7 +120,9 @@
     <Content Include="scripts\controllers\home.controller.js" />
     <Content Include="scripts\controllers\login.controller.js" />
     <Content Include="scripts\controllers\main.controller.js" />
+    <Content Include="scripts\controllers\table.controller.js" />
     <Content Include="scripts\filters.js" />
+    <Content Include="scripts\packs\angular-route.js" />
     <Content Include="scripts\packs\bootstrap.min.js" />
     <Content Include="scripts\services.js" />
     <Content Include="scripts\template.js" />
@@ -129,10 +131,30 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Code\Actor.cs">
-      <DependentUpon>Blockbuster.tt</DependentUpon>
+    <Compile Include="Actor.cs">
+      <DependentUpon>BlockbusterDB.tt</DependentUpon>
     </Compile>
-    <Content Include="App_Code\MailSender.cs" />
+    <Compile Include="BlockbusterDB.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BlockbusterDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Director.cs">
+      <DependentUpon>BlockbusterDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Genre.cs">
+      <DependentUpon>BlockbusterDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="App_Code\MailSender.cs" />
+    <Compile Include="Movie.cs">
+      <DependentUpon>BlockbusterDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MovieActor.cs">
+      <DependentUpon>BlockbusterDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="User.cs">
+      <DependentUpon>BlockbusterDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Blockbuster.aspx.cs">
       <DependentUpon>Blockbuster.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -140,32 +162,15 @@
     <Compile Include="Blockbuster.aspx.designer.cs">
       <DependentUpon>Blockbuster.aspx</DependentUpon>
     </Compile>
-    <Compile Include="App_Code\Blockbuster.Context.cs">
+    <Compile Include="BlockbusterDB.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Blockbuster.Context.tt</DependentUpon>
+      <DependentUpon>BlockbusterDB.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="App_Code\Blockbuster.cs">
+    <Compile Include="BlockbusterDB.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Blockbuster.tt</DependentUpon>
-    </Compile>
-    <Compile Include="App_Code\Blockbuster.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Blockbuster.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="App_Code\Director.cs">
-      <DependentUpon>Blockbuster.tt</DependentUpon>
-    </Compile>
-    <Compile Include="App_Code\Genre.cs">
-      <DependentUpon>Blockbuster.tt</DependentUpon>
-    </Compile>
-    <Compile Include="App_Code\Movie.cs">
-      <DependentUpon>Blockbuster.tt</DependentUpon>
-    </Compile>
-    <Compile Include="App_Code\MovieActor.cs">
-      <DependentUpon>Blockbuster.tt</DependentUpon>
+      <DependentUpon>BlockbusterDB.edmx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestsHandler.aspx.cs">
@@ -174,9 +179,6 @@
     </Compile>
     <Compile Include="RequestsHandler.aspx.designer.cs">
       <DependentUpon>RequestsHandler.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="App_Code\User.cs">
-      <DependentUpon>Blockbuster.tt</DependentUpon>
     </Compile>
     <Compile Include="App_Code\Utils.cs" />
   </ItemGroup>

@@ -16,7 +16,7 @@ namespace MoviesLibrary
     public class Utils
     {
         private static SqlConnection conn;
-        public static string GetInitData(int uid, bool admin)
+        public static string GetInitData(string uid, bool admin)
         {
             DataSet data = new DataSet();
             var connectStr = WebConfigurationManager.AppSettings["SQLServer"];
@@ -24,47 +24,57 @@ namespace MoviesLibrary
             using (conn = new SqlConnection(connectStr))
             {
                 SqlCommand sqlComm = new SqlCommand("GetData", conn);
-                if (admin)
-                    sqlComm.Parameters.AddWithValue("@userId", 0);
-                else
-                    sqlComm.Parameters.AddWithValue("@userId", uid);
+                sqlComm.Parameters.AddWithValue("@userId", uid);
+                sqlComm.Parameters.AddWithValue("@isAdmin", admin);
                 sqlComm.CommandType = CommandType.StoredProcedure;
                 SqlDataAdapter da = new SqlDataAdapter();
                 da.SelectCommand = sqlComm;
                 da.Fill(data);
 
                 data.Tables[0].TableName = "User";
-                data.Tables[1].TableName = "UserDomain";
-                data.Tables[2].TableName = "Ticket";
-                data.Tables[3].TableName = "UserTicket";
-                data.Tables[4].TableName = "Category";
-                data.Tables[5].TableName = "Location";
-                data.Tables[6].TableName = "TicketsToDo";
-                data.Tables[7].TableName = "MyTickets";
-                data.Tables[8].TableName = "Task";
-                data.Tables[9].TableName = "Status";
-                data.Tables[10].TableName = "Role";
-                data.Tables[11].TableName = "Domain";
-                data.Tables[12].TableName = "Department";
+                data.Tables[1].TableName = "Movie";
+                data.Tables[2].TableName = "Actor";
+                data.Tables[3].TableName = "Director";
+                data.Tables[4].TableName = "Genre";
+                data.Tables[5].TableName = "MovieActor";
 
                 return JsonConvert.SerializeObject(data);
             }
         }
 
-        public static string SendForgottenPass(string email)
+        public static string Login(dynamic user)
         {
             try
             {
-                using (var db = new MSEsystemEntities1())
+                using (var db = new MoviesDBEntities())
                 {
-                    var u = db.User.Where(x => x.EmailAddress == email).FirstOrDefault();
+                    string id = Convert.ToString(user.userId);
+                    string pass = Convert.ToString(user.password);
+                    var b = db.User.Where(i => i.Id == id && i.Password==pass) .FirstOrDefault();
+
+                    return JsonConvert.SerializeObject(b);
+                }
+            }
+            catch (Exception e)
+            {
+                return JsonConvert.SerializeObject(new { Id = ""});
+            }
+        }
+
+        public static string SendForgottenPass(string userId)
+        {
+            try
+            {
+                using (var db = new MoviesDBEntities() )
+                {
+                    var u = db.User.Where(x => x.Id == userId).FirstOrDefault();
                     if (u == null)
                         return "error";
                     else
                     {
                         string temp = @"{  
-                  'Username': '" + email + @"',
-                  'mailBody': 'הסיסמא שלך היא: " + u.UserPassword + @"',
+                  'Username': '" + u.Email + @"',
+                  'mailBody': 'הסיסמא שלך היא: " + u.Password + @"',
                   'mailTitle': 'שיחזור סיסמא'
                    }
                 ";

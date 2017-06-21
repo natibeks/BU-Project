@@ -4,7 +4,6 @@
 
     $scope.search = {
         Text: "",
-        ResultView: false,
         Advanced: false,
         Movie: true,
         Actors: true,
@@ -13,7 +12,28 @@
         Year: true
     }
 
+    $scope.getSearchPlaceholder = function () {
+        var str = "Search by ";
+        if ($scope.search.Movie)
+            str += "Movie Name";
+        if ($scope.search.Actors)
+            str += ", Actors";
+        if ($scope.search.Director)
+            str += ", Director";
+        if ($scope.search.Genre)
+            str += ", Genre";
+        if ($scope.search.Year)
+            str += ", Year";
+        return str;
+    }
+
     $scope.setAdvancedMode = function (flag) {
+        $scope.search.Movie = true;
+        $scope.search.Actors = true;
+        $scope.search.Director = true;
+        $scope.search.Genre = true;
+        $scope.search.Year = true;
+
         $scope.search.Advanced = flag;
     }
 
@@ -29,31 +49,10 @@
         return $scope.currentUser.MovieID > 0;
     }
 
-    $scope.tableFields = [{ Title: "#", Width: "50px" },
-    { Title: "Name", Width: "200px" },
-    { Title: "Actors", Width: "200px" },
-    { Title: "Director", Width: "auto" },
-    { Title: "Genre", Width: "200px" }];
-
     $scope.advancedSearchValues = [{ Title: "Movie name", Data: "Movie" },
     { Title: "Actors", Data: "Actors" },
     { Title: "Director", Data: "Director" },
     { Title: "Genre", Data: "Genre" },
     { Title: "Year", Data: "Year" }];
 
-    // pagination code
-    $scope.pager = {
-        curr: 0,
-        size: 5,
-    }
-    $scope.isLastPage = function () { return $scope.pager.curr >= ($scope.data.Movie.length / $scope.pager.size - 1) };
-    $scope.isFirstPage = function () { return $scope.pager.curr == 0 };
-    $scope.incPage = function () { $scope.pager.curr++; };
-    $scope.decPage = function () { $scope.pager.curr--; };
-    $scope.numberOfPages = function () {
-        return Math.ceil($scope.data.Movie.length / $scope.pager.size);
-    };
-    $scope.$watch('data.Movie.length', function () {
-        if ($scope.pager.curr > ($scope.numberOfPages() - 1)) $scope.decPage();
-    });
 });

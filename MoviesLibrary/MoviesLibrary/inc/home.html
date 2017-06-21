@@ -1,7 +1,7 @@
-﻿<div data-ng-controller="HomeController">
+﻿<div>
     <div class="row">
         <div class="form-group">
-            <input class="form-control" data-ng-model="search.Text" placeholder="{{getSearchPlaceholder}}" title="Movies search input"/>
+            <input class="form-control" data-ng-model="search.Text" placeholder="{{getSearchPlaceholder()}}" title="Movies search input" />
             <div class="col-xs-3 col-xs-offset-10 col-md-2 col-lg-2" data-ng-if="!search.Advanced">
                 <a href="#" data-ng-click="setAdvancedMode(true)"></a>
             </div>
@@ -16,19 +16,15 @@
             </div>
         </div>
     </div>
+
     <div class="row">
-        <div data-ng-if="!ResultView">
-            <div class="col-xs-12 col-md-8 col-lg-8 pull-right">
-                <h1>Newest Movie</h1>
-            </div>
-            <div class="col-xs-12 col-md-4 col-lg-4 pull-right">
-                <a href="#" data-ng-click="returnMovie()" class="btn btn-warning">Return Movie</a>
-            </div>
+        <div class="col-xs-12 col-md-8 col-lg-8">
+            <h1 data-ng-bind="getPageHeading()"></h1>
         </div>
-        <div data-ng-if="ResultView">
-            <h1>Search Result</h1>
+        <div class="col-xs-12 col-md-4 col-lg-4 pull-right">
+            <a href="#" data-ng-click="returnMovie()" class="btn btn-warning">Return Movie</a>
         </div>
     </div>
-    <div data-ng-controller="MovieController" data-ng-if="!ResultView" data-ng-include="'inc/movie.html'"></div>
-    <div data-ng-controller="TableController" data-ng-include="'inc/table.html'"></div>
+    <div data-ng-controller="MovieController" data-ng-show="!search.Text.length == 0  || currentPage == 1" data-ng-include="'inc/movie.html'"></div>
+    <div data-ng-controller="TableController" data-ng-show="search.Text.length > 0 || currentPage == 2" data-ng-include="'inc/table.html'"></div>
 </div>
