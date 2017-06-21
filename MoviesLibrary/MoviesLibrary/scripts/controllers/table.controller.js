@@ -6,23 +6,45 @@
 
     $scope.tableFields = [{ Title: "#", Width: "50px" },
         { Title: "Name", Width: "200px" },
-        { Title: "Actors", Width: "200px" },
-        { Title: "Director", Width: "auto" },
-        { Title: "Genre", Width: "200px" }];
+        { Title: "Plot", Width: "auto" },
+        { Title: "Actors", Width: "150px" },
+        { Title: "Year", Width: "100px" },
+        { Title: "Genre", Width: "150px" },];
 
-    $scope.tableFilter = function () {
+    $scope.tableFilter = function (m) {
+        var k = $scope.search.Text.trim();
+        var contains = k == "";
+
         if ($scope.search.Advanced) {
-            return (m.Name.includes($scope.search.Text) && $scope.search.Movie) ||
-                (m.Id.toString().includes($scope.search.Text) && $scope.search.Movie) ||
-                ($scope.isActorsNameMatch($scope.search.Text)  && $scope.search.Actors) ||
-                ($scope.getDirector(m.Director).includes($scope.search.Text) && $scope.search.Movie) ||
-                ($scope.getGenre(m.Genre).includes($scope.search.Text) && $scope.search.Movie) ||
-                (m.Year.includes($scope.search.Text) && $scope.search.Movie);
+            return (m.Name.toString().toLowerCase().indexOf(k)>-1 && $scope.search.Movie) ||
+                (m.Id.toString().indexOf(k) > -1 && $scope.search.Movie) ||
+                ($scope.isActorsNameMatch(m.Id,k)  && $scope.search.Actors) ||
+                ($scope.getDirector(m.Director).toLowerCase().indexOf(k) > -1 && $scope.search.Director) ||
+                ($scope.getGenre(m.Genre).toLowerCase().indexOf(k) > -1 && $scope.search.Genre) ||
+                (m.Year.toString().indexOf(k) > -1 && $scope.search.Year);
         }
         else
-            return ((m.Name).includes($scope.search.Text) || (m.Id.toString()).includes($scope.search.Text)) || $scope.isActorsNameMatch($scope.search.Text) ||
-                $scope.getDirector(m.Director).includes($scope.search.Text) || $scope.getGenre(m.Genre).includes($scope.search.Text)
-                || m.Year.includes($scope.search.Text);
+            return ((m.Name).toLowerCase().indexOf(k) > -1 || (m.Id.toString()).indexOf(k) > -1) || $scope.isActorsNameMatch(m.Id, k) ||
+                $scope.getDirector(m.Director).toLowerCase().indexOf(k) > -1 || $scope.getGenre(m.Genre).toLowerCase().indexOf(k) > -1
+                || m.Year.toString().indexOf(k) > -1;
+    }
+
+    $scope.setSort = function (c, desc) {
+        if (c == "#") c = "Id";
+        $scope.sort.Name = c;
+        $scope.sort.Desc = !$scope.sort.Desc;
+    }
+
+    $scope.isActorsNameMatch = function (movie, key) {
+        var arr = Enumerable.From($scope.data.MovieActor).Where(function (x) { return movie == x.MovieID; }).Select("$.ActorID").ToArray();
+        var cnt = Enumerable.From($scope.data.Actor).Where(function (x) { return arr.indexOf(x.Id) > -1 && x.Name.toLowerCase().indexOf(key) > -1; }).Count();
+        return cnt > 0;
+    }
+
+    $scope.setMovie = function (movie) {
+        var temp = Enumerable.From($scope.data.Movie).Where(function (x) { return x.Id == movie }).FirstOrDefault();
+        $scope.$parent.selectedMovie = angular.copy(temp);
+        $scope.setPage(1);
     }
 
     // pagination code

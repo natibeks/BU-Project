@@ -3,10 +3,8 @@
 app.factory('DataService', dataService);
 app.factory('AuthService', authService);
 
-function dataService($http) {
-    var dataService = {
-        loadingStatus: false,
-    };
+function dataService($http,$q) {
+    var dataService = {};
     dataService.makeGetRequest = function (url, params) {
         var requestUrl = url;
         angular.forEach(params, function (value, key) {
@@ -29,15 +27,17 @@ function dataService($http) {
 
     dataService.getAllData = function (id, isadmin) {
         var url = "RequestsHandler.aspx?key=getdata";
+        var d = $q.defer();
         dataService.loadingStatus = true;
         dataService.makeGetRequest(url, { id: id, isadmin: isadmin }).then(
             function (response) {
                 if (!response.RequestSucceed) return;
                 dataService.dataObject = response.Data;
                 dataService.loadingStatus = false;
-                return dataService.dataObject;
+                d.resolve(dataService.dataObject);           
                 // need to send here a promise! or using async await
-        });  
+            });
+        return d.promise;
     }
 
     dataService.getData = function () {
@@ -56,9 +56,7 @@ function dataService($http) {
     return dataService;
 }
 function authService(DataService) {
-    var authService = {
-        loginStatus: false
-    };
+    var authService = {};
     authService.login = function (userObj) {
         return DataService.makePostRequest("RequestsHandler.aspx?key=login", userObj).then(
             function (response) {
@@ -73,8 +71,5 @@ function authService(DataService) {
             })
     };
 
-    authService.setLoginStatus = function (flag) {
-        authService.loginStatus = flag;
-    }
     return authService;
 }

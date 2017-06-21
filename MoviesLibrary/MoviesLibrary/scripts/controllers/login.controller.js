@@ -1,4 +1,4 @@
-﻿app.controller('LoginController', function ($scope, AuthService, DataService,data) {
+﻿app.controller('LoginController', function ($scope, $rootScope, AuthService, DataService) {
     $scope.loginFailed = false;
     $scope.forgotView = false;
     $scope.userInput = {
@@ -16,12 +16,16 @@
 
     $scope.sendLogin = function (valid) {
         if (!valid) return;
+        $rootScope.loadingStatus = true;
         AuthService.login($scope.userInput).then(
             function (response) {
                 if (response.Succeed)
                     $scope.$emit('loginSucceed', response.User);
-                else
+                else {
+                    $rootScope.loadingStatus = false;
                     $scope.loginFailed = true;
+                }
+                    
         })
     }
 

@@ -1,14 +1,19 @@
-﻿app.controller('MainController', function ($scope, $location,DataService,AuthService) {
+﻿app.controller('MainController', function ($rootScope, $scope, $location, AuthService, DataService) {
+    $scope.currentPage = 1;
+    $rootScope.loadingStatus = false;
+    $rootScope.loginStatus = false;
     $scope.$on('loginSucceed', function (e,user) {
         $scope.currentUser = user;
-        AuthService.setLoginStatus(true);
-        $location.path("/Home");
+        DataService.getAllData(user.Id, user.Admin).then(function (x) {
+            $rootScope.loginStatus = true;
+            $location.path("/Home");
+        })
+
     })
 
-    $scope.setPage = function (page) {
-        if (page==1) {
-            var a = Enumerable.From($scope.data.Movie).Where(function (x) { return x.IsArchive != true && x.WhoRent > 0; }).ToArray();
-            $scope.selectedMovie = angular.copy(a[a.length - 1]);
+    $scope.setPage = function (page,newest) {
+        if (page == 1 && newest) {
+            $scope.$broadcast('setNewestSelectedMovie');
         }
         $scope.currentPage = page;
     }

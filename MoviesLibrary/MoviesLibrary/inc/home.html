@@ -2,29 +2,43 @@
     <div class="row">
         <div class="form-group">
             <input class="form-control" data-ng-model="search.Text" placeholder="{{getSearchPlaceholder()}}" title="Movies search input" />
-            <div class="col-xs-3 col-xs-offset-10 col-md-2 col-lg-2" data-ng-if="!search.Advanced">
-                <a href="#" data-ng-click="setAdvancedMode(true)"></a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group">
+            <div class="row" data-ng-if="!search.Advanced">
+                <div class="col-xs-3 col-md-2 col-lg-2" >
+                    <a href="#" prevent-default data-ng-click="setAdvancedMode(true)">Advanced</a>
+                </div>
             </div>
-            <div class="row">
-                <div class="col-xs-12 col-md-4 col-lg-4" data-ng-repeat="sv in advancedSearchValues">
-                    <div class="checkbox">
+            <div class="row" data-ng-if="search.Advanced">
+                <div class="col-md-2 col-lg-2" style="margin-top:0px" data-ng-repeat="sv in advancedSearchValues">
+                    <div class="checkbox" style="margin-top:0px;margin-bottom:0px;">
                         <label>
                             <input type="checkbox" data-ng-model="search[sv.Data]"> <span data-ng-bind="sv.Title"></span>
                         </label>
                     </div>
+                </div>
+                <div class="col-md-2 col-lg-2">
+                    <a href="#" prevent-default data-ng-click="setAdvancedMode(false)">Cancel</a>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-xs-12 col-md-8 col-lg-8">
+        <div class="col-lg-6 col-md-6 col-xs-12">
             <h1 data-ng-bind="getPageHeading()"></h1>
         </div>
-        <div class="col-xs-12 col-md-4 col-lg-4 pull-right">
-            <a href="#" data-ng-click="returnMovie()" class="btn btn-warning">Return Movie</a>
+        <div class="col-lg-2 col-md-2 col-xs-12" data-ng-if="!isUserFreeToRent()" style="margin-top:20px;text-align:right">
+            <a href="#" prevent-default class="btn btn-warning" data-ng-click="returnMovie()">Stop Rental</a>
+        </div>
+        <div data-ng-class="{true:'col-lg-4 col-md-4 col-xs-12', false:'col-lg-6 col-md-6 col-xs-12' }[!isUserFreeToRent()]" style="margin-top:20px;text-align:right">
+            <a href="#" prevent-default class="btn btn-primary" data-ng-click="setEditMode(true)" data-ng-if="currentPage==1 && currentUser.Admin && !editMode">Edit Movie</a>
+            <a href="#" prevent-default class="btn btn-success" data-ng-click="saveChanges()" data-ng-if="currentPage==1 && currentUser.Admin && editMode">Save Movie</a>
+            <a href="#" prevent-default class="btn btn-default" data-ng-click="setEditMode(false)" data-ng-if="currentPage==1 && currentUser.Admin && editMode">Cancel</a>
         </div>
     </div>
-    <div data-ng-controller="MovieController" data-ng-show="!search.Text.length == 0  || currentPage == 1" data-ng-include="'inc/movie.html'"></div>
+    <div data-ng-show="currentPage == 1 && search.Text.length == 0" data-ng-include="'inc/movie.html'"></div>
     <div data-ng-controller="TableController" data-ng-show="search.Text.length > 0 || currentPage == 2" data-ng-include="'inc/table.html'"></div>
 </div>

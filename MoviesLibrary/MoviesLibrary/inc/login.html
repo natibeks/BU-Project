@@ -5,12 +5,13 @@
                 <h3 class="panel-title">Login</h3>
             </div>
             <div class="panel-body">
-                <form name="loginForm" class="form-horizontal" data-ng-submit="sendLogin(loginForm.$valid)">
-                    <div class="form-group" data-ng-class="{'has-error':loginForm.inputId.$error}">
+                <form name="loginForm" class="form-horizontal" data-ng-submit="sendLogin(loginForm.$valid)" novalidate>
+                    <div class="form-group" 
+                         data-ng-class="{'has-error':loginForm.userIdInput.$invalid && loginForm.userIdInput.$dirty}">
                         <label for="inputId" class="col-lg-3 control-label">ID</label>
                         <div class="col-lg-8">
-                            <input type="text" class="form-control" id="inputId" name="inputId" data-ng-model="userInput.userId"
-                                   data-ng-minlength="9" data-ng-maxlength="9" data-ng-pattern="/^\d+$/" required
+                            <input type="text" class="form-control" id="inputId" name="userIdInput" data-ng-model="userInput.userId"
+                                   data-ng-minlength="9" data-ng-maxlength="9" data-ng-pattern="/^[0-9]*$/" required
                                    placeholder="9 digits identity number">
                         </div>
                     </div>
@@ -28,7 +29,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-lg-9 col-lg-offset-3">
-                            <button type="submit" class="btn btn-primary" data-ng-disabled="loginForm.$invalid">Submit</button>
+                            <button type="submit" class="btn btn-primary" data-ng-disabled="!loginForm.$valid">Submit</button>
                         </div>
                     </div>
                 </form>

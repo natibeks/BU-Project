@@ -125,7 +125,6 @@
     <Content Include="scripts\packs\angular-route.js" />
     <Content Include="scripts\packs\bootstrap.min.js" />
     <Content Include="scripts\services.js" />
-    <Content Include="scripts\template.js" />
     <Content Include="styles\bbstyle.css" />
     <Content Include="styles\packs\bootstrap.min.css" />
     <Content Include="Web.config" />
