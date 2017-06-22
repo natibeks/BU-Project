@@ -13,7 +13,7 @@
             <div ng-show="currentUser.Permission==1">
                 <label>פרטים אישיים - משתמש</label>
             </div>
-            <div ng-show="currentUser.Permission==2">
+            <div ng-show="currentUser.Permission>1">
                 <label>פרטים אישיים - עובד</label>
             </div>
             <div class="form-group">
@@ -50,7 +50,7 @@
                 <label class="col-lg-1 control-label">תחום:</label>
                 <div class="col-lg-3">
                     <select class="form-control" 
-                            data-ng-options="x.Id as x.DomainName for x in data.Domain | filter: domainByUser | orderBy: 'DomainName'" 
+                            data-ng-options="x.Id as x.DomainName for x in data.Domain | orderBy: 'DomainName'" 
                             data-ng-model="selectedTicket.DomainID" required>
                         <option value="">-- בחר תחום --</option>
                     </select>
@@ -77,7 +77,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="checkbox" data-ng-show="currentUser.Permission == 0">
+                <div class="checkbox" data-ng-show="currentUser.Permission == 1">
                     <label data-ng-model="selectedTicket.Priority">האם הפניה קריטית?<input type="checkbox"></label>
                 </div>
             </div>
@@ -87,7 +87,7 @@
                     <textarea data-ng-model="selectedTicket.Description" class="form-control" rows="4" i placeholder="כתוב כאן..." required></textarea>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group" data-ng-show="currentUser.Permission <4">
                 <label class="col-lg-1 control-label">תאריך לביצוע:</label>
                 <div class="col-lg-3">
                     <div class="input-group"

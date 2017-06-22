@@ -119,7 +119,7 @@
     $scope.produceReport = function () {
 
         if ($scope.toProduce.status == true) {
-            if ($scope.currentUser.Permission != 0) {
+            if ($scope.currentUser.Permission != 2) {
                 $scope.cntOpen = Enumerable.From($scope.data.MyTicket).Where(function (i) {
                     var dateOpen = moment(i.TimeOpen, 'DD-MM-YYYY');
                     var f1 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
@@ -185,7 +185,7 @@
         });
 
         if ($scope.toProduce.category == true) {
-            if ($scope.currentUser.Permission != '4') {
+            if ($scope.currentUser.Permission != 2) {
                 $scope.cntOpen = Enumerable.From($scope.data.TicketsToDo).Where(function (i) {
                     var c = i.CategoryName;
                     return i.Domain == $scope.currentUser.Domain

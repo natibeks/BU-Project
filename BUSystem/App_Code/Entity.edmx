@@ -99,6 +99,7 @@ warning 6002: The table/view 'MSE_System.dbo.UserDomain' does not have a primary
           <Property Name="UserID" Type="int" Nullable="false" />
           <Property Name="DomainID" Type="int" Nullable="false" />
           <Property Name="IsArchive" Type="bit" />
+          <Property Name="IsManager" Type="bit" />
         </EntityType>
         <EntityType Name="UserTicket">
           <Key>
@@ -128,7 +129,8 @@ warning 6002: The table/view 'MSE_System.dbo.UserDomain' does not have a primary
             <DefiningQuery>SELECT 
     [UserDomain].[UserID] AS [UserID], 
     [UserDomain].[DomainID] AS [DomainID], 
-    [UserDomain].[IsArchive] AS [IsArchive]
+    [UserDomain].[IsArchive] AS [IsArchive], 
+    [UserDomain].[IsManager] AS [IsManager]
     FROM [dbo].[UserDomain] AS [UserDomain]</DefiningQuery>
           </EntitySet>
         </EntityContainer>
@@ -264,6 +266,7 @@ warning 6002: The table/view 'MSE_System.dbo.UserDomain' does not have a primary
           <Property Name="UserID" Type="Int32" Nullable="false" />
           <Property Name="DomainID" Type="Int32" Nullable="false" />
           <Property Name="IsArchive" Type="Boolean" />
+          <Property Name="IsManager" Type="Boolean" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -391,6 +394,7 @@ warning 6002: The table/view 'MSE_System.dbo.UserDomain' does not have a primary
           <EntitySetMapping Name="UserDomain">
             <EntityTypeMapping TypeName="MSEsystemModel1.UserDomain">
               <MappingFragment StoreEntitySet="UserDomain">
+                <ScalarProperty Name="IsManager" ColumnName="IsManager" />
                 <ScalarProperty Name="IsArchive" ColumnName="IsArchive" />
                 <ScalarProperty Name="DomainID" ColumnName="DomainID" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />

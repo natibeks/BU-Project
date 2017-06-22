@@ -140,7 +140,7 @@
     }
 
     $scope.departmentFilter = function (item) {
-        if ($scope.currentUser.Permission == 0) return true;
+        if ($scope.currentUser.Permission == 2) return true;
         return $scope.currentUser.Department == item.Id;
     }
 
@@ -153,7 +153,7 @@
     };
 
     $scope.CategoryToSearchFilter = function (item) {
-        if ($scope.currentUser.Permission == 0)
+        if ($scope.currentUser.Permission == 2)
             return $scope.currentUser.Domains.indexOf(item.DomainID) > -1;
         else
             return true;

@@ -244,6 +244,17 @@
                     </div>
                     <div class="col-lg-6">
                         <div class="form-group">
+                            <label class="control-label">תחום:</label>
+                            <select class="form-control" data-ng-model="selectedUser.DomainID"
+                                    data-ng-options="o.Id as o.DomainName for o in data.Domain  | orderBy: 'DomainName'">
+                                <option value="">בחר</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-lg-offset-6">
+                        <div class="form-group" data-ng-if="selectedUser.DomainID != ''">
                             <label class="control-label">תפקיד:</label>
                             <select class="form-control" data-ng-model="selectedUser.Role"
                                     data-ng-options="o.Id as o.Role for o in data.Role  | orderBy: 'Role'">
@@ -252,6 +263,7 @@
                         </div>
                     </div>
                 </div>
+      
 
                 <hr />
                 <div class="row">
@@ -265,7 +277,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger pull-right" data-ng-click="showDelConfirmMsg(3)">מחק</button>
+                <button type="button" class="btn btn-danger pull-right" data-ng-click="showDelConfirmMsg(3)" data-ng-if="selectedUser.Id>0">מחק</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">ביטול</button>             
                 <button type="button" class="btn btn-success" data-ng-click="updateUser()">שמור</button>
             </div>

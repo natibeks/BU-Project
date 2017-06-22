@@ -6,6 +6,7 @@
         TelephoneNumber: "",
         Department: "",
         Role: "",
+        DomainID: "",
         UserPassword: "",
         IsArchive: false
     }
@@ -15,6 +16,7 @@
             $scope.selectedUser = angular.copy($scope.userTemplate);
         else
             $scope.selectedUser = angular.copy(user);
+        $scope.selectedUser["DomainID"] = Enumerable.From($scope.data.UserDomain).Where(function (x) { return x.UserID == user.Id }).FirstOrDefault();
         $("#editUserModal").modal('show');
     }
 

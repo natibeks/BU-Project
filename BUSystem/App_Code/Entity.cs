@@ -90,6 +90,7 @@ public partial class UserDomain
     public int UserID { get; set; }
     public int DomainID { get; set; }
     public Nullable<bool> IsArchive { get; set; }
+    public Nullable<bool> IsManager { get; set; }
 }
 
 public partial class UserTicket
