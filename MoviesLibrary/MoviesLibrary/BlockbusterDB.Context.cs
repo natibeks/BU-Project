@@ -28,8 +28,8 @@ namespace MoviesLibrary
         public virtual DbSet<Actor> Actor { get; set; }
         public virtual DbSet<Director> Director { get; set; }
         public virtual DbSet<Genre> Genre { get; set; }
-        public virtual DbSet<Movie> Movie { get; set; }
         public virtual DbSet<MovieActor> MovieActor { get; set; }
         public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<Movie> Movie { get; set; }
     }
 }

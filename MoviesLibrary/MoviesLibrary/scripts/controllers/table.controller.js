@@ -3,6 +3,17 @@
         Name: "Id",
         Desc: false
     }
+    $scope.hoverMovie = 0;
+    $scope.hoverMovieRow = function (id, hoverin) {
+        if (hoverin)
+            $scope.hoverMovie = id;
+        else
+            $scope.hoverMovie = 0;
+    }
+
+    $scope.isMovieFreeToBeRent = function (movie) {
+        return !(movie.WhoRent > 0);
+    }
 
     $scope.tableFields = [{ Title: "#", Width: "50px" },
         { Title: "Name", Width: "200px" },
@@ -42,8 +53,13 @@
     }
 
     $scope.setMovie = function (movie) {
-        var temp = Enumerable.From($scope.data.Movie).Where(function (x) { return x.Id == movie }).FirstOrDefault();
+        if (movie == undefined) {
+            var temp = Enumerable.From($scope.data.Movie).Where(function (x) { return x.Id == movie }).FirstOrDefault();
+        }
+        else
+            var temp = $scope.movieTemplate;
         $scope.$parent.selectedMovie = angular.copy(temp);
+        $scope.editMode = false;
         $scope.setPage(1);
     }
 

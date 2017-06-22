@@ -20,7 +20,7 @@ namespace MoviesLibrary
         public int Genre { get; set; }
         public int Year { get; set; }
         public int Director { get; set; }
-        public Nullable<int> WhoRent { get; set; }
+        public string WhoRent { get; set; }
         public Nullable<bool> IsArchive { get; set; }
     }
 }

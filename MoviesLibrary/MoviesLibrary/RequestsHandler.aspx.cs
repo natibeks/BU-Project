@@ -28,15 +28,17 @@ namespace MoviesLibrary
                     case "login":
                         Response.Write(Utils.Login(obj));
                         break;
-                    //case "addNewTicket":
-                    //    Response.Write(Utils.AddNewTicket(obj));
-                    //    break;
-                    //case "addTask":
-                    //    Response.Write(Utils.UpdateTask(obj));
-                    //    break;
-                    //case "checkTask":
-                    //    Response.Write(Utils.CheckTask(Convert.ToInt32(Request["TaskID"])));
-                    //    break;
+                    case "rentmovie":
+                        int movie = Convert.ToInt32(Request["movie"]);
+                        string user = Convert.ToString(Request["user"]);
+                        Response.Write(Utils.RentMovie(user, movie));
+                        break;
+                    case "returnmovie":               
+                        Response.Write(Utils.ReturnMovie(Convert.ToInt32(Request["movie"])));
+                        break;
+                    case "updatemovie":
+                        Response.Write(Utils.UpdateMovie(obj));
+                        break;
                     //case "delTask":
                     //    Response.Write(Utils.DeleteTask(Convert.ToInt32(Request["task"])));
                     //    break;

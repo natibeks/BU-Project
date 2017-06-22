@@ -11,7 +11,7 @@
     </thead>
     <tbody>
         <tr data-ng-repeat="movie in data.Movie | filter: tableFilter | orderBy: sort.Name : sort.Desc | pagination: pager.curr * pager.size | limitTo: pager.size"
-            data-ng-click="setMovie(movie.Id)" style="cursor:pointer">
+            data-ng-mouseover="hoverMovieRow(movie.Id,true)" data-ng-mouseleave="hoverMovieRow(0,false)">
             <td data-ng-repeat="field in tableFields">
                 <div data-ng-bind="movie.Id" data-ng-if="field.Title == '#'"></div>
                 <div data-ng-bind="movie.Name" data-ng-if="field.Title == 'Name'"></div>
@@ -26,9 +26,18 @@
                 <div data-ng-bind="getGenre(movie.Genre)" data-ng-if="field.Title == 'Genre'"></div>
             </td>
             <td>
-                <div data-ng-if="isUserFreeToRent()">
-                        <a href="#" prevent-default title="Rent It" data-ng-click="rentMovie(movie)" style="font-size:16px"><span class="ion-ios-download-outline text-primary"></span></a>
+                <div data-ng-show="hoverMovie==movie.Id" style="text-decoration:none">
+                    <a href="" title="Enter movie page." prevent-default data-ng-click="setMovie(movie.Id)" style="font-size:25px">
+                        <span class="ion-arrow-expand text-primary"></span>
+                    </a>            
+                    <a href="" title="Rent it." prevent-default data-ng-click="rentMovie(movie.Id)" style="font-size:25px"
+                        data-ng-if="isUserFreeToRent()">
+                        <span class="ion-ios-download-outline text-primary"></span>
+                    </a>
+                    <span title="Already rented." class="ion-ios-pricetag text-default" style="font-size:25px"
+                           data-ng-if="!isMovieFreeToBeRent(movie)"></span>
                 </div>
+
             </td>
         </tr>
     </tbody>

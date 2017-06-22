@@ -1,4 +1,4 @@
-﻿<div class="col-lg-6 col-lg-offset-3">
+﻿<div class="col-lg-8 col-lg-offset-2">
     <div class="panel panel-warning">
         <div class="panel-heading">
             <h3 class="panel-title"><strong data-ng-bind="selectedMovie.Name"></strong></h3>
@@ -12,12 +12,18 @@
                     <div class="row">
                         <div class="form-group">
                             <label class="control-label">Actors:</label>
-                            <div>
+                            <div data-ng-if="!editMode">
                                 <div data-ng-repeat="ma in data.MovieActor | filter:{MovieID: selectedMovie.Id}" style="display:inline-block">
                                     <div data-ng-bind="$last? getActorName(ma.ActorID) : getActorName(ma.ActorID)+' , '"></div>
                                 </div>
                             </div>
                             <div data-ng-if="editMode">
+                                <ui-select multiple ng-model="selectedMovie.Actors" theme="bootstrap" sortable="true" close-on-select="false">
+                                    <ui-select-match placeholder="Select actors..">{{$item.Name}}</ui-select-match>
+                                    <ui-select-choices repeat="ma in data.Actor | propsFilter: {Name: $select.search}">
+                                        <div ng-bind-html="ma.Name | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
                             </div>
 
 
@@ -28,6 +34,10 @@
                             <label class="control-label">Director:  </label>
                             <div data-ng-bind="getDirector(selectedMovie.Director)" data-ng-if="!editMode"></div>
                             <div data-ng-if="editMode">
+                                <select class="form-control" data-ng-model="selectedMovie.Director"
+                                        data-ng-options="o.Id as o.Name for o in data.Director  | orderBy: 'Name'">
+                                    <option value="">בחר</option>
+                                </select>    
                             </div>
                         </div>
                     </div>
@@ -36,6 +46,10 @@
                             <label class="control-label">Genre:  </label>
                             <div data-ng-bind="getGenre(selectedMovie.Genre)" data-ng-if="!editMode"></div>
                             <div data-ng-if="editMode">
+                                <select class="form-control" data-ng-model="selectedMovie.Genre"
+                                        data-ng-options="o.Id as o.Name for o in data.Genre  | orderBy: 'Name'">
+                                    <option value="">בחר</option>
+                                </select>                            
                             </div>
                         </div>
                     </div>
@@ -44,17 +58,20 @@
                             <label class="control-label">Year:  </label>
                             <div data-ng-bind="selectedMovie.Year" data-ng-if="!editMode"></div>
                             <div data-ng-if="editMode">
+                                <input class="form-control" type="number" data-ng-model="selectedMovie.Year" min="1990" max="{{getCurrentYearAsNum()}}" />
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row" style="padding-left:15px;padding-right:15px;">
-                <div class="form-group">
-                    <label class="control-label">Plot:</label>
-                    <div data-ng-bind="selectedMovie.Plot" data-ng-if="!editMode"></div>
-                    <div data-ng-if="editMode">
-                        <textarea class="form-control" rows="3" data-ng-model="selectedMovie.Plot"></textarea>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <label class="control-label">Plot:</label>
+                        <div data-ng-bind="selectedMovie.Plot" data-ng-if="!editMode"></div>
+                        <div data-ng-if="editMode">
+                            <textarea class="form-control" rows="3" data-ng-model="selectedMovie.Plot"></textarea>
+                        </div>
                     </div>
                 </div>
             </div>

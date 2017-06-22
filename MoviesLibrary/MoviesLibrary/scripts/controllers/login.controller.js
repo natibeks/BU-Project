@@ -30,7 +30,7 @@
     }
 
     $scope.sendPassword = function () {
-        DataService.makeGetRequest("RequestsHandler.aspx?tp=login", { userId: $scope.userInput.userId }).then(function (response) {
+        DataService.makeGetRequest("login", { userId: $scope.userInput.userId }).then(function (response) {
             if (!response.RequestSucceed) return;
             if (response.Data == 'error')
                 $scope.forgotSucceed = true;

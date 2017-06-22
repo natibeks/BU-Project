@@ -1,4 +1,4 @@
-﻿app.controller('HomeController', function ($scope, $rootScope, DataService, AuthService, data) {
+﻿app.controller('HomeController', function ($scope, $rootScope, DataService,AuthService, data) {
     $scope.data = data;
     $rootScope.loadingStatus = false;
     $scope.selectedMovie;
@@ -12,11 +12,71 @@
         Year: true
     }
 
+    $scope.movieTemplate = {
+        Id: 0,
+        Director: 0,
+        Year: moment().year(),
+        Genre: 0,
+        Plot: "",
+        Name: ""
+    }
+
+    $scope.setAdvancedMode = function (flag) {
+        $scope.search.Movie = true;
+        $scope.search.Actors = true;
+        $scope.search.Director = true;
+        $scope.search.Genre = true;
+        $scope.search.Year = true;
+
+        $scope.search.Advanced = flag;
+    }
+
+    $scope.rentMovie = function (movieId) {
+        DataService.setMovieAsRent(movieId, AuthService.currentUser.Id).then(function (x) {
+            if (x) {
+                $scope.data = DataService.getData();
+                AuthService.currentUser.MovieID = movieId;
+            }
+                
+        })
+    }
+
+    $scope.returnMovie = function () {
+        DataService.setMovieAsAvailable(movieId).then(function (x) {
+            if (x) {
+                $scope.data = DataService.getData();
+                AuthService.currentUser.MovieID = 0;
+            }
+
+        })
+    }
+
+    $scope.isUserFreeToRent = function() {
+        return !(AuthService.currentUser.MovieID > 0);
+    }
+
+    $scope.setEditMode = function (flag) {
+        $scope.editMode = flag;
+        $scope.selectedMovie["Actors"] = Enumerable.From($scope.data.Actor).Where(function (x) {
+            var CountExistance = Enumerable.From($scope.data.MovieActor).Where(function (y) { return y.MovieID == $scope.selectedMovie.Id && x.Id == y.ActorID; }).Count();
+            return CountExistance > 0;
+        }).ToArray();
+    }
+
+    $scope.saveChanges = function () {
+        DataService.updateMovie($scope.selectedMovie).then(function (x) {
+            if(x) // succeed
+                $scope.data = DataService.getData();
+        })
+    }
+
+    //startGetters
+
     $scope.getPageHeading = function () {
         if ($scope.search.Text.length > 0)
             return "Search Result";
         if ($scope.currentPage == 1)
-            return "Newest Movie";            
+            return "Newest Movie";
         if ($scope.currentPage == 2)
             return "Movies Table";
     }
@@ -33,36 +93,8 @@
             str += ", Genre";
         if ($scope.search.Year)
             str += ", Year";
-        return str;
+        return str + " (DoubleClick for advanced search)";
     }
-
-    $scope.setAdvancedMode = function (flag) {
-        $scope.search.Movie = true;
-        $scope.search.Actors = true;
-        $scope.search.Director = true;
-        $scope.search.Genre = true;
-        $scope.search.Year = true;
-
-        $scope.search.Advanced = flag;
-    }
-
-    $scope.rentMovie = function (movieId) {
-
-    }
-
-    $scope.returnMovie = function () {
-
-    }
-
-    $scope.isUserFreeToRent = function() {
-        return !$scope.currentUser.MovieID > 0;
-    }
-
-    $scope.setEditMode = function (flag) {
-        $scope.editMode = flag;
-    }
-
-    //getters
 
     $scope.getActorName = function (aid) {
         return Enumerable.From($scope.data.Actor).Where(function (x) { return x.Id == aid }).Select("$.Name").FirstOrDefault();
@@ -75,6 +107,12 @@
     $scope.getGenre = function (aid) {
         return Enumerable.From($scope.data.Genre).Where(function (x) { return x.Id == aid }).Select("$.Name").FirstOrDefault();
     }
+
+    $scope.getCurrentYearAsNum = function () {
+        return moment().year();
+    }
+
+    //endGetters
 
     $scope.fitString = function (s, n) {
         if (typeof (s) == 'undefined' || s == null) {

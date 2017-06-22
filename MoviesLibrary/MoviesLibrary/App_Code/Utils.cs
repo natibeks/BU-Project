@@ -57,10 +57,78 @@ namespace MoviesLibrary
             }
             catch (Exception e)
             {
-                return JsonConvert.SerializeObject(new { Id = ""});
+                throw e;
             }
         }
 
+        public static string RentMovie(string user,int movie)
+        {
+            try
+            {
+                using (var db = new MoviesDBEntities())
+                {
+                    var m = db.Movie.Where(i => i.Id == movie).FirstOrDefault();
+                    var u = db.User.Where(i => i.Id == user).FirstOrDefault();
+                    m.WhoRent = user;
+                    u.MovieID = movie;
+                    db.SaveChanges();
+                    return "ok";
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public static string ReturnMovie(int movie)
+        {
+            try
+            {
+                using (var db = new MoviesDBEntities())
+                {
+                    var m = db.Movie.Where(i => i.Id == movie).FirstOrDefault();
+                    var u = db.User.Where(i => i.Id == m.WhoRent).FirstOrDefault();
+                    m.WhoRent = "";
+                    u.MovieID = 0;
+                    db.SaveChanges();
+                    return "ok";
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public static string UpdateMovie(dynamic obj)
+        {
+            try
+            {
+                using (var db = new MoviesDBEntities())
+                {
+                    int id = Convert.ToInt32(obj["Id"]);
+                    var b = id == 0 ? new Movie() : db.Movie.Where(i => i.Id == id).FirstOrDefault();
+                    var isNew = false;
+                    if (id == 0)
+                        isNew = true;
+                    b.Director = Convert.ToInt32(obj["Director"]);
+                    b.Genre = Convert.ToInt32(obj["Genre"]);
+                    b.Year = Convert.ToInt32(obj["Year"]);
+                    b.Plot = Convert.ToString(obj["Plot"]);
+                    b.Name = Convert.ToString(obj["Name"]);
+                    if (isNew)
+                        db.Movie.Add(b);
+                    db.SaveChanges();
+
+                    return JsonConvert.SerializeObject(new { Id = b.Id, IsNew = isNew });
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
         public static string SendForgottenPass(string userId)
         {
             try
@@ -104,10 +172,10 @@ namespace MoviesLibrary
                 return true;
 
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
 
-                return false;
+                throw e;
             }
         }
     }
