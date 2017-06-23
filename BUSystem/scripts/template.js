@@ -70,10 +70,16 @@ var PageConfig = [
                 Width: "auto",
                 Data: "Description",
             }, {
+                Label: "משוייכים",
+                Width: "150px",
+                Data: "Asignee",
+            }, {
                 Label: "סטטוס",
                 Width: "150px",
                 Data: "Status",
             }
+
+
         ]
 
     },

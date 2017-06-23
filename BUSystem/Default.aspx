@@ -30,7 +30,7 @@
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
                     <ul class="nav navbar-nav">
                         <li><a href="#" data-ng-click="setPage('MyTicket')">ניהול פניות</a></li>
-                        <li><a href="#" data-ng-click="setPage('Reports')" data-ng-if="currentUser.Permission==3 || currentUser.Permission==2">דוחות</a></li>
+                        <li><a href="#" data-ng-click="setPage('Reports')" data-ng-if="currentUser.Permission<4">דוחות</a></li>
                         <li><a href="#" data-ng-click="setPage('ManageUsers')" data-ng-if="currentUser.Permission==1">ניהול משתמשים</a></li>
                     </ul>
 

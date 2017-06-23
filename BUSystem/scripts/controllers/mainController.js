@@ -79,6 +79,22 @@
     }
     //getters
 
+    $scope.getAsigneeNames = function (tid) {
+        var ut = Enumerable.From($scope.data.UserTicket).Where(function (x) { return x.TicketID == item.Id }).Select(function (y) { return y.UserID }).ToArray();
+        var unames = Enumerable.From($scope.data.User).Where(function (x) { return ut.indexOf(x.Id) > -1 }).Select(function (y) { return y.DisplayName }).ToArray();
+        var res = "";
+
+        if (typeof(unames[0])=="string")
+            res = unames[0];
+        
+        if (typeof (unames[1]) == "string") {
+            res = res + " ";
+            res = unames[1];
+        }
+            
+       
+    }
+
     $scope.getDomainByCategory = function (cid) {
         return Enumerable.From($scope.data.Category).Where(function (j) { return j.Id == cid }).Select(function (y) { return y.DomainID }).FirstOrDefault();
     }
@@ -142,6 +158,10 @@
     $scope.departmentFilter = function (item) {
         if ($scope.currentUser.Permission == 2) return true;
         return $scope.currentUser.Department == item.Id;
+    }
+
+    $scope.taskFilter = function (item) {
+        return item.IsArchive != true && item.TicketID == $scope.selectedTicket.TicketID;
     }
 
     $scope.filterTasks = function (item) {

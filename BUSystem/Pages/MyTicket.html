@@ -24,7 +24,8 @@
             <tr data-ng-repeat="u in q=(data.MyTickets |filter: ticketsByUser) | orderBy: sort.Name : sort.Desc | startFrom: (currPage-1)*pageSize | limitTo: pageSize">
                 <td data-ng-bind="u.TicketID"></td>
                 <td data-ng-repeat="col in pageConfig[0].Table">
-                    <div data-ng-bind="u[col.Data]" data-ng-if="col.Data!='Status' && col.Data!='Description'"></div>
+                    <div data-ng-bind="u.TimeOpen | date: 'dd-MM-yyyy HH:mm'" data-ng-if="col.Data=='TimeOpen'"></div>
+                    <div data-ng-bind="getCategory(u.CategoryID)" data-ng-if="col.Data=='Category'"></div>
                     <div data-ng-bind="getStatus(u[col.Data])" data-ng-if="col.Data=='Status'"></div>
                     <div data-ng-bind="getTicketDescription(u.TicketID)" data-ng-if="col.Data=='Description'"></div>
                 </td>

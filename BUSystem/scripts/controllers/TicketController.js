@@ -33,7 +33,7 @@
     }
 
     $scope.updateTaskCounter = function () {
-        $scope.taskCounter = Enumerable.From($scope.data.Task).Where(function (x) { return x.TicketID == $scope.selectedTicket.Id }).Count();
+        $scope.taskCounter = Enumerable.From($scope.data.Task).Where(function (x) { return x.TicketID == $scope.selectedTicket.Id && x.IsArchive!=true}).Count();
     }
 
     $scope.getTicketTasks = function (tid) {
@@ -115,7 +115,6 @@
     }
 
     $scope.addNewTicket = function () {
-
         if (!moment($scope.selectedTicket.Date, 'DD-MM-YYYY').isValid()) {
             $scope.error = true;
             $scope.msg = "אנא בחר תאריך לביצוע";
@@ -162,16 +161,15 @@
         var url = "Tasks.aspx?tp=updateTicket";
         var u = angular.copy($scope.selectedTicket);
         //u['tasks'] = $scope.checkTicketTaskUpdate();
-
         if (u.Status == 4) {
-            if ($scope.selectedTicket.oldStatus == 3 || $scope.selectedTicket.oldStatus == 2) {
-                if (!$scope.isAllTasksDone()) {
+            if (($scope.selectedTicket.oldStatus != 3 &&
+                $scope.selectedTicket.oldStatus != 2) ||
+                !$scope.isAllTasksDone()) {
                     $scope.msg = "  לא ניתן לסגור פניה";
                     $("#ShowErrorMsg").modal('show');
-                    $scope.error = true;
-
-                }
-                //to display confirmation
+                    $scope.error = false;
+                    return;
+                    //to display confirmation
             }
         }
         DataService.makePostRequest(url, u).then(
@@ -199,7 +197,6 @@
                 }
                 $scope.updateExistingTicketOfMyTicket();
                 $scope.setPage($scope.currentPage);
-
                 $('#editTicketModal').modal('hide');
                 $scope.error = false;
 
@@ -303,6 +300,7 @@
                     })
                     $scope.taskEditMode = false;
                     $scope.updateTaskCounter();
+                    $("#confirmDeleteModal").modal('hide');
                 }
             })
     };
@@ -321,8 +319,8 @@
     }
 
     $scope.isAllTasksDone = function () {
-        var cnt = Enumerable.From($scope.data.Task).Where(function (x) { return x.TicketID == $scope.selectedTicket.Id && x.Done == false; }).Count();
-        return cnt > 0;
+        var cnt = Enumerable.From($scope.data.Task).Where(function (x) { return x.TicketID == $scope.selectedTicket.Id && x.Done == false && x.IsArchive != true; }).Count();
+        return !(cnt > 0);
     }
 
     $scope.getTicketClass = function (t) {
