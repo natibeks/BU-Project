@@ -75,13 +75,18 @@
 
         <div class="form-group">
             <div class="col-lg-3">
-                <button type="submit" class="btn btn-success" data-ng-show="chartReady==false" data-ng-click="produceReport()"><span class="ion-clipboard" style="font-size: 15px"></span>הפק דו"ח</button>
+                <button type="submit" class="btn btn-success" data-ng-show="chartReady==false" data-ng-click="getReport1()"><span class="ion-clipboard" style="font-size: 15px"></span>הפק דו"ח</button>
                 <button type="reset" class="btn btn-info" data-ng-click="resetReport()"><span class="ion-refresh" style="font-size: 15px"></span>&nbspאפס </button>
             </div>
         </div>
     </form>
 
-    <div data-ng-show="chartReady">
+    <div id="chartContainer" style="max-width: 660px;
+	margin: auto;
+	height: 400px;
+	margin: 0 auto;"></div>
+
+    <!--<div data-ng-show="chartReady">
         <div class="form-group pull-left">
             <div class="col-lg-3">
                 <button type="button" class="btn btn-default" data-ng-click="printReport()"><span class="ion-printer" style="font-size: 15px"></span>הדפס</button>
@@ -90,7 +95,7 @@
         <canvas id="pie-chart" width="700" height="400" data-ng-show="chartReady==true && toProduce.status==true"></canvas>
         <canvas id="bar-chart" width="700" height="400" data-ng-show="chartReady==true && toProduce.category==true"></canvas>
 
-    </div>
+    </div>-->
 
 
 

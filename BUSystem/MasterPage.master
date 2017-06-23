@@ -23,10 +23,6 @@
     <script src="scripts/pack/angular.min.js"></script>
     <script src="scripts/pack/angular-moment-picker.min.js"></script>
     <script src="scripts/pack/angular-sanitize.min.js"></script>
-    <%--    <script src="JS/angular-chart.min.js"></script>--%>
-    <script type="text/javascript" src="scripts/pack/fusioncharts.js"></script>
-    <script src="scripts/pack/fusioncharts.charts.js"></script>
-    <script src="scripts/pack/angular-fusioncharts.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-filter/0.5.8/angular-filter.min.js"></script>
 
     <script src="https://rawgit.com/dwmkerr/angular-modal-service/master/dst/angular-modal-service.js"></script>
@@ -36,7 +32,6 @@
     <script src="scripts/pack/jquery.tooltipster.min.js"></script>
     <script src="scripts/pack/moment.min.js"></script>
     <script src="scripts/pack/moment-with-locales.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
     <script src="scripts/pack/ng-file-upload.min.js"></script>
     <script src="scripts/pack/select2.js"></script>
     <script src="scripts/pack/select2.full.js"></script>

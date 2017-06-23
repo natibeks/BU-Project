@@ -1,6 +1,6 @@
 ﻿// init system angular application
 
-var app = angular.module('myApp', ['moment-picker', "ng-fusioncharts", 'angular.filter']);
+var app = angular.module('myApp', ['moment-picker', 'angular.filter']);
 
 // set app filter for pagination
 app.filter('startFrom', function () {

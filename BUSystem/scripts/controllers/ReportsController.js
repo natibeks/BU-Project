@@ -7,7 +7,8 @@
         build: false,
         dept: false,
         From: "",
-        To: ""
+        To: "",
+        User: 0
 
     }
 
@@ -20,6 +21,123 @@
     $scope.cat1 = 0;
     $scope.cat1 = 0;
     $scope.cat1 = 0;
+
+    $scope.getTitleText = function () {
+        return "פניות למחלקה";
+    }
+
+    $scope.getSeriesData = function (reportType) {
+        switch (reportType) {
+            case 1:
+                return $scope.getTicketForDomainReport();
+            case 2:
+                return $scope.getTicketForWorkerReport();
+        }
+
+
+    }
+
+    $scope.getTicketForDomainReport = function () {
+        var domainNames = Enumerable.From($scope.data.Domain).Select(function (x) { return x.DomainName; }).ToArray();
+        var domainReportCount = [];
+        var domainReport = [];
+        angular.forEach(domainNames, function (o, i) {
+            domainReportCount[i] = Enumerable.From($scope.data.Ticket).Where(function (x) {
+                var dateOpen = moment(x.TimeOpen, 'DD-MM-YYYY HH:mm');
+                var f1 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
+                var t1 = $scope.toProduce.To == "" ? null : moment($scope.toProduce.To, 'DD-MM-YYYY');
+                return $scope.getDomainByCategory(x.CategoryID) == (i + 1) && ((f1 == null && t1 == null) || (f1 != null && t1 != null && dateOpen.isBetween(f1, t1, 'days', '[]')) || (f1 != null && t1 == null && dateOpen.isSameOrAfter(f1)) || (t1 != null && f1 == null && dateOpen.isSameOrBefore(t1)))
+            }).Count();
+            domainReport.push({
+                name: o,
+                y: domainReportCount[i]
+            });
+        })
+        return domainReport;
+    }
+
+    $scope.getTicketForWorkerReport = function () {
+        var ticketsIDs = Enumerable.From($scope.data.UserTicket).Where(function (x) { return x.UserID == $scope.toProduce.User; }).Select(function (y) { return y.TicketID;}).ToArray();
+        var status = Enumerable.From($scope.data.Status).Select(function (x) { return x.StatusName;}).ToArray();
+        var ticketsReport = [];
+        var ticketsReportCount = [];
+        angular.forEach(status, function (o, i) {
+            ticketsReportCount[i] = Enumerable.From($scope.data.Ticket).Where(function (x) {
+                if (ticketsIDs.indexOf(x.Id) == -1 && x.Status!=i+1) return false;
+                var dateOpen = moment(x.TimeOpen, 'DD-MM-YYYY HH:mm');
+                var f1 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
+                var t1 = $scope.toProduce.To == "" ? null : moment($scope.toProduce.To, 'DD-MM-YYYY');
+                return ((f1 == null && t1 == null) || (f1 != null && t1 != null && dateOpen.isBetween(f1, t1, 'days', '[]')) || (f1 != null && t1 == null && dateOpen.isSameOrAfter(f1)) || (t1 != null && f1 == null && dateOpen.isSameOrBefore(t1)))
+            }).Count();
+            ticketsReport.push({
+                name: o,
+                y: ticketsReportCount[i]
+            });
+        })
+        return ticketsReport;
+    }
+
+    $scope.getReport1 = function () {
+        $scope.chartOptions = {
+            titleText: $scope.getTitleText(),
+            seriesData: $scope.getSeriesData()
+        }
+
+        var options = {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie',
+                renderTo: 'chartContainer'
+            },
+            legend: {
+                align: 'center',
+                verticalAlign: 'top',
+                layout: 'vertical',
+                rtl:true
+            },
+            title: {
+                text: $scope.chartOptions.titleText
+            },
+            tooltip: {
+                pointFormatter: function () {
+                    return "כמות: "+this.y ;
+                },
+                useHTML:true
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        formatter: function () {
+                            return this.point.name;
+                        },
+                        useHTML:true,
+                        style: {
+                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                        }
+                    }
+                },
+            },
+            series:
+                [{
+                name: 'תחומים',
+                colorByPoint: true,
+                data: $scope.chartOptions.seriesData
+            }]
+        };
+        var newWindow = window.open('ReportChart.aspx', '_blank', 'width=1000,height=700,resizable=1');
+
+        // Access it using its variable
+        newWindow.myChartData = options;
+    }
+
+    $scope.genReport = function () {
+
+    }
 
     $(function () {
         $('.list-group.checked-list-box .list-group-item').each(function () {
