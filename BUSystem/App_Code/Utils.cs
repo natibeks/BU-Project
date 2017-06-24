@@ -251,7 +251,7 @@ public class Utils
                 int id = Convert.ToInt32(obj["Id"]);
                 var b = id == 0 ? new User() : db.User.Where(i => i.Id == id).FirstOrDefault();
                 var isNew = false;
-                if (Convert.ToInt32(obj["Id"]) == 0)
+                if (id == 0)
                     isNew = true;
                 b.Role = Convert.ToInt32(obj["Role"]);
                 b.DisplayName = Convert.ToString(obj["DisplayName"]);
