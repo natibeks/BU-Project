@@ -14,9 +14,10 @@
     $scope.setUserWin = function (user) {
         if (user == undefined)
             $scope.selectedUser = angular.copy($scope.userTemplate);
-        else
+        else {
             $scope.selectedUser = angular.copy(user);
-        $scope.selectedUser["DomainID"] = Enumerable.From($scope.data.UserDomain).Where(function (x) { return x.UserID == user.Id }).FirstOrDefault();
+            $scope.selectedUser["DomainID"] = Enumerable.From($scope.data.UserDomain).Where(function (x) { return x.UserID == user.Id }).FirstOrDefault();
+        }
         $("#editUserModal").modal('show');
     }
 
