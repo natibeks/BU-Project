@@ -29,16 +29,18 @@
     $scope.getSeriesData = function (reportType) {
         switch (reportType) {
             case 1:
-                return $scope.getTicketForDomainReport();
+                return $scope.getTicketForAllDomainReport();
             case 2:
                 return $scope.getTicketForWorkerReport();
+            case 3:
+                return $scope.getTicketPerPeriodReport();
         }
 
 
     }
 
-    $scope.getTicketForDomainReport = function () {
-        var domainNames = Enumerable.From($scope.data.Domain).Select(function (x) { return x.DomainName; }).ToArray();
+    $scope.getTicketForAllDomainReport = function () {
+        var domainNames = Enumerable.From($scope.data.Domain).Select(function (x) { return { Id: x.Id, Name: x.DomainName }; }).ToArray();
         var domainReportCount = [];
         var domainReport = [];
         angular.forEach(domainNames, function (o, i) {
@@ -46,14 +48,46 @@
                 var dateOpen = moment(x.TimeOpen, 'DD-MM-YYYY HH:mm');
                 var f1 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
                 var t1 = $scope.toProduce.To == "" ? null : moment($scope.toProduce.To, 'DD-MM-YYYY');
-                return $scope.getDomainByCategory(x.CategoryID) == (i + 1) && ((f1 == null && t1 == null) || (f1 != null && t1 != null && dateOpen.isBetween(f1, t1, 'days', '[]')) || (f1 != null && t1 == null && dateOpen.isSameOrAfter(f1)) || (t1 != null && f1 == null && dateOpen.isSameOrBefore(t1)))
+                return $scope.getDomainByCategory(x.CategoryID) == (o.Id) && ((f1 == null && t1 == null) || (f1 != null && t1 != null && dateOpen.isBetween(f1, t1, 'days', '[]')) || (f1 != null && t1 == null && dateOpen.isSameOrAfter(f1)) || (t1 != null && f1 == null && dateOpen.isSameOrBefore(t1)))
             }).Count();
             domainReport.push({
-                name: o,
+                name: o.Name,
                 y: domainReportCount[i]
             });
         })
         return domainReport;
+    }
+
+    $scope.getTicketPerPeriodReport = function () {
+        var filteredTickets = Enumerable.From($scope.data.Ticket).Where(function (x) {
+            var dateOpen = moment(x.TimeOpen, 'DD-MM-YYYY HH:mm');
+            var f1 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
+            var t1 = $scope.toProduce.To == "" ? null : moment($scope.toProduce.To, 'DD-MM-YYYY');
+            return $scope.currentUser.Domains.indexOf($scope.getDomainByCategory(x.CategoryID)) > -1
+                && ((f1 == null && t1 == null) || (f1 != null && t1 != null && dateOpen.isBetween(f1, t1, 'days', '[]'))
+                || (f1 != null && t1 == null && dateOpen.isSameOrAfter(f1)) ||
+                (t1 != null && f1 == null && dateOpen.isSameOrBefore(t1)))
+        }).Select(function (x) {
+            return { Date: moment(x.TimeOpen, 'DD-MM-YYYY HH:mm').format("MM-YYYY"), Status: x.Status }
+        }).
+        ToArray();
+        console.log(filteredTickets);
+        var e = Enumerable.From(filteredTickets).
+            GroupBy(
+            "$.Date",
+                null, // (identity)
+                "{ Date: $, Total: $$.Count() }")
+        .ToArray();
+        e = Enumerable.From(e).Select(function (x) {
+            return {
+                Date: Date.UTC(moment(x.Date, "MM-YYYY").get('year'),
+                    moment(x.Date, "MM-YYYY").get('month')+1,
+                    moment(x.Date, "MM-YYYY").get('date')),
+                Total: x.Total
+            };
+        }).ToArray();
+        
+        return e;
     }
 
     $scope.getTicketForWorkerReport = function () {
@@ -80,10 +114,40 @@
     $scope.getReport1 = function () {
         $scope.chartOptions = {
             titleText: $scope.getTitleText(),
-            seriesData: $scope.getSeriesData()
+            seriesData: $scope.getSeriesData(3)
         }
-
+        console.log($scope.chartOptions.seriesData);
         var options = {
+            chart: {
+                type: 'bar',
+                renderTo: 'chartContainer'
+            },
+            title: {
+                text: 'xAxis datetime example'
+            },
+            xAxis: {
+                type: 'datetime',
+                title: {
+                    text: 'Date'
+                }
+            },
+            yAxis: {
+                title: {
+                    text: 'Number of tickets'
+                },
+                min: 0
+            },
+
+            series: [{
+                name: 'Winter 2012-2013',
+                // Define the data points. All series have a dummy year
+                // of 1970/71 in order to be compared on the same x axis. Note
+                // that in JavaScript, months start at 0 for January, 1 for February etc.
+                data: $scope.chartOptions.seriesData
+                }]
+            }
+
+        var options1 = {
             chart: {
                 plotBackgroundColor: null,
                 plotBorderWidth: null,
@@ -96,6 +160,9 @@
                 verticalAlign: 'top',
                 layout: 'vertical',
                 rtl:true
+            },
+            xAxis:{
+                type: 'datetime'
             },
             title: {
                 text: $scope.chartOptions.titleText
@@ -124,10 +191,10 @@
             },
             series:
                 [{
-                name: 'תחומים',
-                colorByPoint: true,
-                data: $scope.chartOptions.seriesData
-            }]
+                    name: 'תחומים',
+                    colorByPoint: true,
+                    data: $scope.chartOptions.seriesData
+                }]
         };
         var newWindow = window.open('ReportChart.aspx', '_blank', 'width=1000,height=700,resizable=1');
 
@@ -135,80 +202,7 @@
         newWindow.myChartData = options;
     }
 
-    $scope.genReport = function () {
 
-    }
-
-    $(function () {
-        $('.list-group.checked-list-box .list-group-item').each(function () {
-
-            // Settings
-            var $widget = $(this),
-                $checkbox = $('<input type="checkbox" class="hidden" />'),
-                color = ($widget.data('color') ? $widget.data('color') : "primary"),
-                style = ($widget.data('style') == "button" ? "btn-" : "list-group-item-"),
-                settings = {
-                    on: {
-                        icon: 'glyphicon glyphicon-check'
-                    },
-                    off: {
-                        icon: 'glyphicon glyphicon-unchecked'
-                    }
-                };
-
-            $widget.css('cursor', 'pointer')
-            $widget.append($checkbox);
-
-            // Event Handlers
-            $widget.on('click', function () {
-                $checkbox.prop('checked', !$checkbox.is(':checked'));
-                $checkbox.triggerHandler('change');
-                updateDisplay();
-            });
-            $checkbox.on('change', function () {
-                updateDisplay();
-            });
-
-
-            // Actions
-            function updateDisplay() {
-                var isChecked = $checkbox.is(':checked');
-
-                // Set the button's state
-                $widget.data('state', (isChecked) ? "on" : "off");
-
-                // Set the button's icon
-                $widget.find('.state-icon')
-                    .removeClass()
-                    .addClass('state-icon ' + settings[$widget.data('state')].icon);
-
-                // Update the button's color
-                if (isChecked) {
-                    $widget.addClass(style + color + ' active');
-                } else {
-                    $widget.removeClass(style + color + ' active');
-                }
-            }
-
-            // Initialization
-            function init() {
-
-                if ($widget.data('checked') == true) {
-                    $checkbox.prop('checked', !$checkbox.is(':checked'));
-                }
-
-                updateDisplay();
-
-                // Inject the icon if applicable
-                if ($widget.find('.state-icon').length == 0) {
-                    $widget.prepend('<span class="state-icon ' + settings[$widget.data('state')].icon + '"></span>');
-                }
-            }
-            init();
-        });
-
-
-    });
     $scope.printReport = function () {
 
         var printContents = document.getElementById(divToPrint).innerHTML;
