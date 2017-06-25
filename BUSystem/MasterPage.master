@@ -36,6 +36,7 @@
     <script src="scripts/pack/select2.js"></script>
     <script src="scripts/pack/select2.full.js"></script>
     <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
 
     <script src="scripts/template.js"></script>
     <script src="scripts/app.js"></script>

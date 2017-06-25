@@ -8,7 +8,8 @@
         dept: false,
         From: "",
         To: "",
-        User: 0
+        User: 0,
+        Type: 1
 
     }
 
@@ -23,20 +24,54 @@
     $scope.cat1 = 0;
 
     $scope.getTitleText = function () {
-        return "פניות למחלקה";
+        switch ($scope.toProduce.Type) {
+            case 1:
+                return "מספר פניות לכל מחלקה";
+            case 2:
+                return "מספר פניות לחודש לעובד " + $scope.getUserDisplayName($scope.toProduce.User);
+            case 3:
+                return "מספר פניות לחודש בתחום";
+            case 4:
+                return "מספר פניות לחודש לסטטוס " + $scope.getStatus($scope.toProduce.Status);
+            case 5:
+                return "מספר פניות לחודש במבנה ";
+            case 5:
+                return "מספר פניות לחודש בקטגוריה "+ $scope.getCategory$scope.toProduce.Category);
+        }
     }
 
-    $scope.getSeriesData = function (reportType) {
-        switch (reportType) {
+    $scope.getSeriesData = function () {
+        switch ($scope.toProduce.Type) {
             case 1:
                 return $scope.getTicketForAllDomainReport();
             case 2:
                 return $scope.getTicketForWorkerReport();
             case 3:
                 return $scope.getTicketPerPeriodReport();
+            case 4:
+                return $scope.getTicketPerPeriodInStatusReport();
+            case 5:
+                return $scope.getTicketPerPeriodInBuildingReport();
+            case 6:
+                return $scope.getTicketPerPeriodInCategoryReport();
         }
+    }
 
-
+    $scope.getSeriesName = function () {
+        switch ($scope.toProduce.Type) {
+            case 1:
+                return "פניות למחלקה";
+            case 2:
+                return "פניות לעובד";
+            case 3:
+                return "פניות";
+            case 4:
+                return "פניות בסטטוס";
+            case 5:
+                return "פניות במבנה";
+            case 6:
+                return "פניות בקטגוריה";
+        }
     }
 
     $scope.getTicketForAllDomainReport = function () {
@@ -63,7 +98,7 @@
             var dateOpen = moment(x.TimeOpen, 'DD-MM-YYYY HH:mm');
             var f1 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
             var t1 = $scope.toProduce.To == "" ? null : moment($scope.toProduce.To, 'DD-MM-YYYY');
-            return $scope.currentUser.Domains.indexOf($scope.getDomainByCategory(x.CategoryID)) > -1
+            return $scope.currentUser.Domains.indexOf($scope.getDomainByCategory(x.CategoryID)) > -1 && $scope.isUserManagerOfThisCategory(x.CategoryID)
                 && ((f1 == null && t1 == null) || (f1 != null && t1 != null && dateOpen.isBetween(f1, t1, 'days', '[]'))
                 || (f1 != null && t1 == null && dateOpen.isSameOrAfter(f1)) ||
                 (t1 != null && f1 == null && dateOpen.isSameOrBefore(t1)))
@@ -71,22 +106,117 @@
             return { Date: moment(x.TimeOpen, 'DD-MM-YYYY HH:mm').format("MM-YYYY"), Status: x.Status }
         }).
         ToArray();
-        console.log(filteredTickets);
         var e = Enumerable.From(filteredTickets).
             GroupBy(
             "$.Date",
-                null, // (identity)
+                null,
                 "{ Date: $, Total: $$.Count() }")
         .ToArray();
         e = Enumerable.From(e).Select(function (x) {
             return {
                 Date: Date.UTC(moment(x.Date, "MM-YYYY").get('year'),
                     moment(x.Date, "MM-YYYY").get('month')+1,
-                    moment(x.Date, "MM-YYYY").get('date')),
+                    01),
                 Total: x.Total
             };
         }).ToArray();
         
+        return e;
+    }
+
+    $scope.getTicketPerPeriodInStatusReport = function () {
+        var filteredTickets = Enumerable.From($scope.data.Ticket).Where(function (x) {
+            var dateOpen = moment(x.TimeOpen, 'DD-MM-YYYY HH:mm');
+            var f1 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
+            var t1 = $scope.toProduce.To == "" ? null : moment($scope.toProduce.To, 'DD-MM-YYYY');
+            return x.Status==$scope.toProduce.Status &&
+            $scope.currentUser.Domains.indexOf($scope.getDomainByCategory(x.CategoryID)) > -1 && $scope.isUserManagerOfThisCategory(x.CategoryID)
+                && ((f1 == null && t1 == null) || (f1 != null && t1 != null && dateOpen.isBetween(f1, t1, 'days', '[]'))
+                || (f1 != null && t1 == null && dateOpen.isSameOrAfter(f1)) ||
+                (t1 != null && f1 == null && dateOpen.isSameOrBefore(t1)))
+        }).Select(function (x) {
+            return { Date: moment(x.TimeOpen, 'DD-MM-YYYY HH:mm').format("MM-YYYY"), Status: x.Status }
+        }).
+        ToArray();
+        var e = Enumerable.From(filteredTickets).
+            GroupBy(
+            "$.Date",
+                null,
+                "{ Date: $, Total: $$.Count() }")
+        .ToArray();
+        e = Enumerable.From(e).Select(function (x) {
+            return {
+                Date: Date.UTC(moment(x.Date, "MM-YYYY").get('year'),
+                    moment(x.Date, "MM-YYYY").get('month') + 1,
+                    01),
+                Total: x.Total
+            };
+        }).ToArray();
+
+        return e;
+    }
+
+    $scope.getTicketPerPeriodInStatusReport = function () {
+        var filteredTickets = Enumerable.From($scope.data.Ticket).Where(function (x) {
+            var dateOpen = moment(x.TimeOpen, 'DD-MM-YYYY HH:mm');
+            var f1 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
+            var t1 = $scope.toProduce.To == "" ? null : moment($scope.toProduce.To, 'DD-MM-YYYY');
+            return $scope.isInBuilding($scope.toProduce.Building, x.LocationID) &&
+            $scope.currentUser.Domains.indexOf($scope.getDomainByCategory(x.CategoryID)) > -1 && $scope.isUserManagerOfThisCategory(x.CategoryID)
+                && ((f1 == null && t1 == null) || (f1 != null && t1 != null && dateOpen.isBetween(f1, t1, 'days', '[]'))
+                || (f1 != null && t1 == null && dateOpen.isSameOrAfter(f1)) ||
+                (t1 != null && f1 == null && dateOpen.isSameOrBefore(t1)))
+        }).Select(function (x) {
+            return { Date: moment(x.TimeOpen, 'DD-MM-YYYY HH:mm').format("MM-YYYY"), Status: x.Status }
+        }).
+        ToArray();
+        var e = Enumerable.From(filteredTickets).
+            GroupBy(
+            "$.Date",
+                null,
+                "{ Date: $, Total: $$.Count() }")
+        .ToArray();
+        e = Enumerable.From(e).Select(function (x) {
+            return {
+                Date: Date.UTC(moment(x.Date, "MM-YYYY").get('year'),
+                    moment(x.Date, "MM-YYYY").get('month') + 1,
+                    01),
+                Total: x.Total
+            };
+        }).ToArray();
+
+        return e;
+    }
+
+    $scope.getTicketPerPeriodInCategoryReport = function () {
+        var filteredTickets = Enumerable.From($scope.data.Ticket).Where(function (x) {
+            var dateOpen = moment(x.TimeOpen, 'DD-MM-YYYY HH:mm');
+            var f1 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
+            var t1 = $scope.toProduce.To == "" ? null : moment($scope.toProduce.To, 'DD-MM-YYYY');
+            return $scope.toProduce.Category == x.CategoryID &&
+            $scope.currentUser.Domains.indexOf($scope.getDomainByCategory(x.CategoryID)) > -1 && $scope.isUserManagerOfThisCategory(x.CategoryID)
+                && ((f1 == null && t1 == null) || (f1 != null && t1 != null && dateOpen.isBetween(f1, t1, 'days', '[]'))
+                || (f1 != null && t1 == null && dateOpen.isSameOrAfter(f1)) ||
+                (t1 != null && f1 == null && dateOpen.isSameOrBefore(t1)))
+        }).Select(function (x) {
+            return { Date: moment(x.TimeOpen, 'DD-MM-YYYY HH:mm').format("MM-YYYY"), Status: x.Status }
+        }).
+        ToArray();
+        var e = Enumerable.From(filteredTickets).
+            GroupBy(
+            "$.Date",
+                null,
+                "{ Date: $, Total: $$.Count() }")
+        .ToArray();
+        e = Enumerable.From(e).Select(function (x) {
+            return {
+                Date: Date.UTC(moment(x.Date, "MM-YYYY").get('year'),
+                    moment(x.Date, "MM-YYYY").get('month') + 1,
+                    01),
+                Total: x.Total
+            };
+        }).ToArray();
+
         return e;
     }
 
@@ -111,97 +241,102 @@
         return ticketsReport;
     }
 
-    $scope.getReport1 = function () {
+    $scope.generateReport = function () {
         $scope.chartOptions = {
             titleText: $scope.getTitleText(),
-            seriesData: $scope.getSeriesData(3)
+            seriesData: $scope.getSeriesData(),
+            seriesName: $scope.getSeriesName()
         }
         console.log($scope.chartOptions.seriesData);
-        var options = {
-            chart: {
-                type: 'bar',
-                renderTo: 'chartContainer'
-            },
-            title: {
-                text: 'xAxis datetime example'
-            },
-            xAxis: {
-                type: 'datetime',
-                title: {
-                    text: 'Date'
-                }
-            },
-            yAxis: {
-                title: {
-                    text: 'Number of tickets'
+        if ($scope.toProduce.Type == 1) {
+            var options = {
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie',
+                    renderTo: 'chartContainer'
                 },
-                min: 0
-            },
-
-            series: [{
-                name: 'Winter 2012-2013',
-                // Define the data points. All series have a dummy year
-                // of 1970/71 in order to be compared on the same x axis. Note
-                // that in JavaScript, months start at 0 for January, 1 for February etc.
-                data: $scope.chartOptions.seriesData
-                }]
-            }
-
-        var options1 = {
-            chart: {
-                plotBackgroundColor: null,
-                plotBorderWidth: null,
-                plotShadow: false,
-                type: 'pie',
-                renderTo: 'chartContainer'
-            },
-            legend: {
-                align: 'center',
-                verticalAlign: 'top',
-                layout: 'vertical',
-                rtl:true
-            },
-            xAxis:{
-                type: 'datetime'
-            },
-            title: {
-                text: $scope.chartOptions.titleText
-            },
-            tooltip: {
-                pointFormatter: function () {
-                    return "כמות: "+this.y ;
+                legend: {
+                    align: 'center',
+                    verticalAlign: 'top',
+                    layout: 'vertical',
+                    rtl: true
                 },
-                useHTML:true
-            },
-            plotOptions: {
-                pie: {
-                    allowPointSelect: true,
-                    cursor: 'pointer',
-                    dataLabels: {
-                        enabled: true,
-                        formatter: function () {
-                            return this.point.name;
-                        },
-                        useHTML:true,
-                        style: {
-                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                xAxis: {
+                    type: 'datetime'
+                },
+                title: {
+                    text: $scope.chartOptions.titleText
+                },
+                tooltip: {
+                    pointFormatter: function () {
+                        return "כמות: " + this.y;
+                    },
+                    useHTML: true
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            formatter: function () {
+                                return this.point.name;
+                            },
+                            useHTML: true,
+                            style: {
+                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                            }
                         }
+                    },
+                },
+                series:
+                    [{
+                        name: 'תחומים',
+                        colorByPoint: true,
+                        data: $scope.chartOptions.seriesData
+                    }]
+            };
+
+        }
+        else
+        {
+            var options = {
+                chart: {
+                    type: 'spline',
+                    renderTo: 'chartContainer'
+                },
+                rangeSelector: {
+                    selected: 1
+                },
+
+                title: {
+                    text: $scope.chartOptions.titleText
+                },
+                xAxis: {
+                    type: 'datetime',
+                    dateTimeLabelFormats: {
+                        month: '%m \'%y',
                     }
                 },
-            },
-            series:
-                [{
-                    name: 'תחומים',
-                    colorByPoint: true,
+                yAxis: {
+                    title: {
+                        text: 'פניות'
+                    },
+                },
+                series: [{
+                    name: $scope.chartOptions.seriesName,
                     data: $scope.chartOptions.seriesData
                 }]
-        };
+            }
+        }
+
         var newWindow = window.open('ReportChart.aspx', '_blank', 'width=1000,height=700,resizable=1');
 
         // Access it using its variable
         newWindow.myChartData = options;
     }
-
 
     $scope.printReport = function () {
 
@@ -213,128 +348,49 @@
 
     }
 
-    $scope.resetReport = function () {
-        $scope.toProduce.status = false;
-        $scope.toProduce.category = false;
-        $scope.toProduce.emp = false;
-        $scope.toProduce.build = false;
-        $scope.toProduce.dept = false;
-        $scope.toProduce.From = "";
-        $scope.toProduce.To = "";
+    //$scope.produceReport = function () {
 
-        $scope.chartReady = false;
-        $scope.countOpen = 0;
-        $scope.countClose = 0;
-        $scope.countCategory = 0;
-    }
+    //    if ($scope.toProduce.status == true) {
+    //        if ($scope.currentUser.Permission != 2) {
+    //            $scope.cntOpen = Enumerable.From($scope.data.MyTicket).Where(function (i) {
+    //                var dateOpen = moment(i.TimeOpen, 'DD-MM-YYYY');
+    //                var f1 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
+    //                var t1 = $scope.toProduce.To == "" ? null : moment($scope.toProduce.To, 'DD-MM-YYYY');
+    //                return i.Domain == $scope.currentUser.Domain && ((f1 == null && t1 == null) || (f1 != null && t1 != null && dateOpen.isBetween(f1, t1, 'days', '[]')) || (f1 != null && t1 == null && dateOpen.isSameOrAfter(f1)) || (t1 != null && f1 == null && dateOpen.isSameOrBefore(t1)))
 
-    $scope.produceReport = function () {
+    //            }).Count();
 
-        if ($scope.toProduce.status == true) {
-            if ($scope.currentUser.Permission != 2) {
-                $scope.cntOpen = Enumerable.From($scope.data.MyTicket).Where(function (i) {
-                    var dateOpen = moment(i.TimeOpen, 'DD-MM-YYYY');
-                    var f1 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
-                    var t1 = $scope.toProduce.To == "" ? null : moment($scope.toProduce.To, 'DD-MM-YYYY');
-                    return i.Domain == $scope.currentUser.Domain && ((f1 == null && t1 == null) || (f1 != null && t1 != null && dateOpen.isBetween(f1, t1, 'days', '[]')) || (f1 != null && t1 == null && dateOpen.isSameOrAfter(f1)) || (t1 != null && f1 == null && dateOpen.isSameOrBefore(t1)))
-
-                }).Count();
-
-                $scope.cntClose = Enumerable.From($scope.data.MyTicket).Where(function (i) {
-                    var dateClose = i.TimeClose == null ? null : moment(i.TimeClose, 'DD-MM-YYYY');
-                    var f2 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
-                    var t2 = $scope.toProduce.To == "" ? null : moment($scope.toProduce.To, 'DD-MM-YYYY');
-                    return i.Domain == $scope.currentUser.Domain && dateClose != null && ((f2 == null && t2 == null) || (f2 != null && t2 != null && dateClose.isBetween(f2, t2, 'days', '[]')) || (f2 != null && t2 == null && dateClose.isSameOrAfter(f2)) || (t2 != null && f2 == null && dateClose.isSameOrBefore(t2)))
+    //            $scope.cntClose = Enumerable.From($scope.data.MyTicket).Where(function (i) {
+    //                var dateClose = i.TimeClose == null ? null : moment(i.TimeClose, 'DD-MM-YYYY');
+    //                var f2 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
+    //                var t2 = $scope.toProduce.To == "" ? null : moment($scope.toProduce.To, 'DD-MM-YYYY');
+    //                return i.Domain == $scope.currentUser.Domain && dateClose != null && ((f2 == null && t2 == null) || (f2 != null && t2 != null && dateClose.isBetween(f2, t2, 'days', '[]')) || (f2 != null && t2 == null && dateClose.isSameOrAfter(f2)) || (t2 != null && f2 == null && dateClose.isSameOrBefore(t2)))
 
 
-                }).Count();
-            }
-            else {          //for CEO
-                $scope.cntOpen = Enumerable.From($scope.data.Ticket).Where(function (i) {
-                    var dateOpen = moment(i.TimeOpen, 'DD-MM-YYYY');
-                    var f1 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
-                    var t1 = $scope.toProduce.To == "" ? null : moment($scope.toProduce.To, 'DD-MM-YYYY');
-                    return ((f1 == null && t1 == null) || (f1 != null && t1 != null && dateOpen.isBetween(f1, t1, 'days', '[]')) || (f1 != null && t1 == null && dateOpen.isSameOrAfter(f1)) || (t1 != null && f1 == null && dateOpen.isSameOrBefore(t1)))
-                }).Count();
+    //            }).Count();
+    //        }
+    //        else {          //for CEO
+    //            $scope.cntOpen = Enumerable.From($scope.data.Ticket).Where(function (i) {
+    //                var dateOpen = moment(i.TimeOpen, 'DD-MM-YYYY');
+    //                var f1 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
+    //                var t1 = $scope.toProduce.To == "" ? null : moment($scope.toProduce.To, 'DD-MM-YYYY');
+    //                return ((f1 == null && t1 == null) || (f1 != null && t1 != null && dateOpen.isBetween(f1, t1, 'days', '[]')) || (f1 != null && t1 == null && dateOpen.isSameOrAfter(f1)) || (t1 != null && f1 == null && dateOpen.isSameOrBefore(t1)))
+    //            }).Count();
 
-                $scope.cntClose = Enumerable.From($scope.data.Ticket).Where(function (i) {
-                    var dateClose = moment(i.TimeClose, 'DD-MM-YYYY');
-                    var f2 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
-                    var t2 = $scope.toProduce.To == "" ? null : moment($scope.toProduce.To, 'DD-MM-YYYY');
-                    return dateClose != null && ((f2 == null && t2 == null) || (f2 != null && t2 != null && dateClose.isBetween(f2, t2, 'days', '[]')) || (f2 != null && t2 == null && dateClose.isSameOrAfter(f2)) || (t2 != null && f2 == null && dateClose.isSameOrBefore(t2)))
-
-
-                }).Count();
-            }
-
-            $scope.initChartWin({
-                ToProduce: $scope.toProduce,
-                Data: {
-                    CountOpen: $scope.cntOpen, CountClose: $scope.cntClose,
-                }
-            });
-            $scope.chartReady = true;
-        }
-
-        $scope.initChartWin = function (data) {
-            var popupWindow = window.open('Pages/chart.htm');
-            popupWindow.myChartData = data;
-        }
+    //            $scope.cntClose = Enumerable.From($scope.data.Ticket).Where(function (i) {
+    //                var dateClose = moment(i.TimeClose, 'DD-MM-YYYY');
+    //                var f2 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
+    //                var t2 = $scope.toProduce.To == "" ? null : moment($scope.toProduce.To, 'DD-MM-YYYY');
+    //                return dateClose != null && ((f2 == null && t2 == null) || (f2 != null && t2 != null && dateClose.isBetween(f2, t2, 'days', '[]')) || (f2 != null && t2 == null && dateClose.isSameOrAfter(f2)) || (t2 != null && f2 == null && dateClose.isSameOrBefore(t2)))
 
 
-        new Chart(document.getElementById("pie-chart"), {
-            type: 'pie',
-            data: {
-                labels: ["נפתחו", "נסגרו"],
-                datasets: [
-                  {
-                      label: "כמות פניות",
-                      backgroundColor: ["#3e95cd", "#8e5ea2"],
-                      data: [$scope.countOpen, $scope.countClose]
-                  }
-                ]
-            }
-        });
+    //            }).Count();
+    //        }
 
-        if ($scope.toProduce.category == true) {
-            if ($scope.currentUser.Permission != 2) {
-                $scope.cntOpen = Enumerable.From($scope.data.TicketsToDo).Where(function (i) {
-                    var c = i.CategoryName;
-                    return i.Domain == $scope.currentUser.Domain
+    //        $scope.chartReady = true;
+    //    }
 
-                }).ToArray();
-
-                $scope.cntClose = Enumerable.From($scope.data.TicketsToDo).Where(function (i) {
-                    var dateClose = i.TimeClose == null ? null : moment(i.TimeClose, 'DD-MM-YYYY');
-                    var f2 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
-                    var t2 = $scope.toProduce.To == "" ? null : moment($scope.toProduce.To, 'DD-MM-YYYY');
-                    return i.Domain == $scope.currentUser.Domain && dateClose != null && ((f2 == null && t2 == null) || (f2 != null && t2 != null && dateClose.isBetween(f2, t2, 'days', '[]')) || (f2 != null && t2 == null && dateClose.isSameOrAfter(f2)) || (t2 != null && f2 == null && dateClose.isSameOrBefore(t2)))
-
-                }).ToArray();
-            }
-            else {          //for CEO
-                $scope.cntOpen = Enumerable.From($scope.data.TicketsToDo).Where(function (i) {
-                    var dateOpen = moment(i.TimeOpen, 'DD-MM-YYYY');
-                    var f1 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
-                    var t1 = $scope.toProduce.To == "" ? null : moment($scope.toProduce.To, 'DD-MM-YYYY');
-                    return ((f1 == null && t1 == null) || (f1 != null && t1 != null && dateOpen.isBetween(f1, t1, 'days', '[]')) || (f1 != null && t1 == null && dateOpen.isSameOrAfter(f1)) || (t1 != null && f1 == null && dateOpen.isSameOrBefore(t1)))
-
-                }).ToArray();
-
-                $scope.cntClose = Enumerable.From($scope.data.TicketsToDo).Where(function (i) {
-                    var dateClose = moment(i.TimeClose, 'DD-MM-YYYY');
-                    var f2 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
-                    var t2 = $scope.toProduce.To == "" ? null : moment($scope.toProduce.To, 'DD-MM-YYYY');
-                    return dateClose != null && ((f2 == null && t2 == null) || (f2 != null && t2 != null && dateClose.isBetween(f2, t2, 'days', '[]')) || (f2 != null && t2 == null && dateClose.isSameOrAfter(f2)) || (t2 != null && f2 == null && dateClose.isSameOrBefore(t2)))
-
-                }).ToArray();
-            }
-            $scope.countOpen = $scope.cntOpen.length;
-            $scope.countClose = $scope.cntClose.length;
-            $scope.chartReady = true;
-        }
-
-    }
+    //}
 
 
 

@@ -99,6 +99,18 @@
         return Enumerable.From($scope.data.Category).Where(function (j) { return j.Id == cid }).Select(function (y) { return y.DomainID }).FirstOrDefault();
     }
 
+    $scope.isUserManagerOfThisCategory = function (cid) {
+        var domain = $scope.getDomainByCategory(cid);
+        var e = Enumerable.From($scope.data.UserDomain).Where(function (x) { return x.UserID == $scope.currentUser.Id && x.DomainID == domain }).FirstOrDefault();
+        return e.IsManager == true;
+
+    }
+
+    $scope.isInBuilding = function (build, loc) {
+        var e = Enumerable.From($scope.data.Location).Where(function (x) { return x.Id == loc }).FirstOrDefault();
+        return e.Building == build;
+    }
+
     $scope.getUserDisplayName = function (uid) {
         if (uid == undefined) return;
         return Enumerable.From($scope.data.User).Where(function (x) { return x.Id == uid }).Select(function (y) { return y.DisplayName }).FirstOrDefault();

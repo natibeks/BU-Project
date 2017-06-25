@@ -4,7 +4,10 @@
         <div class="form-group">
             <label class="control-label col-lg-1">תחום:</label>
             <div class="col-lg-3">
-                <input type="text" placeholder="הקלד" class="form-control" data-ng-model="toSearch.text">
+                <select class="form-control" data-ng-model="ssss"
+                        data-ng-options="o.Id as o.DomainName for o in data.Domain | orderBy: 'DomainName'">
+                    <option value="">בחר</option>
+                </select>            
             </div>
         </div>
         <div class="form-group">
@@ -75,7 +78,7 @@
 
         <div class="form-group">
             <div class="col-lg-3">
-                <button type="submit" class="btn btn-success" data-ng-show="chartReady==false" data-ng-click="getReport1()"><span class="ion-clipboard" style="font-size: 15px"></span>הפק דו"ח</button>
+                <button type="submit" class="btn btn-success" data-ng-show="chartReady==false" data-ng-click="generateReport()"><span class="ion-clipboard" style="font-size: 15px"></span>הפק דו"ח</button>
                 <button type="reset" class="btn btn-info" data-ng-click="resetReport()"><span class="ion-refresh" style="font-size: 15px"></span>&nbspאפס </button>
             </div>
         </div>
@@ -86,111 +89,5 @@
 	height: 400px;
 	margin: 0 auto;"></div>
 
-    <!--<div data-ng-show="chartReady">
-        <div class="form-group pull-left">
-            <div class="col-lg-3">
-                <button type="button" class="btn btn-default" data-ng-click="printReport()"><span class="ion-printer" style="font-size: 15px"></span>הדפס</button>
-            </div>
-        </div>
-        <canvas id="pie-chart" width="700" height="400" data-ng-show="chartReady==true && toProduce.status==true"></canvas>
-        <canvas id="bar-chart" width="700" height="400" data-ng-show="chartReady==true && toProduce.category==true"></canvas>
 
-    </div>-->
-
-
-
-
-    <!--<div class="scrollable" style="margin-top:10px">
-        <h3>הפקת דוחות</h3>
-        <form style="margin-top:10px">
-            <div class="form-group">
-                <label class="control-label" for="focusedInput">תחום:</label>
-                <input class="form-control" id="focusedInput" type="text" ng-model="currentUser.Domain" ng-disabled="true">
-            </div>
-
-
-            <div class="form-group">
-
-                <div class="col-lg-6">
-                    <label class="control-label">מתאריך:</label>
-                    <div class="input-group"
-                         data-moment-picker="toProduce.From"
-                         data-locale="he"
-                         data-start-view="day"
-                         data-format="DD-MM-YYYY">
-                        <span class="input-group-addon">
-                            <i class="icon ion-calendar"></i>
-                        </span>
-                        <input class="form-control inp-d"
-                               placeholder="בחר תאריך"
-                               data-ng-model="toProduce.From"
-                               data-ng-model-options="{ updateOn: 'blur' }" />
-                    </div>
-                </div>
-
-                <div class="col-lg-6">
-                    <label class="control-label">עד מתאריך:</label>
-                    <div class="input-group"
-                         data-moment-picker="toProduce.To"
-                         data-locale="he"
-                         data-start-view="day"
-                         data-format="DD-MM-YYYY">
-                        <span class="input-group-addon">
-                            <i class="icon ion-calendar"></i>
-                        </span>
-                        <input class="form-control inp-d"
-                               placeholder="בחר תאריך"
-                               data-ng-model="toProduce.To"
-                               data-ng-model-options="{ updateOn: 'blur' }" />
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="control-label" for="focusedInput">
-                    לפי חתכים:
-                    <br /><input type="checkbox" data-ng-model="toProduce.status"> סטטוס
-                    <a data-ng-show="currentUser.permission=='4'"><br /><input type="checkbox" data-ng-model="toProduce.dept"> מחלקה</a>
-                    <br /><input type="checkbox" data-ng-model="toProduce.category"> קטגוריה
-                    <br /><input type="checkbox" data-ng-model="toProduce.emp"> עובד מטפל
-                    <br /><input type="checkbox" data-ng-model="toProduce.build"> מבנה
-                </label>
-            </div>
-
-
-            <div>
-                <label class="control-label" for="focusedInput">
-                    לפי חתכים:
-                    <br /><input type="checkbox" data-ng-model="toProduce.status"> סטטוס
-                    <a data-ng-show="currentUser.permission=='4'"><br /><input type="checkbox" data-ng-model="toProduce.dept"> מחלקה</a>
-                    <br /><input type="checkbox" data-ng-model="toProduce.category"> קטגוריה
-                    <br /><input type="checkbox" data-ng-model="toProduce.emp"> עובד מטפל
-                    <br /><input type="checkbox" data-ng-model="toProduce.build"> מבנה
-                </label>
-            </div>
-
-            <div class="form-group">
-                <div class="col-lg-3">
-                    <button type="submit" class="btn btn-success" data-ng-click="customSearch()"><span class="ion-search" style="font-size: 15px"></span>&nbspחפש </button>
-                    <button type="reset" class="btn btn-info" data-ng-click="resetSearch()"><span class="ion-refresh" style="font-size: 15px"></span>&nbspאפס </button>
-                </div>
-            </div>
-
-            <div>
-                <canvas id="pie-chart" width="700" height="400" data-ng-show="chartReady==true && toProduce.status==true"></canvas>
-                <canvas id="bar-chart" width="700" height="400" data-ng-show="chartReady==true && toProduce.category==true"></canvas>
-
-            </div>
-
-            <input type="button" value="הדפס דוח" data-ng-click="PrintReport('divToPrint')" data-ng-show="chartReady==true" />
-
-
-            <div>
-                <button type="submit" class="btn btn-success" data-ng-show="chartReady==false" data-ng-click="produceReport()"><span class="ion-clipboard" style="font-size: 15px"></span>&nbspהפק דוח </button>
-                <button type="submit" class="btn btn-info" data-ng-click="resetReport()"><span class="ion-refresh" style="font-size: 15px"></span>&nbspאפס </button>
-
-            </div>
-
-        </form>
-    </div>-->
 </div>
