@@ -146,6 +146,11 @@
         e = e == null ? "" : e.Description;
         return e;
     }
+    
+    $scope.getBuildingFromLocation = function (loc) {
+        loc = Enumerable.From($scope.data.Location).Where(function (x) { return loc == x.Id }).FirstOrDefault();
+        return loc.Building;
+    }
 
     //filters
 
@@ -156,6 +161,21 @@
     $scope.domainByUser = function (item) {
         return $scope.currentUser.Domains.indexOf(item.Id) > -1;
     }
+
+    $scope.isUserInManagerDomain = function (item) {
+        var flag = false;
+        var manDomain = Enumerable.From($scope.data.UserDomain).Where(function (j) { return j.UserID == $scope.currentUser.Id && j.IsManager}).Select(function (i) { return i.DomainID }).ToArray();
+        var userDomain = Enumerable.From($scope.data.UserDomain).Where(function (j) { return j.UserID == $scope.currentUser.Id }).Select(function (i) { return i.DomainID }).ToArray();
+        angular.forEach(manDomain, function (o, i) {
+            angular.forEach(userDomain, function (p,j) {
+                if (o == p) flag = true
+            })
+        })
+
+        return flag;
+    }
+
+
 
     $scope.asigneeFilter = function (item) {
         if ($scope.selectedTicket == undefined) return;

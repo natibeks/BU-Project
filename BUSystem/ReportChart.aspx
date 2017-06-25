@@ -8,21 +8,17 @@
     <script src="http://code.highcharts.com/highcharts.js"></script>
     <title>גרף כלשהו</title>
 </head>
-<body dir="rtl" style="direction:rtl">
+<body dir="rtl" style="direction: rtl">
     <form id="form1" runat="server">
-    <div>
-        <div id="chartContainer" style="max-width: 660px;margin: auto;height: 400px;margin: 0 auto;">
-
-
+        <div id="chartContainer" style="max-width: 500px; margin: auto; height: 400px;">
         </div>
-    </div>
     </form>
 </body>
-    <script>
-        $(document).ready(function () {   
-            //Highcharts.chart('chartContainer', window.myChartData);
-            var options = window.myChartData;
-            var chart = new Highcharts.Chart(options);
-        })
-    </script>
+<script>
+    $(document).ready(function () {
+        //Highcharts.chart('chartContainer', window.myChartData);
+        var options = window.myChartData;
+        var chart = new Highcharts.Chart(options);
+    })
+</script>
 </html>

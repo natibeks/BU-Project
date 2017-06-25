@@ -1,13 +1,42 @@
 ﻿<div id="divToPrint">
     <h3>הפקת דוחות</h3>
-    <form class="form-horizontal" style="margin-top:20px" data-ng-submit="freeSearch()">
+    <form class="form-horizontal" style="margin-top:20px" data-ng-submit="generateReport()">
         <div class="form-group">
-            <label class="control-label col-lg-1">תחום:</label>
-            <div class="col-lg-3">
-                <select class="form-control" data-ng-model="ssss"
-                        data-ng-options="o.Id as o.DomainName for o in data.Domain | orderBy: 'DomainName'">
+            <label class="control-label col-lg-1">סוג דו"ח:</label>
+            <div class="col-lg-6">
+                <select class="form-control" data-ng-model="toProduce.Type"
+                        data-ng-options="o.Id as o.Name for o in reportsList">
                     <option value="">בחר</option>
                 </select>            
+            </div>
+        </div>
+        <div class="form-group" data-ng-if="toProduce.Type==3">
+            <label class="control-label col-lg-1">עובד:</label>
+            <div class="col-lg-3">
+                <select class="form-control" data-ng-model="toProduce.User"
+                        data-ng-options="o.Id as o.DisplayName for o in data.User | filter: isUserInManagerDomain">
+                    <option value="">בחר</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group" data-ng-if="toProduce.Type==4">
+            <label class="control-label col-lg-1">מבנה:</label>
+            <div class="col-lg-3">
+                <select class="form-control" data-ng-model="toProduce.Building">
+                    <option value="">בחר</option>
+                    <option value="M">M</option>
+                    <option value="EM">EM</option>
+                    <option value="L">L</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group" data-ng-if="toProduce.Type==5">
+            <label class="control-label col-lg-1">קטגוריה:</label>
+            <div class="col-lg-3">
+                <select class="form-control" data-ng-model="toProduce.Category"
+                        data-ng-options="o.Id as o.Name for o in Category">
+                    <option value="">בחר</option>
+                </select>
             </div>
         </div>
         <div class="form-group">
@@ -44,41 +73,10 @@
                 </div>
             </div>
         </div>
-        <div class="form-group">
-            <label class="control-label col-lg-1">לפי חתכים:</label>
-            <div class="col-lg-8">
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" data-ng-model="toProduce.status"> <span style="margin-right:45px">סטטוס</span>
-                    </label>
-                </div>
-                <div class="checkbox" data-ng-if="currentUser.permission=='4'">
-                    <label>
-                        <input type="checkbox" data-ng-model="toProduce.dept"> <span style="margin-right:45px">מחלקה</span>
-                    </label>
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" data-ng-model="toProduce.category"> <span style="margin-right:45px">קטגוריה</span>
-                    </label>
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" data-ng-model="toProduce.emp"> <span style="margin-right:45px">עובד מטפל</span>
-                    </label>
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" data-ng-model="toProduce.build"> <span style="margin-right:45px">מבנה</span>
-                    </label>
-                </div>
-
-            </div>
-        </div>
 
         <div class="form-group">
             <div class="col-lg-3">
-                <button type="submit" class="btn btn-success" data-ng-show="chartReady==false" data-ng-click="generateReport()"><span class="ion-clipboard" style="font-size: 15px"></span>הפק דו"ח</button>
+                <button type="submit" class="btn btn-success"><span class="ion-clipboard" style="font-size: 15px"></span>הפק דו"ח</button>
                 <button type="reset" class="btn btn-info" data-ng-click="resetReport()"><span class="ion-refresh" style="font-size: 15px"></span>&nbspאפס </button>
             </div>
         </div>

@@ -13,6 +13,14 @@
 
     }
 
+    $scope.reportsList = [
+        {Id: 1, Name: 'דו"ח מנכ"ל - מספר פניות לכל תחומי ניהול'},
+        {Id: 2, Name: 'דו"ח מנהל - מספר פניות חודשי לתחום ניהולו'},
+        {Id: 3, Name: 'דו"ח מנהל - מספר פניות חודשי לעובד'},
+        {Id: 4, Name: 'דו"ח מנהל - מספר פניות חודשי במבנה'},
+        {Id: 5, Name: 'דו"ח מנהל - מספר פניות חודשי בקטגוריה'},
+    ]
+
     $scope.chartReady = false;
     $scope.countOpen = 0;
     $scope.countClose = 0;
@@ -26,17 +34,15 @@
     $scope.getTitleText = function () {
         switch ($scope.toProduce.Type) {
             case 1:
-                return "מספר פניות לכל מחלקה";
-            case 2:
-                return "מספר פניות לחודש לעובד " + $scope.getUserDisplayName($scope.toProduce.User);
+                return "מספר פניות לכל תחומי ניהול";
             case 3:
-                return "מספר פניות לחודש בתחום";
+                return "מספר פניות לחודש לעובד " + $scope.getUserDisplayName($scope.toProduce.User);
+            case 2:
+                return "מספר פניות חודשי לתחום ניהולו";
             case 4:
-                return "מספר פניות לחודש לסטטוס " + $scope.getStatus($scope.toProduce.Status);
+                return "מספר פניות חודשי במבנה " + $scope.getBuildingFromLocation($scope.toProduce.Building);
             case 5:
-                return "מספר פניות לחודש במבנה ";
-            case 5:
-                return "מספר פניות לחודש בקטגוריה "+ $scope.getCategory$scope.toProduce.Category);
+                return "מספר פניות חודשי בקטגוריה " + $scope.getCategory($scope.toProduce.Category);
         }
     }
 
@@ -45,14 +51,12 @@
             case 1:
                 return $scope.getTicketForAllDomainReport();
             case 2:
-                return $scope.getTicketForWorkerReport();
-            case 3:
                 return $scope.getTicketPerPeriodReport();
+            case 3:
+                return $scope.getTicketForWorkerReport();
             case 4:
-                return $scope.getTicketPerPeriodInStatusReport();
-            case 5:
                 return $scope.getTicketPerPeriodInBuildingReport();
-            case 6:
+            case 5:
                 return $scope.getTicketPerPeriodInCategoryReport();
         }
     }
@@ -113,12 +117,11 @@
                 "{ Date: $, Total: $$.Count() }")
         .ToArray();
         e = Enumerable.From(e).Select(function (x) {
-            return {
-                Date: Date.UTC(moment(x.Date, "MM-YYYY").get('year'),
-                    moment(x.Date, "MM-YYYY").get('month')+1,
-                    01),
-                Total: x.Total
-            };
+            return [
+                (Date.UTC(moment(x.Date, "MM-YYYY").get('year'),
+                    moment(x.Date, "MM-YYYY").get('month') + 1,
+                    01)),
+                x.Total];
         }).ToArray();
         
         return e;
@@ -145,18 +148,17 @@
                 "{ Date: $, Total: $$.Count() }")
         .ToArray();
         e = Enumerable.From(e).Select(function (x) {
-            return {
-                Date: Date.UTC(moment(x.Date, "MM-YYYY").get('year'),
+            return [
+                (Date.UTC(moment(x.Date, "MM-YYYY").get('year'),
                     moment(x.Date, "MM-YYYY").get('month') + 1,
-                    01),
-                Total: x.Total
-            };
+                    01)),
+                x.Total];
         }).ToArray();
 
         return e;
     }
 
-    $scope.getTicketPerPeriodInStatusReport = function () {
+    $scope.getTicketPerPeriodInBuildingReport = function () {
         var filteredTickets = Enumerable.From($scope.data.Ticket).Where(function (x) {
             var dateOpen = moment(x.TimeOpen, 'DD-MM-YYYY HH:mm');
             var f1 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
@@ -177,12 +179,11 @@
                 "{ Date: $, Total: $$.Count() }")
         .ToArray();
         e = Enumerable.From(e).Select(function (x) {
-            return {
-                Date: Date.UTC(moment(x.Date, "MM-YYYY").get('year'),
+            return [
+                (Date.UTC(moment(x.Date, "MM-YYYY").get('year'),
                     moment(x.Date, "MM-YYYY").get('month') + 1,
-                    01),
-                Total: x.Total
-            };
+                    01)),
+                x.Total];
         }).ToArray();
 
         return e;
@@ -209,36 +210,49 @@
                 "{ Date: $, Total: $$.Count() }")
         .ToArray();
         e = Enumerable.From(e).Select(function (x) {
-            return {
-                Date: Date.UTC(moment(x.Date, "MM-YYYY").get('year'),
+            return [
+                (Date.UTC(moment(x.Date, "MM-YYYY").get('year'),
                     moment(x.Date, "MM-YYYY").get('month') + 1,
-                    01),
-                Total: x.Total
-            };
+                    01)),
+                x.Total];
         }).ToArray();
 
         return e;
     }
-
+  
     $scope.getTicketForWorkerReport = function () {
         var ticketsIDs = Enumerable.From($scope.data.UserTicket).Where(function (x) { return x.UserID == $scope.toProduce.User; }).Select(function (y) { return y.TicketID;}).ToArray();
         var status = Enumerable.From($scope.data.Status).Select(function (x) { return x.StatusName;}).ToArray();
-        var ticketsReport = [];
-        var ticketsReportCount = [];
-        angular.forEach(status, function (o, i) {
-            ticketsReportCount[i] = Enumerable.From($scope.data.Ticket).Where(function (x) {
-                if (ticketsIDs.indexOf(x.Id) == -1 && x.Status!=i+1) return false;
-                var dateOpen = moment(x.TimeOpen, 'DD-MM-YYYY HH:mm');
-                var f1 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
-                var t1 = $scope.toProduce.To == "" ? null : moment($scope.toProduce.To, 'DD-MM-YYYY');
-                return ((f1 == null && t1 == null) || (f1 != null && t1 != null && dateOpen.isBetween(f1, t1, 'days', '[]')) || (f1 != null && t1 == null && dateOpen.isSameOrAfter(f1)) || (t1 != null && f1 == null && dateOpen.isSameOrBefore(t1)))
-            }).Count();
-            ticketsReport.push({
-                name: o,
-                y: ticketsReportCount[i]
-            });
-        })
-        return ticketsReport;
+
+        var filteredTickets = Enumerable.From($scope.data.Ticket).Where(function (x) {
+            if (ticketsIDs.indexOf(x.Id) == -1) return false;
+            var dateOpen = moment(x.TimeOpen, 'DD-MM-YYYY HH:mm');
+            var f1 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
+            var t1 = $scope.toProduce.To == "" ? null : moment($scope.toProduce.To, 'DD-MM-YYYY');
+            return $scope.toProduce.Category == x.CategoryID &&
+            $scope.currentUser.Domains.indexOf($scope.getDomainByCategory(x.CategoryID)) > -1 && $scope.isUserManagerOfThisCategory(x.CategoryID)
+                && ((f1 == null && t1 == null) || (f1 != null && t1 != null && dateOpen.isBetween(f1, t1, 'days', '[]'))
+                || (f1 != null && t1 == null && dateOpen.isSameOrAfter(f1)) ||
+                (t1 != null && f1 == null && dateOpen.isSameOrBefore(t1)))
+        }).Select(function (x) {
+            return { Date: moment(x.TimeOpen, 'DD-MM-YYYY HH:mm').format("MM-YYYY"), Status: x.Status }
+        }).
+        ToArray();
+        var e = Enumerable.From(filteredTickets).
+            GroupBy(
+            "$.Date",
+                null,
+                "{ Date: $, Total: $$.Count() }")
+        .ToArray();
+        e = Enumerable.From(e).Select(function (x) {
+            return [
+                (Date.UTC(moment(x.Date, "MM-YYYY").get('year'),
+                    moment(x.Date, "MM-YYYY").get('month') + 1,
+                    01)),
+                x.Total];
+        }).ToArray();
+
+        return e;
     }
 
     $scope.generateReport = function () {
@@ -304,26 +318,35 @@
         {
             var options = {
                 chart: {
-                    type: 'spline',
+                    chart: 'spline',
                     renderTo: 'chartContainer'
                 },
-                rangeSelector: {
-                    selected: 1
+                eporting:{
+                    enabled:true,
                 },
-
+                legend: {
+                    align: 'center',
+                    layout: 'vertical',
+                    rtl: true,
+                    useHTML: true
+                },
                 title: {
                     text: $scope.chartOptions.titleText
                 },
                 xAxis: {
                     type: 'datetime',
-                    dateTimeLabelFormats: {
-                        month: '%m \'%y',
-                    }
+
                 },
                 yAxis: {
                     title: {
                         text: 'פניות'
+                    },    
+                },
+                tooltip: {
+                    pointFormatter: function () {
+                        return "כמות: " + this.y;
                     },
+                    useHTML: true
                 },
                 series: [{
                     name: $scope.chartOptions.seriesName,
