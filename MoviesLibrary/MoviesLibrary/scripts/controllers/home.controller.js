@@ -57,10 +57,13 @@
 
     $scope.setEditMode = function (flag) {
         $scope.editMode = flag;
-        $scope.selectedMovie["Actors"] = Enumerable.From($scope.data.Actor).Where(function (x) {
-            var CountExistance = Enumerable.From($scope.data.MovieActor).Where(function (y) { return y.MovieID == $scope.selectedMovie.Id && x.Id == y.ActorID; }).Count();
-            return CountExistance > 0;
-        }).ToArray();
+        if (flag)
+            $scope.selectedMovie["Actors"] = Enumerable.From($scope.data.Actor).Where(function (x) {
+                var CountExistance = Enumerable.From($scope.data.MovieActor).Where(function (y) { return y.MovieID == $scope.selectedMovie.Id && x.Id == y.ActorID; }).Count();
+                return CountExistance > 0;
+            }).ToArray();
+        else
+            $scope.fromNewToMovies();
     }
 
     $scope.saveChanges = function () {
@@ -70,13 +73,43 @@
         })
     }
 
+    $scope.setNewMovie = function () {
+        $scope.setMovie();
+        $scope.setEditMode(true);
+    }
+
+    $scope.delMovie = function () {
+        DataService.deleteMovie($scope.selectedMovie).then(function (x) {
+            if (x) // succeed
+                $scope.data = DataService.getData();
+        })
+    }
+
+    $scope.setMovie = function (movie) {
+        if (movie != undefined) {
+            var temp = Enumerable.From($scope.data.Movie).Where(function (x) { return x.Id == movie }).FirstOrDefault();
+        }
+        else
+            var temp = $scope.movieTemplate;
+        $scope.selectedMovie = angular.copy(temp);
+        $scope.editMode = false;
+        $scope.setPage(1);
+    }
+
+    $scope.fromNewToMovies = function () {
+        if ($scope.selectedMovie.Id == 0) {
+            $scope.selectedMovie == null;
+            $scope.setPage(2);
+        }         
+    }
+
     //startGetters
 
     $scope.getPageHeading = function () {
         if ($scope.search.Text.length > 0)
             return "Search Result";
         if ($scope.currentPage == 1)
-            return "Newest Movie";
+            return "Movie Page";
         if ($scope.currentPage == 2)
             return "Movies Table";
     }

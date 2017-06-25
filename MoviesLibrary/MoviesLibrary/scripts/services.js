@@ -95,10 +95,10 @@ function dataService($http, $q) {
                         }
                     });
                     var arr = Enumerable.From(selectedMovie.Actors).Select("$.Id").ToArray();
-                    angular.forEach(dataService.dataObject.MovieActor, function (o, i) {                            
+                    angular.forEach(dataService.dataObject.MovieActor, function (o, i) {
                         if (o.MovieID == selectedMovie.Id) {
                             var index = arr.indexOf(o.ActorID)
-                            if(index==-1)
+                            if (index == -1)
                                 dataService.dataObject.MovieActor[i].IsArchive = true;
                             else
                                 arr.splice(index, 1);
@@ -111,7 +111,7 @@ function dataService($http, $q) {
                             IsArchive: false
                         })
                     })
-              
+
                 } // is new movie
                 else {
                     dataService.dataObject.Movie.push(selectedMovie);
@@ -126,6 +126,21 @@ function dataService($http, $q) {
 
                 d.resolve(true);
 
+            })
+    }
+
+    dataService.deleteMovie = function (selectedMovie) {
+        var d = $q.defer();
+        dataService.makeGetRequest("deletemovie", { movieid: selectedMovie.Id }).then(
+            function (response) {
+                if (!response.RequestSucceed) d.reject(false);
+                selectedMovie.IsArchive = true;
+                angular.forEach(dataService.dataObject.Movie, function (o, i) {
+                    if (o.Id == selectedMovie.Id) {
+                        dataService.dataObject.Movie[i] = angular.copy(selectedMovie);
+                    }
+                });
+                d.resolve(true);
             })
     }
 

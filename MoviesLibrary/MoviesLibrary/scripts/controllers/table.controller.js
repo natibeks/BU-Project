@@ -53,11 +53,7 @@
     }
 
     $scope.setMovie = function (movie) {
-        if (movie == undefined) {
-            var temp = Enumerable.From($scope.data.Movie).Where(function (x) { return x.Id == movie }).FirstOrDefault();
-        }
-        else
-            var temp = $scope.movieTemplate;
+        var temp = Enumerable.From($scope.data.Movie).Where(function (x) { return x.Id == movie }).FirstOrDefault();
         $scope.$parent.selectedMovie = angular.copy(temp);
         $scope.editMode = false;
         $scope.setPage(1);

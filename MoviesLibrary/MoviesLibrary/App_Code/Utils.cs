@@ -129,6 +129,26 @@ namespace MoviesLibrary
                 throw e;
             }
         }
+        
+        public static string DeleteMovie(int movie)
+        {
+            try
+            {
+                using (var db = new MoviesDBEntities())
+                {
+                    var b = db.Movie.Where(i => i.Id == movie).FirstOrDefault();
+                    b.IsArchive = true;
+                    db.SaveChanges();
+
+                    return "ok";
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public static string SendForgottenPass(string userId)
         {
             try

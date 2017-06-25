@@ -10,7 +10,7 @@
                 </div>
                 <div class="col-xs-12 col-sm-7 col-lg-7">
                     <div class="row">
-                        <div class="form-group">
+                        <div class="form-group" style="padding-right:15px">
                             <label class="control-label">Actors:</label>
                             <div data-ng-if="!editMode">
                                 <div data-ng-repeat="ma in data.MovieActor | filter:{MovieID: selectedMovie.Id}" style="display:inline-block">
@@ -30,30 +30,30 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="form-group">
+                        <div class="form-group" style="padding-right:15px">
                             <label class="control-label">Director:  </label>
                             <div data-ng-bind="getDirector(selectedMovie.Director)" data-ng-if="!editMode"></div>
                             <div data-ng-if="editMode">
                                 <select class="form-control" data-ng-model="selectedMovie.Director"
                                         data-ng-options="o.Id as o.Name for o in data.Director  | orderBy: 'Name'">
-                                    <option value="">בחר</option>
+                                    <option value="">Select director...</option>
                                 </select>    
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="form-group">
+                        <div class="form-group" style="padding-right:15px">
                             <label class="control-label">Genre:  </label>
                             <div data-ng-bind="getGenre(selectedMovie.Genre)" data-ng-if="!editMode"></div>
                             <div data-ng-if="editMode">
                                 <select class="form-control" data-ng-model="selectedMovie.Genre"
                                         data-ng-options="o.Id as o.Name for o in data.Genre  | orderBy: 'Name'">
-                                    <option value="">בחר</option>
+                                    <option value="">Select genre...</option>
                                 </select>                            
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row" style="padding-right:15px">
                         <div class="form-group">
                             <label class="control-label">Year:  </label>
                             <div data-ng-bind="selectedMovie.Year" data-ng-if="!editMode"></div>

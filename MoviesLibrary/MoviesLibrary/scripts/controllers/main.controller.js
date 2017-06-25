@@ -12,7 +12,7 @@
     })
 
     $scope.setPage = function (page,newest) {
-        if (page == 1 && newest) {
+        if (page == 1 && newest==true) {
             $scope.$broadcast('setNewestSelectedMovie');
         }
         $scope.currentPage = page;

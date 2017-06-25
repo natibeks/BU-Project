@@ -6,7 +6,7 @@
                 <span data-ng-if="sort.Name==field.Title" data-ng-class="{true:'ion-arrow-down-b text-danger',false:'ion-arrow-up-b text-success'}[sort.Desc]"
                       style="display: inline-block; margin-left: 3px"></span>
             </th>
-            <th style="width: 70px;"> </th>
+            <th style="width: 76px;"> </th>
         </tr>
     </thead>
     <tbody>
@@ -26,17 +26,26 @@
                 <div data-ng-bind="getGenre(movie.Genre)" data-ng-if="field.Title == 'Genre'"></div>
             </td>
             <td>
-                <div data-ng-show="hoverMovie==movie.Id" style="text-decoration:none">
-                    <a href="" title="Enter movie page." prevent-default data-ng-click="setMovie(movie.Id)" style="font-size:25px">
-                        <span class="ion-arrow-expand text-primary"></span>
-                    </a>            
-                    <a href="" title="Rent it." prevent-default data-ng-click="rentMovie(movie.Id)" style="font-size:25px"
-                        data-ng-if="isUserFreeToRent()">
-                        <span class="ion-ios-download-outline text-primary"></span>
-                    </a>
-                    <span title="Already rented." class="ion-ios-pricetag text-default" style="font-size:25px"
-                           data-ng-if="!isMovieFreeToBeRent(movie)"></span>
-                </div>
+                <table>
+                    <tr>
+                        <td style="width:25px">
+                            <a href="" title="Rent it." prevent-default data-ng-show="hoverMovie==movie.Id" data-ng-click="rentMovie(movie.Id)" style="font-size:25px"
+                               data-ng-if="isUserFreeToRent()">
+                                <span class="ion-ios-download-outline text-primary"></span>
+                            </a>
+                        </td>
+                        <td style="width:25px">
+                            <a href="" title="Enter movie page." prevent-default data-ng-show="hoverMovie==movie.Id" data-ng-click="setMovie(movie.Id)" style="font-size:25px">
+                                <span class="ion-arrow-expand text-primary"></span>
+                            </a> 
+                        </td>
+                        <td style="width:25px">
+                            <span title="Already rented." class="ion-ios-pricetag text-default" style="font-size:25px"
+                                  data-ng-if="!isMovieFreeToBeRent(movie)"></span>
+                        </td>
+                    </tr>
+                   
+                </table>
 
             </td>
         </tr>

@@ -39,6 +39,10 @@ namespace MoviesLibrary
                     case "updatemovie":
                         Response.Write(Utils.UpdateMovie(obj));
                         break;
+                    case "deletemovie":
+                        movie = Convert.ToInt32(Request["movieid"]);
+                        Response.Write(Utils.DeleteMovie(movie));
+                        break;
                     //case "delTask":
                     //    Response.Write(Utils.DeleteTask(Convert.ToInt32(Request["task"])));
                     //    break;
