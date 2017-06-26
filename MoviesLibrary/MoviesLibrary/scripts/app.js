@@ -1,6 +1,6 @@
 ﻿// init system angular application
 
-var app = angular.module('myApp', ['ngRoute', 'ngSanitize', 'ui.select']);
+var app = angular.module('myApp', ['ngRoute', 'ngSanitize', 'ui.select', 'ngFileUpload']);
 
 app.run(function ($rootScope,$location,AuthService) {
 

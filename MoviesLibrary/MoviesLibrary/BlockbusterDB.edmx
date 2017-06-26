@@ -41,6 +41,7 @@
           <Property Name="Director" Type="int" Nullable="false" />
           <Property Name="WhoRent" Type="varchar" MaxLength="50" />
           <Property Name="IsArchive" Type="bit" />
+          <Property Name="HasPoster" Type="bit" />
         </EntityType>
         <EntityType Name="MovieActor">
           <Key>
@@ -144,6 +145,7 @@
           <Property Name="Director" Type="Int32" Nullable="false" />
           <Property Name="WhoRent" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="IsArchive" Type="Boolean" />
+          <Property Name="HasPoster" Type="Boolean" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -205,6 +207,7 @@
           <EntitySetMapping Name="Movie">
             <EntityTypeMapping TypeName="MoviesDBModel.Movie">
               <MappingFragment StoreEntitySet="Movie">
+                <ScalarProperty Name="HasPoster" ColumnName="HasPoster" />
                 <ScalarProperty Name="IsArchive" ColumnName="IsArchive" />
                 <ScalarProperty Name="WhoRent" ColumnName="WhoRent" />
                 <ScalarProperty Name="Director" ColumnName="Director" />

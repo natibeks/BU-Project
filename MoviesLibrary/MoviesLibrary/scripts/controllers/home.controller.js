@@ -1,4 +1,4 @@
-﻿app.controller('HomeController', function ($scope, $rootScope, DataService,AuthService, data) {
+﻿app.controller('HomeController', function ($scope, $rootScope, DataService, AuthService, Upload, data) {
     $scope.data = data;
     $rootScope.loadingStatus = false;
     $scope.selectedMovie;
@@ -18,7 +18,8 @@
         Year: moment().year(),
         Genre: 0,
         Plot: "",
-        Name: ""
+        Name: "",
+        HasPoster: false
     }
 
     $scope.setAdvancedMode = function (flag) {
@@ -102,6 +103,34 @@
             $scope.setPage(2);
         }         
     }
+
+    $scope.$watch('uploadedImg', function () {
+        if ($scope.uploadedImg != null) {
+            $scope.upload($scope.uploadedImg);
+        }
+    });
+
+    $scope.upload = function (file) {
+        if (file) {
+            if (!file.$error) {
+                Upload.upload({
+                    url: 'imgUploader.ashx&id=' + $scope.selectedMovie.Id,
+                    data: {
+                        file: file
+                    }
+                }).then(function (resp) {
+                    $scope.selectedMovie.HasPoster = true;
+                    console.log('filesucceed');
+                }, null, function (evt) {
+                    var progressPercentage = parseInt(100.0 *
+                            evt.loaded / evt.total);
+                    $scope.log = 'progress: ' + progressPercentage +
+                        '% ' + evt.config.data.file.name + '\n' +
+                      $scope.log;
+                });
+            }
+        }
+    };
 
     //startGetters
 

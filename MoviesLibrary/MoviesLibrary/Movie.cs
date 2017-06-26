@@ -22,5 +22,6 @@ namespace MoviesLibrary
         public int Director { get; set; }
         public string WhoRent { get; set; }
         public Nullable<bool> IsArchive { get; set; }
+        public Nullable<bool> HasPoster { get; set; }
     }
 }

@@ -6,7 +6,12 @@
         <div class="panel-body">
             <div class="row">
                 <div class="col-xs-12 col-sm-5 col-lg-5">
-                    <img class="img-responsive" data-ng-src="posters/{{selectedMovie.Id}}.jpg" />
+                    <div data-ng-if="!selectedMovie.HasPoster" ngf-drop ngf-select ng-model="uploadedImg" class="drop-box"
+                         ngf-drag-over-class="'dragover'" ngf-multiple="false" ngf-allow-dir="true"
+                         accept="image/*,application/pdf"
+                         ngf-pattern="'image/*,application/pdf'">גרור לפה תמונה מסוג jpeg/jpg בלבד</div>
+                    <div ngf-no-file-drop>התמונה לא נתמכת</div>
+                    <img class="img-responsive" data-ng-if="selectedMovie.HasPoster" data-ng-src="posters/{{selectedMovie.Id}}.jpg" />
                 </div>
                 <div class="col-xs-12 col-sm-7 col-lg-7">
                     <div class="row">

@@ -117,6 +117,7 @@ namespace MoviesLibrary
                     b.Year = Convert.ToInt32(obj["Year"]);
                     b.Plot = Convert.ToString(obj["Plot"]);
                     b.Name = Convert.ToString(obj["Name"]);
+                    b.HasPoster = Convert.ToBoolean(obj["HasPoster"]);
                     if (isNew)
                         db.Movie.Add(b);
                     db.SaveChanges();
