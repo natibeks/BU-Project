@@ -100,8 +100,10 @@
             var dateOpen = moment(x.TimeOpen, 'DD-MM-YYYY HH:mm');
             var f1 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
             var t1 = $scope.toProduce.To == "" ? null : moment($scope.toProduce.To, 'DD-MM-YYYY');
-            return $scope.currentUser.Domains.indexOf($scope.getDomainByCategory(x.CategoryID)) > -1 && $scope.isUserManagerOfThisCategory(x.CategoryID)
-                && ((f1 == null && t1 == null) || (f1 != null && t1 != null && dateOpen.isBetween(f1, t1, 'days', '[]'))
+            var flag1 = $scope.currentUser.Domains.indexOf($scope.getDomainByCategory(x.CategoryID)) > -1;
+            var flag2 = $scope.isUserManagerOfThisCategory(x.CategoryID);
+            return flag1 && flag2 &&
+                ((f1 == null && t1 == null) || (f1 != null && t1 != null && dateOpen.isBetween(f1, t1, 'days', '[]'))
                 || (f1 != null && t1 == null && dateOpen.isSameOrAfter(f1)) ||
                 (t1 != null && f1 == null && dateOpen.isSameOrBefore(t1)))
         }).Select(function (x) {

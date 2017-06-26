@@ -259,19 +259,20 @@ public class Utils
                 b.TelephoneNumber = Convert.ToString(obj["TelephoneNumber"]);
                 b.Department = Convert.ToInt32(obj["Department"]);
                 b.UserPassword = Convert.ToString(obj["UserPassword"]);
+                if (isNew)
+                    db.User.Add(b);
                 var domain = Convert.ToInt32(obj["DomainID"]);
                 var doms = db.UserDomain.Where(i => i.UserID == id).ToArray();
                 foreach(var dom1 in doms){
                     dom1.IsArchive = true;
                 }
                 var dom = new UserDomain();
-                dom.UserID = id;
+                dom.UserID = b.Id;
                 dom.DomainID = domain;
                 dom.IsManager = b.Role < 4;
                 db.UserDomain.Add(dom);
 
-                if (isNew)
-                    db.User.Add(b);
+ 
                 db.SaveChanges();
 
                 return b.Id.ToString();

@@ -80,7 +80,13 @@
     //getters
 
     $scope.getAsigneeNames = function (tid) {
-        var ut = Enumerable.From($scope.data.UserTicket).Where(function (x) { return x.TicketID == item.Id }).Select(function (y) { return y.UserID }).ToArray();
+        var ut = Enumerable.From($scope.data.UserTicket).Where(
+            function (x) {
+                return x.TicketID == tid;
+            }).Select(
+            function (y) {
+                return y.UserID
+            }).ToArray();
         var unames = Enumerable.From($scope.data.User).Where(function (x) { return ut.indexOf(x.Id) > -1 }).Select(function (y) { return y.DisplayName }).ToArray();
         var res = "";
 
@@ -88,10 +94,10 @@
             res = unames[0];
         
         if (typeof (unames[1]) == "string") {
-            res = res + " ";
-            res = unames[1];
+            res = res + ", ";
+            res = res+unames[1];
         }
-            
+        return res;
        
     }
 
@@ -102,6 +108,7 @@
     $scope.isUserManagerOfThisCategory = function (cid) {
         var domain = $scope.getDomainByCategory(cid);
         var e = Enumerable.From($scope.data.UserDomain).Where(function (x) { return x.UserID == $scope.currentUser.Id && x.DomainID == domain }).FirstOrDefault();
+        if (e == null) return false;
         return e.IsManager == true;
 
     }
@@ -150,10 +157,19 @@
     
     $scope.getBuildingFromLocation = function (loc) {
         loc = Enumerable.From($scope.data.Location).Where(function (x) { return loc == x.Id }).FirstOrDefault();
+        if (loc == null) return;
         return loc.Building;
     }
 
     //filters
+
+    $scope.reportFilter = function (item) {
+        if (item.Id == 1)
+            if ($scope.currentUser.Permission > 2)
+                return false;
+        return true;
+
+    }
 
     $scope.ticketsByDomain = function (item) {
         return ($scope.currentUser.Domains.indexOf(item.Domain) > -1 && item.Status != 4);
@@ -166,7 +182,7 @@
     $scope.isUserInManagerDomain = function (item) {
         var flag = false;
         var manDomain = Enumerable.From($scope.data.UserDomain).Where(function (j) { return j.UserID == $scope.currentUser.Id && j.IsManager}).Select(function (i) { return i.DomainID }).ToArray();
-        var userDomain = Enumerable.From($scope.data.UserDomain).Where(function (j) { return j.UserID == $scope.currentUser.Id }).Select(function (i) { return i.DomainID }).ToArray();
+        var userDomain = Enumerable.From($scope.data.UserDomain).Where(function (j) { return j.UserID == item.Id }).Select(function (i) { return i.DomainID }).ToArray();
         angular.forEach(manDomain, function (o, i) {
             angular.forEach(userDomain, function (p,j) {
                 if (o == p) flag = true
