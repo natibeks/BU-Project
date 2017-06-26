@@ -108,6 +108,7 @@
 
     $scope.isInBuilding = function (build, loc) {
         var e = Enumerable.From($scope.data.Location).Where(function (x) { return x.Id == loc }).FirstOrDefault();
+        if (e == undefined) return false;
         return e.Building == build;
     }
 

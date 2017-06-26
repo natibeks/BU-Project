@@ -40,7 +40,7 @@
             case 2:
                 return "מספר פניות חודשי לתחום ניהולו";
             case 4:
-                return "מספר פניות חודשי במבנה " + $scope.getBuildingFromLocation($scope.toProduce.Building);
+                return "מספר פניות חודשי במבנה " + $scope.toProduce.Building;
             case 5:
                 return "מספר פניות חודשי בקטגוריה " + $scope.getCategory($scope.toProduce.Category);
         }
@@ -65,15 +65,13 @@
         switch ($scope.toProduce.Type) {
             case 1:
                 return "פניות למחלקה";
-            case 2:
-                return "פניות לעובד";
             case 3:
+                return "פניות לעובד";
+            case 2:
                 return "פניות";
             case 4:
-                return "פניות בסטטוס";
-            case 5:
                 return "פניות במבנה";
-            case 6:
+            case 5:
                 return "פניות בקטגוריה";
         }
     }
@@ -163,11 +161,14 @@
             var dateOpen = moment(x.TimeOpen, 'DD-MM-YYYY HH:mm');
             var f1 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
             var t1 = $scope.toProduce.To == "" ? null : moment($scope.toProduce.To, 'DD-MM-YYYY');
-            return $scope.isInBuilding($scope.toProduce.Building, x.LocationID) &&
-            $scope.currentUser.Domains.indexOf($scope.getDomainByCategory(x.CategoryID)) > -1 && $scope.isUserManagerOfThisCategory(x.CategoryID)
-                && ((f1 == null && t1 == null) || (f1 != null && t1 != null && dateOpen.isBetween(f1, t1, 'days', '[]'))
-                || (f1 != null && t1 == null && dateOpen.isSameOrAfter(f1)) ||
-                (t1 != null && f1 == null && dateOpen.isSameOrBefore(t1)))
+            var flag1 = $scope.isInBuilding($scope.toProduce.Building, x.LocationID);
+            var flag2 = $scope.currentUser.Domains.indexOf($scope.getDomainByCategory(x.CategoryID)) > -1;
+            var flag3 = $scope.isUserManagerOfThisCategory(x.CategoryID);
+            return flag1 && flag2 && flag3
+                && ( (f1 == null && t1 == null)
+                || ( f1 != null && t1 != null && dateOpen.isBetween(f1, t1, 'days', '[]') )
+                || (f1 != null && t1 == null && dateOpen.isSameOrAfter(f1))
+                || ( t1 != null && f1 == null && dateOpen.isSameOrBefore(t1) ) )
         }).Select(function (x) {
             return { Date: moment(x.TimeOpen, 'DD-MM-YYYY HH:mm').format("MM-YYYY"), Status: x.Status }
         }).
@@ -229,11 +230,13 @@
             var dateOpen = moment(x.TimeOpen, 'DD-MM-YYYY HH:mm');
             var f1 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
             var t1 = $scope.toProduce.To == "" ? null : moment($scope.toProduce.To, 'DD-MM-YYYY');
-            return $scope.toProduce.Category == x.CategoryID &&
-            $scope.currentUser.Domains.indexOf($scope.getDomainByCategory(x.CategoryID)) > -1 && $scope.isUserManagerOfThisCategory(x.CategoryID)
-                && ((f1 == null && t1 == null) || (f1 != null && t1 != null && dateOpen.isBetween(f1, t1, 'days', '[]'))
-                || (f1 != null && t1 == null && dateOpen.isSameOrAfter(f1)) ||
-                (t1 != null && f1 == null && dateOpen.isSameOrBefore(t1)))
+            var flag1 = $scope.currentUser.Domains.indexOf($scope.getDomainByCategory(x.CategoryID)) > -1;
+            var flag2 = $scope.isUserManagerOfThisCategory(x.CategoryID);
+            return flag1 && flag2
+                && ( (f1 == null && t1 == null) ||
+                ( f1 != null && t1 != null && dateOpen.isBetween(f1, t1, 'days', '[]') ) ||
+                ( f1 != null && t1 == null && dateOpen.isSameOrAfter(f1) ) ||
+                ( t1 != null && f1 == null && dateOpen.isSameOrBefore(t1) ) )
         }).Select(function (x) {
             return { Date: moment(x.TimeOpen, 'DD-MM-YYYY HH:mm').format("MM-YYYY"), Status: x.Status }
         }).
@@ -324,6 +327,9 @@
                 eporting:{
                     enabled:true,
                 },
+                rangeSelector:{
+                    selected: 1
+                },
                 legend: {
                     align: 'center',
                     layout: 'vertical',
@@ -335,19 +341,28 @@
                 },
                 xAxis: {
                     type: 'datetime',
-
+                    dateTimeLabelFormats: {
+                        day: '%y / %m',
+                        week: '%y / %m',
+                        month: '%y / %m',
+                        year: '%y / %m'
+                    },
+                    rtl: true,
+                    useHTML: true
                 },
                 yAxis: {
                     title: {
                         text: 'פניות'
-                    },    
+                    },
+                    allowDecimals: false
                 },
                 tooltip: {
-                    pointFormatter: function () {
-                        return "כמות: " + this.y;
-                    },
-                    useHTML: true
+                    useHTML: true,
+                    formatter: function () {
+                        return " כמות הפניות ב <b>" + moment(this.x).format("MM/YYYY") + "</b><br/> היא <b>" + this.y + "</b>"
+                    }
                 },
+
                 series: [{
                     name: $scope.chartOptions.seriesName,
                     data: $scope.chartOptions.seriesData
@@ -370,52 +385,6 @@
         popupWin.document.close();
 
     }
-
-    //$scope.produceReport = function () {
-
-    //    if ($scope.toProduce.status == true) {
-    //        if ($scope.currentUser.Permission != 2) {
-    //            $scope.cntOpen = Enumerable.From($scope.data.MyTicket).Where(function (i) {
-    //                var dateOpen = moment(i.TimeOpen, 'DD-MM-YYYY');
-    //                var f1 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
-    //                var t1 = $scope.toProduce.To == "" ? null : moment($scope.toProduce.To, 'DD-MM-YYYY');
-    //                return i.Domain == $scope.currentUser.Domain && ((f1 == null && t1 == null) || (f1 != null && t1 != null && dateOpen.isBetween(f1, t1, 'days', '[]')) || (f1 != null && t1 == null && dateOpen.isSameOrAfter(f1)) || (t1 != null && f1 == null && dateOpen.isSameOrBefore(t1)))
-
-    //            }).Count();
-
-    //            $scope.cntClose = Enumerable.From($scope.data.MyTicket).Where(function (i) {
-    //                var dateClose = i.TimeClose == null ? null : moment(i.TimeClose, 'DD-MM-YYYY');
-    //                var f2 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
-    //                var t2 = $scope.toProduce.To == "" ? null : moment($scope.toProduce.To, 'DD-MM-YYYY');
-    //                return i.Domain == $scope.currentUser.Domain && dateClose != null && ((f2 == null && t2 == null) || (f2 != null && t2 != null && dateClose.isBetween(f2, t2, 'days', '[]')) || (f2 != null && t2 == null && dateClose.isSameOrAfter(f2)) || (t2 != null && f2 == null && dateClose.isSameOrBefore(t2)))
-
-
-    //            }).Count();
-    //        }
-    //        else {          //for CEO
-    //            $scope.cntOpen = Enumerable.From($scope.data.Ticket).Where(function (i) {
-    //                var dateOpen = moment(i.TimeOpen, 'DD-MM-YYYY');
-    //                var f1 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
-    //                var t1 = $scope.toProduce.To == "" ? null : moment($scope.toProduce.To, 'DD-MM-YYYY');
-    //                return ((f1 == null && t1 == null) || (f1 != null && t1 != null && dateOpen.isBetween(f1, t1, 'days', '[]')) || (f1 != null && t1 == null && dateOpen.isSameOrAfter(f1)) || (t1 != null && f1 == null && dateOpen.isSameOrBefore(t1)))
-    //            }).Count();
-
-    //            $scope.cntClose = Enumerable.From($scope.data.Ticket).Where(function (i) {
-    //                var dateClose = moment(i.TimeClose, 'DD-MM-YYYY');
-    //                var f2 = $scope.toProduce.From == "" ? null : moment($scope.toProduce.From, 'DD-MM-YYYY');
-    //                var t2 = $scope.toProduce.To == "" ? null : moment($scope.toProduce.To, 'DD-MM-YYYY');
-    //                return dateClose != null && ((f2 == null && t2 == null) || (f2 != null && t2 != null && dateClose.isBetween(f2, t2, 'days', '[]')) || (f2 != null && t2 == null && dateClose.isSameOrAfter(f2)) || (t2 != null && f2 == null && dateClose.isSameOrBefore(t2)))
-
-
-    //            }).Count();
-    //        }
-
-    //        $scope.chartReady = true;
-    //    }
-
-    //}
-
-
 
 }
 
