@@ -30,7 +30,6 @@
     // Init currentUser object and create his TicketsToDo Table
     $scope.initUserValues = function () {
         $scope.currentUser = Enumerable.From($scope.data.User).Where(function (j) { return j.Id == $scope.UserId }).FirstOrDefault();
-        $scope.currentUser["Permission"] = $scope.currentUser.Role;
         $scope.currentUser.Domains = Enumerable.From($scope.data.UserDomain).Where(function (j) { return j.UserID == $scope.currentUser.Id }).Select(function (i) { return i.DomainID }).ToArray();
         $scope.createTicketsToDo();
     }
@@ -126,6 +125,7 @@
 
     $scope.getLocationName = function (loc, flag) {
         if (loc == undefined) return;
+        if (loc == 0) return "";
         if (!flag)
             loc = Enumerable.From($scope.data.Location).Where(function (x) { return loc == x.Id }).FirstOrDefault();
         return loc.Building.toString() + ' ' + loc.Room + ' - ' + loc.Description;
@@ -164,9 +164,16 @@
     //filters
 
     $scope.reportFilter = function (item) {
-        if (item.Id == 1)
-            if ($scope.currentUser.Permission > 2)
+        if (item.Id == 2)
+            if ($scope.currentUser.Role == 2)
                 return false;
+            else
+                return true;
+        if (item.Id == 1)
+            if ($scope.currentUser.Role != 2)
+                return false;
+            else
+                return true;
         return true;
 
     }
@@ -192,20 +199,24 @@
         return flag;
     }
 
-
+    $scope.notArchiveFilter = function (item) {
+        if (item.IsArchive == undefined) return true;
+        return item.IsArchive != true;
+    }
 
     $scope.asigneeFilter = function (item) {
         if ($scope.selectedTicket == undefined) return;
         var domains = Enumerable.From($scope.data.UserDomain).Where(function (x) { return x.UserID == item.Id }).Select(function (y) { return y.DomainID }).ToArray();
-        return $scope.currentUser.Id != item.Id && domains.indexOf($scope.selectedTicket.DomainID) > -1;
+        if ($scope.currentUser.Id == item.Id && $scope.selectedTicket.AnotherAsignee != item.Id) return false;
+        return domains.indexOf($scope.selectedTicket.DomainID) > -1;
     };
 
     $scope.ticketsByUser = function (item) {
-        return item.UserID == $scope.currentUser.Id;
+        return item.UserID_Created == $scope.currentUser.Id;
     }
 
     $scope.departmentFilter = function (item) {
-        if ($scope.currentUser.Permission == 2) return true;
+        if ($scope.currentUser.Role == 2) return true;
         return $scope.currentUser.Department == item.Id;
     }
 
@@ -222,7 +233,14 @@
     };
 
     $scope.CategoryToSearchFilter = function (item) {
-        if ($scope.currentUser.Permission == 2)
+        if ($scope.currentUser.Role == 2)
+            return $scope.currentUser.Domains.indexOf(item.DomainID) > -1;
+        else
+            return true;
+    }
+
+    $scope.categoryToReportFilter = function (item) {
+        if ($scope.currentUser.Role != 2)
             return $scope.currentUser.Domains.indexOf(item.DomainID) > -1;
         else
             return true;

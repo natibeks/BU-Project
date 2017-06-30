@@ -5,10 +5,11 @@
         EmailAddress: "",
         TelephoneNumber: "",
         Department: "",
-        Role: "",
+        Role: 4,
         DomainID: "",
         UserPassword: "",
-        IsArchive: false
+        IsArchive: false,
+
     }
 
     $scope.setUserWin = function (user) {
@@ -16,7 +17,7 @@
             $scope.selectedUser = angular.copy($scope.userTemplate);
         else {
             $scope.selectedUser = angular.copy(user);
-            $scope.selectedUser["DomainID"] = Enumerable.From($scope.data.UserDomain).Where(function (x) { return x.UserID == user.Id }).FirstOrDefault();
+            $scope.selectedUser["DomainID"] = Enumerable.From($scope.data.UserDomain).Where(function (x) { return x.UserID == user.Id }).Select(function(y){return y.DomainID;}).FirstOrDefault();
         }
         $("#editUserModal").modal('show');
     }
@@ -33,13 +34,20 @@
                 if (!response.RequestSucceed) return;
                 var res = parseInt(response.Data);
                 if (isNew) {
-                    $scope.selectedUser.Id = res.Id;
+                    $scope.selectedUser.Id = res;
                     $scope.data.User.push($scope.selectedUser);
                 }
                 else {
                     angular.forEach($scope.data.User, function (o,i) {
-                        if (o.Id == res.Id)
+                        if (o.Id == res)
                             $scope.data.User[i] = angular.copy($scope.selectedUser);
+                    })
+                    angular.forEach($scope.data.UserDomain, function (o, i) {
+                        if (o.UserID == res) {
+                            $scope.data.UserDomain[i].DomainID = $scope.selectedUser.DomainID;
+                            $scope.data.UserDomain[i].IsManager = $scope.selectedUser.Role < 4;
+                        }
+                            
                     })
                 }
                 $scope.setPage('ManageUsers');
@@ -52,12 +60,12 @@
         DataService.makeGetRequest("Tasks.aspx?tp=delUser", {user: $scope.selectedUser.Id}).then(
             function (response) {
                 if (!response.RequestSucceed) return;
-                var res = parseInt(response.Data);
                 angular.forEach($scope.data.User, function (o, i) {
                     if (o.Id == $scope.selectedUser.Id)
                         $scope.data.User[i].IsArchive = true;
                 })
                 $scope.setPage('ManageUsers');
+                $("#confirmDeleteModal").modal('hide');
                 $("#editUserModal").modal('hide');
                 $scope.error = false;
             })
@@ -73,8 +81,12 @@
             valid = false;
         if ($scope.selectedUser.Department == '')
             valid = false;
-        if ($scope.selectedUser.Role == '')
-            valid = false;
+        if ($scope.selectedUser.Department == 4) {
+            if ($scope.selectedUser.DomainID == '')
+                valid = false;
+            if ($scope.selectedUser.Role == '')
+                valid = false;
+        }
         if ($scope.selectedUser.UserPassword.length == 0)
             valid = false;
         return valid;

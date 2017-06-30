@@ -34,8 +34,8 @@ public partial class MSEsystemEntities1 : DbContext
     public virtual DbSet<Task> Task { get; set; }
     public virtual DbSet<Ticket> Ticket { get; set; }
     public virtual DbSet<User> User { get; set; }
-    public virtual DbSet<UserTicket> UserTicket { get; set; }
     public virtual DbSet<UserDomain> UserDomain { get; set; }
+    public virtual DbSet<UserTicket> UserTicket { get; set; }
 
     public virtual ObjectResult<spGetData_Result> spGetData(Nullable<int> userId)
     {

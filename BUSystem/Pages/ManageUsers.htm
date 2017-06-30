@@ -23,7 +23,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="u in q=data.User | orderBy: sort.Name : sort.Desc | startFrom: (currPage-1)*pageSize | limitTo: pageSize">
+            <tr data-ng-repeat="u in q=data.User | filter: notArchiveFilter | orderBy: sort.Name : sort.Desc | startFrom: (currPage-1)*pageSize | limitTo: pageSize">
                 <td data-ng-bind="u.Id"></td>
                 <td data-ng-repeat="col in pageConfig[3].Table">
                     <div data-ng-bind="u[col.Data]" data-ng-if="col.Data!='Department'"></div>

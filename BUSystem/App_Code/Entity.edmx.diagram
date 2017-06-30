@@ -14,8 +14,8 @@
         <EntityTypeShape EntityType="MSEsystemModel1.Task" Width="1.5" PointX="6.75" PointY="0.75" />
         <EntityTypeShape EntityType="MSEsystemModel1.Ticket" Width="1.5" PointX="0.75" PointY="6.75" />
         <EntityTypeShape EntityType="MSEsystemModel1.User" Width="1.5" PointX="2.75" PointY="6.75" />
-        <EntityTypeShape EntityType="MSEsystemModel1.UserTicket" Width="1.5" PointX="6.75" PointY="3.75" />
-        <EntityTypeShape EntityType="MSEsystemModel1.UserDomain" Width="1.5" PointX="4.75" PointY="6.75" />
+        <EntityTypeShape EntityType="MSEsystemModel1.UserDomain" Width="1.5" PointX="6.75" PointY="3.75" />
+        <EntityTypeShape EntityType="MSEsystemModel1.UserTicket" Width="1.5" PointX="4.75" PointY="6.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

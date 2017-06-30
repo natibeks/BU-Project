@@ -70,6 +70,8 @@ public partial class Ticket
     public Nullable<System.DateTime> TimeOpen { get; set; }
     public Nullable<System.DateTime> TimeClose { get; set; }
     public Nullable<bool> IsArchive { get; set; }
+    public Nullable<int> UserID_Created { get; set; }
+    public Nullable<bool> IsFuture { get; set; }
 }
 
 public partial class User

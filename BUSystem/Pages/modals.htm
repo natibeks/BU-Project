@@ -18,7 +18,7 @@
                     <div class="col-lg-6">
                         <div class="form-group">
                             <label class="control-label">שם הפונה:</label>
-                            <input class="form-control" ng-value="getUserDisplayName(selectedTicket.UserID)" disabled>
+                            <input class="form-control" ng-value="getUserDisplayName(selectedTicket.UserID_Created)" disabled>
                         </div>
                     </div>
                     <div class="col-lg-6">
@@ -27,7 +27,13 @@
                             <input class="form-control" ng-value="selectedTicket.TimeOpen" disabled>
                         </div>
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-6" data-ng-if="selectedTicket.IsFuture">
+                        <div class="form-group">
+                            <label class="control-label">תאריך לביצוע:</label>
+                            <input class="form-control" ng-value="selectedTicket.TimeClose" disabled>
+                        </div>
+                    </div>
+                    <div class="col-lg-6" data-ng-if="selectedTicket.Domain==1">
                         <div class="form-group">
                             <label class="control-label">מיקום:</label>
                             <input class="form-control" ng-value="getLocationName(selectedTicket.LocationID,false)" ng-disabled="true">
@@ -44,15 +50,15 @@
                         <label class="control-label">סטטוס:</label>
                         <div>
                             <select class="form-control" data-ng-model="selectedTicket.Status"
-                                    data-ng-options="o.Id as o.StatusName for o in data.Status | orderBy: 'StatusName'">
+                                    data-ng-options="o.Id as o.StatusName for o in data.Status">
                                 <option value="">בחר</option>
                             </select>
                         </div>
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-6" data-ng-if="selectedTicket.Status>1">
                         <label class="control-label">עובד נוסף:</label>
                         <div>
-                            <select class="form-control" data-ng-model="selectedTicket.AnotherAsignee"
+                            <select class="form-control" data-ng-model="selectedTicket.AnotherAsignee" data-ng-disabled="selectedTicket.AnotherAsignee==currentUser.Id"
                                     data-ng-options="o.Id as o.DisplayName for o in data.User |
                                  filter: asigneeFilter | orderBy: 'DisplayName' " data-ng-change="setTicketStatus(2)">
                                 <option value="">בחר</option>
@@ -127,7 +133,7 @@
                 </div>
                 <button type="button" class="btn btn-default" data-dismiss="modal">ביטול</button>
                 <button type="button" class="btn btn-success" data-ng-click="updateTicket()">שמור</button>
-                <button type="button" class="btn btn-danger pull-right" data-ng-if="currentUser.Permission == 1" data-ng-click="showDelConfirmMsg(1)">מחק</button>
+                <button type="button" class="btn btn-danger pull-right" data-ng-if="currentUser.Role == 1" data-ng-click="showDelConfirmMsg(1)">מחק</button>
             </div>
         </div>
 
@@ -242,7 +248,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-6" data-ng-if="selectedUser.Role!=1 && selectedUser.Department==4">
                         <div class="form-group">
                             <label class="control-label">תחום:</label>
                             <select class="form-control" data-ng-model="selectedUser.DomainID"
@@ -252,9 +258,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row" data-ng-if="selectedUser.DomainID != '' && selectedUser.Department==4">
                     <div class="col-lg-6 col-lg-offset-6">
-                        <div class="form-group" data-ng-if="selectedUser.DomainID != ''">
+                        <div class="form-group">
                             <label class="control-label">תפקיד:</label>
                             <select class="form-control" data-ng-model="selectedUser.Role"
                                     data-ng-options="o.Id as o.Role for o in data.Role  | orderBy: 'Role'">

@@ -119,7 +119,7 @@
         e = Enumerable.From(e).Select(function (x) {
             return [
                 (Date.UTC(moment(x.Date, "MM-YYYY").get('year'),
-                    moment(x.Date, "MM-YYYY").get('month') + 1,
+                    moment(x.Date, "MM-YYYY").get('month'),
                     01)),
                 x.Total];
         }).ToArray();
@@ -184,7 +184,7 @@
         e = Enumerable.From(e).Select(function (x) {
             return [
                 (Date.UTC(moment(x.Date, "MM-YYYY").get('year'),
-                    moment(x.Date, "MM-YYYY").get('month') + 1,
+                    moment(x.Date, "MM-YYYY").get('month'),
                     01)),
                 x.Total];
         }).ToArray();

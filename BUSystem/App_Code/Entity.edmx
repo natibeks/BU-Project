@@ -74,6 +74,8 @@
           <Property Name="TimeOpen" Type="datetime" />
           <Property Name="TimeClose" Type="datetime" />
           <Property Name="IsArchive" Type="bit" />
+          <Property Name="UserID_Created" Type="int" />
+          <Property Name="IsFuture" Type="bit" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -89,8 +91,6 @@
           <Property Name="IsArchive" Type="bit" />
           <Property Name="Department" Type="int" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'MSE_System.dbo.UserDomain' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="UserDomain">
           <Key>
             <PropertyRef Name="UserID" />
@@ -124,15 +124,8 @@ warning 6002: The table/view 'MSE_System.dbo.UserDomain' does not have a primary
           <EntitySet Name="Task" EntityType="Self.Task" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Ticket" EntityType="Self.Ticket" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserDomain" EntityType="Self.UserDomain" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserTicket" EntityType="Self.UserTicket" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="UserDomain" EntityType="Self.UserDomain" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [UserDomain].[UserID] AS [UserID], 
-    [UserDomain].[DomainID] AS [DomainID], 
-    [UserDomain].[IsArchive] AS [IsArchive], 
-    [UserDomain].[IsManager] AS [IsManager]
-    FROM [dbo].[UserDomain] AS [UserDomain]</DefiningQuery>
-          </EntitySet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -151,8 +144,8 @@ warning 6002: The table/view 'MSE_System.dbo.UserDomain' does not have a primary
           <EntitySet Name="Task" EntityType="MSEsystemModel1.Task" />
           <EntitySet Name="Ticket" EntityType="MSEsystemModel1.Ticket" />
           <EntitySet Name="User" EntityType="MSEsystemModel1.User" />
-          <EntitySet Name="UserTicket" EntityType="MSEsystemModel1.UserTicket" />
           <EntitySet Name="UserDomain" EntityType="MSEsystemModel1.UserDomain" />
+          <EntitySet Name="UserTicket" EntityType="MSEsystemModel1.UserTicket" />
           </EntityContainer>
         <ComplexType Name="spGetData_Result">
           <Property Type="String" Name="uid" Nullable="false" MaxLength="50" />
@@ -233,6 +226,8 @@ warning 6002: The table/view 'MSE_System.dbo.UserDomain' does not have a primary
           <Property Name="TimeOpen" Type="DateTime" Precision="3" />
           <Property Name="TimeClose" Type="DateTime" Precision="3" />
           <Property Name="IsArchive" Type="Boolean" />
+          <Property Name="UserID_Created" Type="Int32" />
+          <Property Name="IsFuture" Type="Boolean" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -248,16 +243,6 @@ warning 6002: The table/view 'MSE_System.dbo.UserDomain' does not have a primary
           <Property Name="IsArchive" Type="Boolean" />
           <Property Name="Department" Type="Int32" />
         </EntityType>
-        <EntityType Name="UserTicket">
-          <Key>
-            <PropertyRef Name="UserID" />
-            <PropertyRef Name="TicketID" />
-          </Key>
-          <Property Name="UserID" Type="Int32" Nullable="false" />
-          <Property Name="TicketID" Type="Int32" Nullable="false" />
-          <Property Name="MainUser" Type="Boolean" />
-          <Property Name="IsArchive" Type="Boolean" />
-        </EntityType>
         <EntityType Name="UserDomain">
           <Key>
             <PropertyRef Name="UserID" />
@@ -267,6 +252,16 @@ warning 6002: The table/view 'MSE_System.dbo.UserDomain' does not have a primary
           <Property Name="DomainID" Type="Int32" Nullable="false" />
           <Property Name="IsArchive" Type="Boolean" />
           <Property Name="IsManager" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="UserTicket">
+          <Key>
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="TicketID" />
+          </Key>
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="TicketID" Type="Int32" Nullable="false" />
+          <Property Name="MainUser" Type="Boolean" />
+          <Property Name="IsArchive" Type="Boolean" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -354,6 +349,8 @@ warning 6002: The table/view 'MSE_System.dbo.UserDomain' does not have a primary
           <EntitySetMapping Name="Ticket">
             <EntityTypeMapping TypeName="MSEsystemModel1.Ticket">
               <MappingFragment StoreEntitySet="Ticket">
+                <ScalarProperty Name="IsFuture" ColumnName="IsFuture" />
+                <ScalarProperty Name="UserID_Created" ColumnName="UserID_Created" />
                 <ScalarProperty Name="IsArchive" ColumnName="IsArchive" />
                 <ScalarProperty Name="TimeClose" ColumnName="TimeClose" />
                 <ScalarProperty Name="TimeOpen" ColumnName="TimeOpen" />
@@ -381,22 +378,22 @@ warning 6002: The table/view 'MSE_System.dbo.UserDomain' does not have a primary
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="UserTicket">
-            <EntityTypeMapping TypeName="MSEsystemModel1.UserTicket">
-              <MappingFragment StoreEntitySet="UserTicket">
-                <ScalarProperty Name="IsArchive" ColumnName="IsArchive" />
-                <ScalarProperty Name="MainUser" ColumnName="MainUser" />
-                <ScalarProperty Name="TicketID" ColumnName="TicketID" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="UserDomain">
             <EntityTypeMapping TypeName="MSEsystemModel1.UserDomain">
               <MappingFragment StoreEntitySet="UserDomain">
                 <ScalarProperty Name="IsManager" ColumnName="IsManager" />
                 <ScalarProperty Name="IsArchive" ColumnName="IsArchive" />
                 <ScalarProperty Name="DomainID" ColumnName="DomainID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserTicket">
+            <EntityTypeMapping TypeName="MSEsystemModel1.UserTicket">
+              <MappingFragment StoreEntitySet="UserTicket">
+                <ScalarProperty Name="IsArchive" ColumnName="IsArchive" />
+                <ScalarProperty Name="MainUser" ColumnName="MainUser" />
+                <ScalarProperty Name="TicketID" ColumnName="TicketID" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
               </MappingFragment>
             </EntityTypeMapping>

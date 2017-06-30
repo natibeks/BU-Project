@@ -11,7 +11,9 @@
         CategoryID: "",
         DomainID: "",
         Location: "",
-        Priority: false
+        Priority: false,
+        UserID_Created: 0,
+        IsFuture: false
     };
 
     $scope.taskTemplate = {
@@ -65,8 +67,6 @@
             if (o.TicketID == tid) {
                 $scope.data.MyTicket[i]['DomainID'] = Enumerable.From($scope.data.Category).Where(function (x) { return lastTicket.CategoryID == x.Id }).Select(function (y) { return y.DomainID }).FirstOrDefault();
                 $scope.data.MyTicket[i]['TicketID'] = lastTicket.Id;
-                $scope.data.MyTicket[i]['UserID'] = $scope.currentUser.Id;
-                $scope.data.MyTicket[i]['MainUser'] = Enumerable.From($scope.data.UserTicket).Where(function (x) { return x.UserID == $scope.currentUser.Id && x.TicketID == lastTicket.Id }).Select(function (y) { return y.MainUser }).FirstOrDefault();
                 $scope.data.MyTicket[i]['TimeClose'] = lastTicket.TimeClose;
                 $scope.data.MyTicket[i]['TimeOpen'] = lastTicket.TimeOpen;
                 $scope.data.MyTicket[i]['Status'] = lastTicket.Status;
@@ -74,6 +74,7 @@
                 $scope.data.MyTicket[i]['LocationID'] = lastTicket.LocationID;
                 $scope.data.MyTicket[i]['Description'] = lastTicket.Description;
                 $scope.data.MyTicket[i]['CategoryID'] = lastTicket.CategoryID;
+                $scope.data.MyTicket[i]['IsFuture'] = lastTicket.IsFuture;
                 $scope.data.MyTicket[i]['AnotherAsignee'] = Enumerable.From($scope.data.UserTicket).Where(function (x) { return x.MainUser == false && x.TicketID == lastTicket.Id }).Select(function (y) { return y.UserID }).FirstOrDefault();
 
             }
@@ -96,7 +97,8 @@
             temp['TimeClose'] = o.TimeClose;
             temp['TimeOpen'] = o.TimeOpen;
             temp['Status'] = o.Status;
-            temp['UserID'] = Enumerable.From($scope.data.UserTicket).Where(function (x) { return x.MainUser == true && x.TicketID == o.Id }).Select(function (y) { return y.UserID }).FirstOrDefault();
+            temp['UserID_Created'] = o.UserID_Created,
+            temp['FirstAsignee'] = Enumerable.From($scope.data.UserTicket).Where(function (x) { return x.MainUser == true && x.TicketID == o.Id }).Select(function (y) { return y.UserID }).FirstOrDefault();
             temp['AnotherAsignee'] = Enumerable.From($scope.data.UserTicket).Where(function (x) { return x.MainUser == false && x.TicketID == o.Id }).Select(function (y) { return y.UserID }).FirstOrDefault();
             ttd.push(temp);
         });
@@ -111,10 +113,11 @@
     }
 
     $scope.setTicketStatus = function (status) {
-        $scope.selectedTicket.Status = 2;
+        $scope.selectedTicket.Status = status;
     }
 
     $scope.addNewTicket = function () {
+        $scope.selectedTicket["UserID_Created"] = $scope.currentUser.Id;
         if (!moment($scope.selectedTicket.Date, 'DD-MM-YYYY').isValid()) {
             $scope.error = true;
             $scope.msg = "אנא בחר תאריך לביצוע";
@@ -141,12 +144,6 @@
                     $scope.selectedTicket.Id = Id;
                     $scope.data.Ticket.push(angular.copy($scope.selectedTicket));
 
-                    var temp2 = {
-                        TicketID: Id,
-                        UserID: $scope.selectedTicket.UserID,
-                        MainUser: true
-                    }
-                    $scope.data.UserTicket.push(temp2);
                     $scope.addNewTicketToMyTicket();
                     $scope.error = false;
                     $('#confirmOpenTicketModal').modal('show');
@@ -159,7 +156,8 @@
 
     $scope.updateTicket = function () {
         var url = "Tasks.aspx?tp=updateTicket";
-        var u = angular.copy($scope.selectedTicket);
+        $scope.selectedTicket["CurrUser"] = $scope.currentUser.Id;
+        var u = angular.copy($scope.selectedTicket);        
         //u['tasks'] = $scope.checkTicketTaskUpdate();
         if (u.Status == 4) {
             if (($scope.selectedTicket.oldStatus != 3 &&
@@ -175,10 +173,25 @@
         DataService.makePostRequest(url, u).then(
             function (response) {
                 if (!response.RequestSucceed) return;
+                var oldStatus = 0;
                 $.each($scope.data.Ticket, function (i, o) {
                     if (o.Id == $scope.selectedTicket.Id)
+                    {
+                        oldStatus = o.Status;
                         $scope.data.Ticket[i] = angular.copy($scope.selectedTicket);
+                    }
                 })
+                if ($scope.selectedTicket.Status == 2 && oldStatus == 1) {
+                    angular.forEach($scope.data.UserTicket, function (o, i) {
+                        if (o.TicketID == $scope.selectedTicket.Id)
+                            $scope.data.UserTicket[i].IsArchive = true;
+                    })
+                    $scope.data.UserTicket.push({
+                        TicketID: $scope.selectedTicket.Id,
+                        UserID: $scope.selectedTicket.CurrUser,
+                        MainUser: true
+                    })
+                }
                 var newAnotherAsignee = $scope.selectedTicket.AnotherAsignee > 0;
                 if (newAnotherAsignee) {
                     var isFound = false;
@@ -191,11 +204,11 @@
                     if (!isFound)
                         $scope.data.UserTicket.push({
                             TicketID: $scope.selectedTicket.Id,
-                            UserID: $scope.selectedTicket.UserID,
+                            UserID: $scope.selectedTicket.AnotherAsignee,
                             MainUser: false
                         })
                 }
-                $scope.updateExistingTicketOfMyTicket();
+                $scope.updateExistingTicketOfMyTicket($scope.selectedTicket.Id);
                 $scope.setPage($scope.currentPage);
                 $('#editTicketModal').modal('hide');
                 $scope.error = false;
@@ -324,14 +337,26 @@
     }
 
     $scope.getTicketClass = function (t) {
-        if (moment(t.TimeOpen, "DD-MM-YYYY HH:mm").diff(moment(), "hours") < 24)
-            return "warning";
+        if (t.IsFuture)
+        {
+            if (moment(t.TimeClose, "DD-MM-YYYY HH:mm").diff(moment(), "days") == 0)
+                return "info";
+            if (moment(t.TimeClose, "DD-MM-YYYY HH:mm").diff(moment(), "days") == 1)
+                return "warning";
+            if (moment(t.TimeClose, "DD-MM-YYYY HH:mm").diff(moment(), "days") > 1)
+                return "danger";
+        }
+        else {
+            if (moment(t.TimeOpen, "DD-MM-YYYY HH:mm").diff(moment(), "hours") < 24)
+                return "warning";
 
-        if (moment(t.TimeClose, "DD-MM-YYYY HH:mm").diff(moment(), "days") > 0)
-            return "info";
+            if (moment(t.TimeOpen, "DD-MM-YYYY HH:mm").diff(moment(), "hours") > 24)
+                return "danger";
+        }
 
-        if (moment(t.TimeClose, "DD-MM-YYYY HH:mm").diff(moment(), "days") > 0)
-            return "danger";
+
+
+
     }
 
     $scope.isTicketOpened = function (t) {
@@ -339,7 +364,7 @@
     }
 
     $scope.resetFields = function () {
-        $scope.selectedTicket = angular.copy($scop.ticketTemplate);
+        $scope.selectedTicket = angular.copy($scope.ticketTemplate);
 
     }
 

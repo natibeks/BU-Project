@@ -22,8 +22,9 @@
     <script src="scripts/pack/linq.min.js"></script>
     <script src="scripts/pack/angular.min.js"></script>
     <script src="scripts/pack/angular-moment-picker.min.js"></script>
-    <script src="scripts/pack/angular-sanitize.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-filter/0.5.8/angular-filter.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-sanitize.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-select/0.20.0/select.min.js"></script>
 
     <script src="https://rawgit.com/dwmkerr/angular-modal-service/master/dst/angular-modal-service.js"></script>
     <script src="scripts/pack/bootstrap.min.js"></script>

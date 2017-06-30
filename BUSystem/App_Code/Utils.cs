@@ -44,13 +44,12 @@ public class Utils
             data.Tables[3].TableName = "UserTicket";
             data.Tables[4].TableName = "Category";
             data.Tables[5].TableName = "Location";
-            data.Tables[6].TableName = "TicketsToDo";
-            data.Tables[7].TableName = "MyTickets";
-            data.Tables[8].TableName = "Task";
-            data.Tables[9].TableName = "Status";
-            data.Tables[10].TableName = "Role";
-            data.Tables[11].TableName = "Domain";
-            data.Tables[12].TableName = "Department";
+            data.Tables[6].TableName = "MyTickets";
+            data.Tables[7].TableName = "Task";
+            data.Tables[8].TableName = "Status";
+            data.Tables[9].TableName = "Role";
+            data.Tables[10].TableName = "Domain";
+            data.Tables[11].TableName = "Department";
 
             return JsonConvert.SerializeObject(data, new CustomDateTimeConverter());
         }
@@ -88,6 +87,8 @@ public class Utils
                 b.Priority = Convert.ToBoolean(obj["Priority"]);
                 b.Description = Convert.ToString(obj["Description"]);
                 b.CategoryID = Convert.ToInt32(obj["CategoryID"]);
+                b.UserID_Created = Convert.ToInt32(obj["UserID_Created"]);
+
                 b.TimeOpen = DateTime.Now;
                 DateTime dateValue;
                 string s = Convert.ToString(obj["Date"]);
@@ -97,17 +98,11 @@ public class Utils
                 else
                     b.TimeClose = DateTime.Now;
 
+                b.IsFuture = Convert.ToBoolean(obj["IsFuture"]);
+
                 b.Status = 1;
 
                 db.Ticket.Add(b);
-                db.SaveChanges();
-
-                var c = new UserTicket();
-                c.TicketID = b.Id;
-                c.UserID = Convert.ToInt32(obj["UserID"]);
-                c.MainUser = true;
-
-                db.UserTicket.Add(c);
                 db.SaveChanges();
 
                 return b.Id.ToString();
@@ -126,7 +121,7 @@ public class Utils
             {
                 int id = Convert.ToInt32(obj["Id"]);
                 var b = db.Ticket.Where(i => i.Id == id).FirstOrDefault();
-
+                var oldStatus = b.Status;
                 b.Id = id;
                 b.LocationID = Convert.ToInt32(obj["LocationID"]);
                 b.Priority = Convert.ToBoolean(obj["Priority"]);
@@ -140,7 +135,29 @@ public class Utils
                 else
                     b.TimeClose = DateTime.Now;
                 b.Status = Convert.ToInt32(obj["Status"]);
-
+                
+                if(b.Status==1)
+                {
+                    var z = db.UserTicket.Where(i => i.TicketID == id).ToArray();
+                    foreach(UserTicket ut in z)
+                    {
+                        db.UserTicket.Remove(ut);
+                    }
+                }
+                if (b.Status == 2 && oldStatus == 1)
+                {
+                    var z = db.UserTicket.Where(i => i.TicketID == id).ToArray();
+                    foreach (UserTicket ut in z)
+                    {
+                        db.UserTicket.Remove(ut);
+                    }
+                    var user= Convert.ToInt32(obj["CurrUser"]);
+                    var nut = new UserTicket();
+                    nut.UserID = user;
+                    nut.TicketID = b.Id;
+                    nut.MainUser = true;
+                    db.UserTicket.Add(nut);
+                }
                 //foreach (var t in obj["tasks"])
                 //{
                 //    int tid = Convert.ToInt32(t["TaskID"]);
@@ -261,16 +278,21 @@ public class Utils
                 b.UserPassword = Convert.ToString(obj["UserPassword"]);
                 if (isNew)
                     db.User.Add(b);
-                var domain = Convert.ToInt32(obj["DomainID"]);
-                var doms = db.UserDomain.Where(i => i.UserID == id).ToArray();
-                foreach(var dom1 in doms){
-                    dom1.IsArchive = true;
+                if(b.Department==4)
+                {
+                    var domain = Convert.ToInt32(obj["DomainID"]);
+                    var doms = db.UserDomain.Where(i => i.UserID == id).ToArray();
+                    foreach (var dom1 in doms)
+                    {
+                        db.UserDomain.Remove(dom1);
+                    }
+                    var dom = new UserDomain();
+                    dom.UserID = b.Id;
+                    dom.DomainID = domain;
+                    dom.IsManager = b.Role < 4;
+                    db.UserDomain.Add(dom);
                 }
-                var dom = new UserDomain();
-                dom.UserID = b.Id;
-                dom.DomainID = domain;
-                dom.IsManager = b.Role < 4;
-                db.UserDomain.Add(dom);
+
 
  
                 db.SaveChanges();

@@ -34,7 +34,7 @@
             <label class="control-label col-lg-1">קטגוריה:</label>
             <div class="col-lg-3">
                 <select class="form-control" data-ng-model="toProduce.Category"
-                        data-ng-options="o.Id as o.CategoryName for o in data.Category">
+                        data-ng-options="o.Id as o.CategoryName for o in data.Category | filter: categoryToReportFilter">
                     <option value="">בחר</option>
                 </select>
             </div>
