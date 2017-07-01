@@ -8,6 +8,7 @@
         Role: 4,
         DomainID: "",
         UserPassword: "",
+        Sn: "123456789",
         IsArchive: false,
 
     }
@@ -25,6 +26,11 @@
     $scope.updateUser = function () {
         if (!$scope.validUserForm()) {
             $scope.msg = "אנא מלא כנדרש את כל השדות";
+            $("#ShowErrorMsg").modal('show');
+            return;
+        }
+        if ($scope.isUserExist()) {
+            $scope.msg = "קיים משתמש עם נתוני חובה זהים";
             $("#ShowErrorMsg").modal('show');
             return;
         }
@@ -89,7 +95,18 @@
         }
         if ($scope.selectedUser.UserPassword.length == 0)
             valid = false;
+        if ($scope.selectedUser.Sn.length != 9)
+            valid = false;
         return valid;
     }
 
+    $scope.isUserExist = function () {
+        var exist = Enumerable.From($scope.data.User).Where(function (x) {
+            return x.EmailAddres == $scope.selectedUser.EmailAddress ||
+                x.TelephoneNumber == $scope.selectedUser.TelephoneNumber ||
+                x.Sn == $scope.selectedUser.Sn;
+        }).Count();
+        return exist > 0;
+    }
+ 
 }

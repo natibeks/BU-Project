@@ -90,6 +90,7 @@
           <Property Name="Role" Type="int" />
           <Property Name="IsArchive" Type="bit" />
           <Property Name="Department" Type="int" />
+          <Property Name="Sn" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="UserDomain">
           <Key>
@@ -242,6 +243,7 @@
           <Property Name="Role" Type="Int32" />
           <Property Name="IsArchive" Type="Boolean" />
           <Property Name="Department" Type="Int32" />
+          <Property Name="Sn" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
         <EntityType Name="UserDomain">
           <Key>
@@ -366,6 +368,7 @@
           <EntitySetMapping Name="User">
             <EntityTypeMapping TypeName="MSEsystemModel1.User">
               <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="Sn" ColumnName="Sn" />
                 <ScalarProperty Name="Department" ColumnName="Department" />
                 <ScalarProperty Name="IsArchive" ColumnName="IsArchive" />
                 <ScalarProperty Name="Role" ColumnName="Role" />

@@ -276,6 +276,7 @@ public class Utils
                 b.TelephoneNumber = Convert.ToString(obj["TelephoneNumber"]);
                 b.Department = Convert.ToInt32(obj["Department"]);
                 b.UserPassword = Convert.ToString(obj["UserPassword"]);
+                b.Sn = Convert.ToString(obj["Sn"]);
                 if (isNew)
                     db.User.Add(b);
                 if(b.Department==4)

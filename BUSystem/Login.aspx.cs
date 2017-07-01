@@ -17,7 +17,7 @@ public partial class Login : System.Web.UI.Page
         using (var db = new MSEsystemEntities1())
         {
 
-            User user = db.User.Where(i => i.EmailAddress == inputUser.Text && i.UserPassword == inputPassword.Text).FirstOrDefault();
+            User user = db.User.Where(i => i.Sn == inputUser.Text && i.UserPassword == inputPassword.Text).FirstOrDefault();
             if (user == null || user.LoginStatus == true)
             {
                 pnlMessage.Visible = true;

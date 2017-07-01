@@ -14,7 +14,7 @@
                 <div class="form-group">
                     <label for="inputUser" class="col-lg-3 control-label">תעודת זהות</label>
                     <div class="col-lg-5">
-                        <asp:TextBox runat="server" TextMode="SingleLine" CssClass="form-control" ID="inputUser" placeholder="תעודת זהות" />
+                        <asp:TextBox runat="server" TextMode="SingleLine" pattern="\d{9}" title="9 ספרות של ת.ז" CssClass="form-control" ID="inputUser" placeholder="תעודת זהות" />
                     </div>
                     <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server"
                         ControlToValidate="inputUser" ForeColor="Red"

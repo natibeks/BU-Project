@@ -85,6 +85,7 @@ public partial class User
     public Nullable<int> Role { get; set; }
     public Nullable<bool> IsArchive { get; set; }
     public Nullable<int> Department { get; set; }
+    public string Sn { get; set; }
 }
 
 public partial class UserDomain
