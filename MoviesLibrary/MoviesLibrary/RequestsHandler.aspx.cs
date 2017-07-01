@@ -43,28 +43,9 @@ namespace MoviesLibrary
                         movie = Convert.ToInt32(Request["movieid"]);
                         Response.Write(Utils.DeleteMovie(movie));
                         break;
-                    //case "delTask":
-                    //    Response.Write(Utils.DeleteTask(Convert.ToInt32(Request["task"])));
-                    //    break;
-                    //case "freeSearch":
-                    //    Response.Write(Utils.freeSearch(obj));
-                    //    break;
                     case "ForgotPassword":
                         Response.Write(Utils.SendForgottenPass(Convert.ToString(Request["userId"])));
                         break;
-                    //case "updateTicket":
-                    //    Response.Write(Utils.UpdateTicket(obj));
-                    //    break;
-                    //case "delTicket":
-                    //    Response.Write(Utils.UpdateTicket(Convert.ToString(Request["ticket"])));
-                    //    break;
-                    //case "updUser":
-                    //    Response.Write(Utils.UpdateUser(obj));
-                    //    break;
-                    //case "delUser":
-                    //    Response.Write(Utils.DeleteUser(Convert.ToInt32(Request["user"])));
-                    //    break;
-
                     default: break;
                 }
             }

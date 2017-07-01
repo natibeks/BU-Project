@@ -1,7 +1,8 @@
-﻿app.controller('HomeController', function ($scope, $rootScope, DataService, AuthService, Upload, data) {
+﻿app.controller('HomeController', function ($scope, $rootScope, DataService, AuthService, Upload, FileReaderService, data) {
     $scope.data = data;
     $rootScope.loadingStatus = false;
     $scope.selectedMovie;
+    $scope.uploadedImg = { File: null, Uploading: false };
     $scope.search = {
         Text: "",
         Advanced: false,
@@ -43,7 +44,7 @@
     }
 
     $scope.returnMovie = function () {
-        DataService.setMovieAsAvailable(movieId).then(function (x) {
+        DataService.setMovieAsAvailable(AuthService.currentUser.MovieID, AuthService.currentUser.Id).then(function (x) {
             if (x) {
                 $scope.data = DataService.getData();
                 AuthService.currentUser.MovieID = 0;
@@ -104,29 +105,29 @@
         }         
     }
 
-    $scope.$watch('uploadedImg', function () {
-        if ($scope.uploadedImg != null) {
-            $scope.upload($scope.uploadedImg);
-        }
+    $scope.changeImageSelect = function () {
+        $scope.tempImageSrc = null;
+        $scope.uploadedImg.File = null;
+        $scope.selectedMovie.HasPoster = false;
+    }
+
+    $scope.$watch('uploadedImg.File', function () {
+        if ($scope.uploadedImg != null) 
+            //$scope.uploadFile($scope.uploadedImg.File);
+            if ($scope.uploadedImg.File != null)
+                FileReaderService.readAsDataUrl($scope.uploadedImg.File, $scope)
+                    .then(function (result) {
+                            $scope.tempImageSrc = result;
+                    });
+        
     });
 
-    $scope.upload = function (file) {
+    $scope.uploadFile = function (file) {
         if (file) {
             if (!file.$error) {
-                Upload.upload({
-                    url: 'imgUploader.ashx&id=' + $scope.selectedMovie.Id,
-                    data: {
-                        file: file
-                    }
-                }).then(function (resp) {
-                    $scope.selectedMovie.HasPoster = true;
-                    console.log('filesucceed');
-                }, null, function (evt) {
-                    var progressPercentage = parseInt(100.0 *
-                            evt.loaded / evt.total);
-                    $scope.log = 'progress: ' + progressPercentage +
-                        '% ' + evt.config.data.file.name + '\n' +
-                      $scope.log;
+                $scope.uploadedImg.Uploading = true;
+                DataService.uploadImage(file, $scope.selectedMovie).then(function (x) {
+                    $scope.uploadedImg.Uploading = false;
                 });
             }
         }
@@ -193,6 +194,11 @@
     $scope.$on('setNewestSelectedMovie', function (e) {
         var a = Enumerable.From($scope.data.Movie).Where(function (x) { return x.IsArchive != true && (x.WhoRent == 0 || x.WhoRent == null); }).ToArray();
         $scope.selectedMovie = angular.copy(a[a.length - 1]);
+    })
+
+    $scope.$on('resetMode', function (e) {
+        $scope.editMode = false;
+        $scope.uploadedImg = { File: null, Uploading: false };
     })
     $scope.setPage(1,true);
 });

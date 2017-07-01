@@ -15,6 +15,7 @@
         if (page == 1 && newest==true) {
             $scope.$broadcast('setNewestSelectedMovie');
         }
+        $scope.$broadcast('resetMode');
         $scope.currentPage = page;
     }
 });

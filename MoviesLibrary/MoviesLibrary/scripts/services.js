@@ -2,8 +2,9 @@
 
 app.factory('DataService', dataService);
 app.factory('AuthService', authService);
+app.factory('FileReaderService', fileReaderService);
 
-function dataService($http, $q) {
+function dataService($http, $q, Upload) {
     var dataService = {};
     dataService.makeGetRequest = function (keyValue, params) {
         var url = "RequestsHandler.aspx?key=";
@@ -63,9 +64,9 @@ function dataService($http, $q) {
         return d.promise;
     }
 
-    dataService.setMovieAsAvailable = function (movieId) {
+    dataService.setMovieAsAvailable = function (movieId,userId) {
         var d = $q.defer();
-        dataService.makeGetRequest("rentmovie", { movie: movieId }).then(
+        dataService.makeGetRequest("returnmovie", { movie: movieId }).then(
             function (response) {
                 if (!response.RequestSucceed) d.reject(false);
                 angular.forEach(dataService.dataObject.User, function (o, i) {
@@ -144,6 +145,20 @@ function dataService($http, $q) {
             })
     }
 
+    dataService.uploadImage = function (file, selectedMovie) {
+        Upload.upload({
+            url: 'FileHandler.ashx?id=' + selectedMovie.Id,
+            data: {
+                file: file
+            }
+        }).then(function (resp) {
+            selectedMovie.HasPoster = true;
+            console.log('File uploaded successfuly.');
+        }, function (msg) {
+            dataServiceError(msg);
+        });
+    }
+
     function dataServiceError(errorResponse) {
         if (errorResponse.status == 500) {
             $("#responseErrorModal").html("קרתה שגיאה במהלך התקשורת עם השרת. בדוק נתונים או נסה שנית.");
@@ -172,4 +187,52 @@ function authService(DataService) {
     };
 
     return authService;
+}
+function fileReaderService($q) {
+
+    var onLoad = function (reader, deferred, scope) {
+        return function () {
+            scope.$apply(function () {
+                deferred.resolve(reader.result);
+            });
+        };
+    };
+
+    var onError = function (reader, deferred, scope) {
+        return function () {
+            scope.$apply(function () {
+                deferred.reject(reader.result);
+            });
+        };
+    };
+
+    var onProgress = function (reader, scope) {
+        return function (event) {
+            scope.$broadcast("fileProgress",
+                {
+                    total: event.total,
+                    loaded: event.loaded
+                });
+        };
+    };
+
+    var getReader = function (deferred, scope) {
+        var reader = new FileReader();
+        reader.onload = onLoad(reader, deferred, scope);
+        reader.onerror = onError(reader, deferred, scope);
+        reader.onprogress = onProgress(reader, scope);
+        return reader;
+    };
+
+    var readAsDataURL = function (file, scope) {
+        var deferred = $q.defer();
+        var reader = getReader(deferred, scope);
+        reader.readAsDataURL(file);
+
+        return deferred.promise;
+    };
+
+    return {
+        readAsDataUrl: readAsDataURL
+    };
 }

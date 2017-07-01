@@ -18,7 +18,7 @@ namespace MoviesLibrary
     public class Utils
     {
         private static SqlConnection conn;
-        public static async string GetInitData(string uid, bool admin)
+        public static string GetInitData(string uid, bool admin)
         {
             var connectStr = WebConfigurationManager.AppSettings["SQLServer"];
 
@@ -30,27 +30,37 @@ namespace MoviesLibrary
                 sqlComm.CommandType = CommandType.StoredProcedure;
                 SqlDataAdapter da = new SqlDataAdapter();
                 da.SelectCommand = sqlComm;
-                DataSet data = await Task.Run(new Action(FillDataSet(da)));
+                DataSet data = new DataSet();
+                da.Fill(data);
+
+                data.Tables[0].TableName = "User";
+                data.Tables[1].TableName = "Movie";
+                data.Tables[2].TableName = "Actor";
+                data.Tables[3].TableName = "Director";
+                data.Tables[4].TableName = "Genre";
+                data.Tables[5].TableName = "MovieActor";
+
+                //return data;
+                //DataSet data = await Task.Run(new Action(FillDataSet(da)));
 
                 return JsonConvert.SerializeObject(data);
             }
         }
 
-        private static Task<DataSet> FillDataSet(SqlDataAdapter da)
-        {
-            ;
-            DataSet data = new DataSet();
-            da.Fill(data);
+        //private static Task<DataSet> FillDataSet(SqlDataAdapter da)
+        //{
+        //    DataSet data = new DataSet();
+        //    da.Fill(data);
 
-            data.Tables[0].TableName = "User";
-            data.Tables[1].TableName = "Movie";
-            data.Tables[2].TableName = "Actor";
-            data.Tables[3].TableName = "Director";
-            data.Tables[4].TableName = "Genre";
-            data.Tables[5].TableName = "MovieActor";
+        //    data.Tables[0].TableName = "User";
+        //    data.Tables[1].TableName = "Movie";
+        //    data.Tables[2].TableName = "Actor";
+        //    data.Tables[3].TableName = "Director";
+        //    data.Tables[4].TableName = "Genre";
+        //    data.Tables[5].TableName = "MovieActor";
 
-            return data;
-        }
+        //    return data;
+        //}
 
         public static string Login(dynamic user)
         {
@@ -130,6 +140,8 @@ namespace MoviesLibrary
                     b.HasPoster = Convert.ToBoolean(obj["HasPoster"]);
                     if (isNew)
                         db.Movie.Add(b);
+                    if ((bool)b.HasPoster && isNew)
+                        ConvertPosterNameToId(obj["PosterTS"], b.Id.ToString());
                     db.SaveChanges();
 
                     return JsonConvert.SerializeObject(new { Id = b.Id, IsNew = isNew });
@@ -140,7 +152,26 @@ namespace MoviesLibrary
                 throw e;
             }
         }
-        
+
+        public static string ConvertPosterNameToId (string tsFilaname, string id)
+        {
+            try
+            {
+                string destPathString = System.Web.Configuration.WebConfigurationManager.AppSettings["UploadFolder"] + "\\";
+
+                var dps = string.Format("{0}\\{1}", destPathString, tsFilaname);
+                var dps2 = string.Format("{0}\\{1}.{2}", destPathString, id, System.IO.Path.GetExtension(tsFilaname));
+                System.IO.File.Move(dps, dps2);
+                //File.Delete(dps);
+
+                return "ok";
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public static string DeleteMovie(int movie)
         {
             try

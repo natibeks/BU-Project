@@ -100,7 +100,7 @@
     <Content Include="BlockbusterDB.edmx.diagram">
       <DependentUpon>BlockbusterDB.edmx</DependentUpon>
     </Content>
-    <Content Include="imgUploader.ashx" />
+    <Content Include="FileHandler.ashx" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -122,6 +122,7 @@
     <Content Include="scripts\controllers\login.controller.js" />
     <Content Include="scripts\controllers\main.controller.js" />
     <Content Include="scripts\controllers\table.controller.js" />
+    <Content Include="scripts\directives.js" />
     <Content Include="scripts\filters.js" />
     <Content Include="scripts\packs\angular-route.js" />
     <Content Include="scripts\packs\bootstrap.min.js" />
@@ -134,7 +135,6 @@
     <Compile Include="Actor.cs">
       <DependentUpon>BlockbusterDB.tt</DependentUpon>
     </Compile>
-    <Content Include="App_Code\ImageHandler.cs" />
     <Compile Include="BlockbusterDB.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -142,6 +142,9 @@
     </Compile>
     <Compile Include="Director.cs">
       <DependentUpon>BlockbusterDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="FileHandler.ashx.cs">
+      <DependentUpon>FileHandler.ashx</DependentUpon>
     </Compile>
     <Compile Include="Genre.cs">
       <DependentUpon>BlockbusterDB.tt</DependentUpon>

@@ -25,6 +25,7 @@
 
     <script src="scripts/app.js"></script>
     <script src="scripts/services.js"></script>
+    <script src="scripts/directives.js"></script>
     <script src="scripts/config.js"></script>
     <script src="scripts/filters.js"></script>
     <script src="scripts/controllers/login.controller.js"></script>

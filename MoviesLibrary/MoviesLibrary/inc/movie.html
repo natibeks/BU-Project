@@ -1,17 +1,30 @@
 ﻿<div class="col-lg-8 col-lg-offset-2">
     <div class="panel panel-warning">
         <div class="panel-heading">
-            <h3 class="panel-title"><strong data-ng-bind="selectedMovie.Name"></strong></h3>
+            <h3 data-ng-if="!editMode" class="panel-title"><strong data-ng-bind="selectedMovie.Name"></strong></h3>
+            <input data-ng-if="editMode" class="form-control" type="text" placeholder="Movie name..." data-ng-model="selectedMovie.Name" />
         </div>
         <div class="panel-body">
             <div class="row">
                 <div class="col-xs-12 col-sm-5 col-lg-5">
-                    <div data-ng-if="!selectedMovie.HasPoster" ngf-drop ngf-select ng-model="uploadedImg" class="drop-box"
-                         ngf-drag-over-class="'dragover'" ngf-multiple="false" ngf-allow-dir="true"
-                         accept="image/*,application/pdf"
-                         ngf-pattern="'image/*,application/pdf'">גרור לפה תמונה מסוג jpeg/jpg בלבד</div>
+                    <div data-ng-if="!selectedMovie.HasPoster && uploadedImg.File==null" ngf-drop ngf-select ng-file-to-preview data-ng-model="uploadedImg.File" class="drop-box"
+                         ngf-drag-over-class="'dragover'" ngf-multiple="false" accept="image/*">
+                    גרור לפה תמונה מסוג jpeg/jpg בלבד
+                    </div>
                     <div ngf-no-file-drop>התמונה לא נתמכת</div>
-                    <img class="img-responsive" data-ng-if="selectedMovie.HasPoster" data-ng-src="posters/{{selectedMovie.Id}}.jpg" />
+                    <img class="img-responsive" style="cursor:pointer" title="Click to cancel poster"
+                         data-ng-if="selectedMovie.HasPoster" data-ng-src="posters/{{selectedMovie.Id}}.jpg" 
+                         data-ng-click="changeImageSelect()" />
+                    <div data-ng-if="uploadedImg.File!=null && !selectedMovie.HasPoster">
+                        <img class="img-responsive" style="cursor:pointer" title="Click to cancel poster"                          
+                             data-ng-src="{{tempImageSrc}}" data-ng-click="changeImageSelect()" />
+                        <div style="text-align:center;margin-top:5px;">
+                            <a href="#" class="btn btn-primary btn-xs" data-ng-click="uploadFile(uploadedImg.File)">שמור</a>
+                            <a href="#" class="btn btn-default btn-xs" data-ng-click="changeImageSelect()" >בטל</a>
+                        </div>
+
+                    </div>
+
                 </div>
                 <div class="col-xs-12 col-sm-7 col-lg-7">
                     <div class="row">
