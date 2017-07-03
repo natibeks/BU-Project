@@ -58,6 +58,8 @@
         </nav>
     </header>
 
+    <div data-ng-include="'inc/modals.html'"></div>
+
     <div data-ng-view data-ng-show="!loadingStatus" class="container"></div>
 
     <!--Rounded loader animation-->

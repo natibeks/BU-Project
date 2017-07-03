@@ -39,7 +39,7 @@
                 $scope.data = DataService.getData();
                 AuthService.currentUser.MovieID = movieId;
             }
-                
+
         })
     }
 
@@ -53,7 +53,7 @@
         })
     }
 
-    $scope.isUserFreeToRent = function() {
+    $scope.isUserFreeToRent = function () {
         return !(AuthService.currentUser.MovieID > 0);
     }
 
@@ -69,10 +69,23 @@
     }
 
     $scope.saveChanges = function () {
-        DataService.updateMovie($scope.selectedMovie).then(function (x) {
-            if(x) // succeed
-                $scope.data = DataService.getData();
-        })
+        if ($scope.forms.movieForm.$valid)
+            DataService.updateMovie($scope.selectedMovie).then(function (x) {
+                if (x) // succeed
+                {
+                    $scope.data = DataService.getData();
+                    $scope.editMode = false;
+                }
+
+            })
+        else {
+            $("#errorModalText").html("Please fill in all the relavent fields.");
+            $('#responseErrorModal').modal('show');
+            angular.forEach($scope.forms.movieForm, function (field,fieldName) {
+                if (!fieldName.startsWith('$'))
+                    field.$setDirty();
+            });
+        }
     }
 
     $scope.setNewMovie = function () {
@@ -102,24 +115,25 @@
         if ($scope.selectedMovie.Id == 0) {
             $scope.selectedMovie == null;
             $scope.setPage(2);
-        }         
+        }
     }
 
     $scope.changeImageSelect = function () {
         $scope.tempImageSrc = null;
         $scope.uploadedImg.File = null;
         $scope.selectedMovie.HasPoster = false;
+        $scope.selectedMovie.HasNewPoster = false;
     }
 
     $scope.$watch('uploadedImg.File', function () {
-        if ($scope.uploadedImg != null) 
+        if ($scope.uploadedImg != null)
             //$scope.uploadFile($scope.uploadedImg.File);
             if ($scope.uploadedImg.File != null)
                 FileReaderService.readAsDataUrl($scope.uploadedImg.File, $scope)
                     .then(function (result) {
-                            $scope.tempImageSrc = result;
+                        $scope.tempImageSrc = result;
                     });
-        
+
     });
 
     $scope.uploadFile = function (file) {
@@ -185,6 +199,10 @@
         return s.length > n ? (s.substring(0, n - 3) + "...") : s;
     }
 
+    $scope.setFormObj = function (formname, formObj) {
+        $scope.forms = formObj;
+    }
+
     $scope.advancedSearchValues = [{ Title: "Movie name", Data: "Movie" },
     { Title: "Actors", Data: "Actors" },
     { Title: "Director", Data: "Director" },
@@ -200,5 +218,5 @@
         $scope.editMode = false;
         $scope.uploadedImg = { File: null, Uploading: false };
     })
-    $scope.setPage(1,true);
+    $scope.setPage(1, true);
 });

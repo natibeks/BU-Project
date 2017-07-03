@@ -137,12 +137,12 @@ namespace MoviesLibrary
                     b.Year = Convert.ToInt32(obj["Year"]);
                     b.Plot = Convert.ToString(obj["Plot"]);
                     b.Name = Convert.ToString(obj["Name"]);
-                    b.HasPoster = Convert.ToBoolean(obj["HasPoster"]);
+                    b.HasPoster = Convert.ToBoolean(obj["HasPoster"]) || Convert.ToBoolean(obj["HasNewPoster"]);
                     if (isNew)
                         db.Movie.Add(b);
-                    if ((bool)b.HasPoster && isNew)
-                        ConvertPosterNameToId(obj["PosterTS"], b.Id.ToString());
                     db.SaveChanges();
+                    if ((bool)obj["HasNewPoster"] && isNew)
+                        ConvertPosterNameToId(Convert.ToString(obj["PosterTS"]), b.Id.ToString());
 
                     return JsonConvert.SerializeObject(new { Id = b.Id, IsNew = isNew });
                 }
@@ -157,12 +157,11 @@ namespace MoviesLibrary
         {
             try
             {
-                string destPathString = System.Web.Configuration.WebConfigurationManager.AppSettings["UploadFolder"] + "\\";
-
-                var dps = string.Format("{0}\\{1}", destPathString, tsFilaname);
-                var dps2 = string.Format("{0}\\{1}.{2}", destPathString, id, System.IO.Path.GetExtension(tsFilaname));
+                string destPathString = System.Web.Configuration.WebConfigurationManager.AppSettings["UploadedFolder"] + "\\";
+                destPathString = System.Web.HttpContext.Current.Server.MapPath(destPathString);
+                var dps = string.Format("{0}Temp\\{1}", destPathString, tsFilaname);
+                var dps2 = string.Format("{0}{1}{2}", destPathString, id, System.IO.Path.GetExtension(tsFilaname));
                 System.IO.File.Move(dps, dps2);
-                //File.Delete(dps);
 
                 return "ok";
             }

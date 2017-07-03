@@ -1,100 +1,111 @@
 ﻿<div class="col-lg-8 col-lg-offset-2">
-    <div class="panel panel-warning">
-        <div class="panel-heading">
-            <h3 data-ng-if="!editMode" class="panel-title"><strong data-ng-bind="selectedMovie.Name"></strong></h3>
-            <input data-ng-if="editMode" class="form-control" type="text" placeholder="Movie name..." data-ng-model="selectedMovie.Name" />
-        </div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-xs-12 col-sm-5 col-lg-5">
-                    <div data-ng-if="!selectedMovie.HasPoster && uploadedImg.File==null" ngf-drop ngf-select ng-file-to-preview data-ng-model="uploadedImg.File" class="drop-box"
-                         ngf-drag-over-class="'dragover'" ngf-multiple="false" accept="image/*">
-                    גרור לפה תמונה מסוג jpeg/jpg בלבד
-                    </div>
-                    <div ngf-no-file-drop>התמונה לא נתמכת</div>
-                    <img class="img-responsive" style="cursor:pointer" title="Click to cancel poster"
-                         data-ng-if="selectedMovie.HasPoster" data-ng-src="posters/{{selectedMovie.Id}}.jpg" 
-                         data-ng-click="changeImageSelect()" />
-                    <div data-ng-if="uploadedImg.File!=null && !selectedMovie.HasPoster">
-                        <img class="img-responsive" style="cursor:pointer" title="Click to cancel poster"                          
-                             data-ng-src="{{tempImageSrc}}" data-ng-click="changeImageSelect()" />
-                        <div style="text-align:center;margin-top:5px;">
-                            <a href="#" class="btn btn-primary btn-xs" data-ng-click="uploadFile(uploadedImg.File)">שמור</a>
-                            <a href="#" class="btn btn-default btn-xs" data-ng-click="changeImageSelect()" >בטל</a>
+    <form name="movieForm" data-ng-init="setFormObj('movieForm',this)">
+        <div class="panel panel-warning">
+            <div class="panel-heading" data-ng-class="{'has-error':!movieForm.movieName.$valid && movieForm.movieName.$dirty}">
+                <h3 data-ng-if="!editMode" class="panel-title"><strong data-ng-bind="selectedMovie.Name"></strong></h3>
+                <input data-ng-if="editMode" class="form-control" name="movieName" type="text" placeholder="Movie name..." 
+                       data-ng-model="selectedMovie.Name" 
+                       required data-ng-minlength="1"/>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-5 col-lg-5">
+                        <div data-ng-if="!selectedMovie.HasPoster && uploadedImg.File==null" ngf-drop ngf-select ng-file-to-preview data-ng-model="uploadedImg.File" class="drop-box"
+                             ngf-drag-over-class="'dragover'" ngf-multiple="false" accept="image/*">
+                            גרור לפה תמונה מסוג jpeg/jpg בלבד
+                        </div>
+                        <div ngf-no-file-drop>התמונה לא נתמכת</div>
+                        <img class="img-responsive" title="{{selectedMovie.Name}}"
+                             data-ng-if="selectedMovie.HasPoster && !editMode" data-ng-src="posters/{{selectedMovie.Id}}.jpg"/>
+                        <img class="img-responsive" style="cursor:pointer" title="Click to cancel poster"
+                             data-ng-if="selectedMovie.HasPoster && editMode" data-ng-src="posters/{{selectedMovie.Id}}.jpg"
+                             data-ng-click="changeImageSelect()" />
+                        <div data-ng-if="((uploadedImg.File!=null  || selectedMovie.HasNewPoster) && !selectedMovie.HasPoster)">
+                            <img class="img-responsive" style="cursor:pointer" title="Click to cancel poster"
+                                 data-ng-src="{{tempImageSrc}}" data-ng-click="changeImageSelect()" />
+                            <div style="text-align:center;margin-top:5px;" data-ng-if="selectedMovie.HasNewPoster!=true">
+                                <a href="#" class="btn btn-primary btn-xs" data-ng-click="uploadFile(uploadedImg.File)">שמור</a>
+                                <a href="#" class="btn btn-default btn-xs" data-ng-click="changeImageSelect()">בטל</a>
+                            </div>
+
                         </div>
 
                     </div>
+                    <div class="col-xs-12 col-sm-7 col-lg-7">
+                        <div class="row">
+                            <div class="form-group" style="padding-right:15px"  data-ng-class="{'has-error':!movieForm.movieActors.$valid && movieForm.movieActors.$dirty}">
+                                <label class="control-label">Actors:</label>
+                                <div data-ng-if="!editMode">
+                                    <div data-ng-repeat="ma in data.MovieActor | filter:{MovieID: selectedMovie.Id}" style="display:inline-block">
+                                        <div data-ng-bind="$last? getActorName(ma.ActorID) : getActorName(ma.ActorID)+' , '"></div>
+                                    </div>
+                                </div>
+                                <div data-ng-if="editMode">
+                                    <ui-select multiple name="movieActors" required ng-model="selectedMovie.Actors" theme="bootstrap" sortable="true" close-on-select="false">
+                                        <ui-select-match placeholder="Select actors..">{{$item.Name}}</ui-select-match>
+                                        <ui-select-choices repeat="ma in data.Actor | propsFilter: {Name: $select.search}">
+                                            <div ng-bind-html="ma.Name | highlight: $select.search"></div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
 
-                </div>
-                <div class="col-xs-12 col-sm-7 col-lg-7">
-                    <div class="row">
-                        <div class="form-group" style="padding-right:15px">
-                            <label class="control-label">Actors:</label>
-                            <div data-ng-if="!editMode">
-                                <div data-ng-repeat="ma in data.MovieActor | filter:{MovieID: selectedMovie.Id}" style="display:inline-block">
-                                    <div data-ng-bind="$last? getActorName(ma.ActorID) : getActorName(ma.ActorID)+' , '"></div>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group" data-ng-class="{'has-error':(!movieForm.movieDirector.$valid || selectedMovie.Director==0) && movieForm.movieDirector.$dirty}" style="padding-right:15px">
+                                <label class="control-label">Director:  </label>
+                                <div data-ng-bind="getDirector(selectedMovie.Director)" data-ng-if="!editMode"></div>
+                                <div data-ng-if="editMode">
+                                    <select class="form-control" data-ng-model="selectedMovie.Director" name="movieDirector"
+                                            data-ng-options="o.Id as o.Name for o in data.Director  | orderBy: 'Name'"
+                                            required >
+                                        <option value="">Select director...</option>
+                                    </select>
                                 </div>
                             </div>
-                            <div data-ng-if="editMode">
-                                <ui-select multiple ng-model="selectedMovie.Actors" theme="bootstrap" sortable="true" close-on-select="false">
-                                    <ui-select-match placeholder="Select actors..">{{$item.Name}}</ui-select-match>
-                                    <ui-select-choices repeat="ma in data.Actor | propsFilter: {Name: $select.search}">
-                                        <div ng-bind-html="ma.Name | highlight: $select.search"></div>
-                                    </ui-select-choices>
-                                </ui-select>
-                            </div>
-
-
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group" style="padding-right:15px">
-                            <label class="control-label">Director:  </label>
-                            <div data-ng-bind="getDirector(selectedMovie.Director)" data-ng-if="!editMode"></div>
-                            <div data-ng-if="editMode">
-                                <select class="form-control" data-ng-model="selectedMovie.Director"
-                                        data-ng-options="o.Id as o.Name for o in data.Director  | orderBy: 'Name'">
-                                    <option value="">Select director...</option>
-                                </select>    
+                        <div class="row">
+                            <div class="form-group" data-ng-class="{'has-error':(!movieForm.movieGenre.$valid || selectedMovie.Genre==0) && movieForm.movieGenre.$dirty}" style="padding-right:15px">
+                                <label class="control-label">Genre:  </label>
+                                <div data-ng-bind="getGenre(selectedMovie.Genre)" data-ng-if="!editMode"></div>
+                                <div data-ng-if="editMode">
+                                    <select class="form-control" data-ng-model="selectedMovie.Genre" name="movieGenre"
+                                            data-ng-options="o.Id as o.Name for o in data.Genre  | orderBy: 'Name'"
+                                            required >
+                                        <option value="">Select genre...</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group" style="padding-right:15px">
-                            <label class="control-label">Genre:  </label>
-                            <div data-ng-bind="getGenre(selectedMovie.Genre)" data-ng-if="!editMode"></div>
-                            <div data-ng-if="editMode">
-                                <select class="form-control" data-ng-model="selectedMovie.Genre"
-                                        data-ng-options="o.Id as o.Name for o in data.Genre  | orderBy: 'Name'">
-                                    <option value="">Select genre...</option>
-                                </select>                            
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row" style="padding-right:15px">
-                        <div class="form-group">
-                            <label class="control-label">Year:  </label>
-                            <div data-ng-bind="selectedMovie.Year" data-ng-if="!editMode"></div>
-                            <div data-ng-if="editMode">
-                                <input class="form-control" type="number" data-ng-model="selectedMovie.Year" min="1990" max="{{getCurrentYearAsNum()}}" />
+                        <div class="row" style="padding-right:15px">
+                            <div class="form-group" data-ng-class="{'has-error':!movieForm.movieYear.$valid && movieForm.movieYear.$dirty}">
+                                <label class="control-label" for="movieYear">Year:  </label>
+                                <div data-ng-bind="selectedMovie.Year" data-ng-if="!editMode"></div>
+                                <div data-ng-if="editMode">
+                                    <input class="form-control" name="movieYear" type="number" data-ng-model="selectedMovie.Year" min="1990" max="{{getCurrentYearAsNum()}}" 
+                                           required />
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="form-group">
-                        <label class="control-label">Plot:</label>
-                        <div data-ng-bind="selectedMovie.Plot" data-ng-if="!editMode"></div>
-                        <div data-ng-if="editMode">
-                            <textarea class="form-control" rows="3" data-ng-model="selectedMovie.Plot"></textarea>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group" data-ng-class="{'has-error':!movieForm.moviePlot.$valid && movieForm.moviePlot.$dirty}">
+                            <label class="control-label" for="moviePlot">Plot:</label>
+                            <div data-ng-bind="selectedMovie.Plot" data-ng-if="!editMode"></div>
+                            <div data-ng-if="editMode">
+                                <textarea class="form-control" rows="3" name="moviePlot" data-ng-model="selectedMovie.Plot"
+                                    required data-ng-minlength="1" ></textarea>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </form>
+
 </div>
 
 

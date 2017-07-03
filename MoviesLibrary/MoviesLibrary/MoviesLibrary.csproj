@@ -115,6 +115,9 @@
     <Content Include="inc\home.html" />
     <Content Include="inc\login.html" />
     <Content Include="inc\modals.html" />
+    <Content Include="posters\1.jpg" />
+    <Content Include="posters\2.jpg" />
+    <Content Include="posters\3.jpg" />
     <Content Include="RequestsHandler.aspx" />
     <Content Include="scripts\app.js" />
     <Content Include="scripts\config.js" />
@@ -187,7 +190,7 @@
     <Compile Include="App_Code\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="posters\" />
+    <Folder Include="posters\Temp\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

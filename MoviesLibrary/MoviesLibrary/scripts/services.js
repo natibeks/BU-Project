@@ -115,6 +115,8 @@ function dataService($http, $q, Upload) {
 
                 } // is new movie
                 else {
+                    if (!selectedMovie.HasPoster && selectedMovie.HasNewPoster)
+                         selectedMovie.HasPoster = true;
                     dataService.dataObject.Movie.push(selectedMovie);
                     angular.forEach(selectedMovie.Actors, function (p, j) {
                         dataService.dataObject.MovieActor.push({
@@ -128,6 +130,7 @@ function dataService($http, $q, Upload) {
                 d.resolve(true);
 
             })
+        return d.promise;
     }
 
     dataService.deleteMovie = function (selectedMovie) {
@@ -146,14 +149,23 @@ function dataService($http, $q, Upload) {
     }
 
     dataService.uploadImage = function (file, selectedMovie) {
+        var d = $q.defer();
         Upload.upload({
             url: 'FileHandler.ashx?id=' + selectedMovie.Id,
             data: {
                 file: file
             }
-        }).then(function (resp) {
-            selectedMovie.HasPoster = true;
+        }).then(function (resp) {           
+            if (selectedMovie.Id == 0){
+                selectedMovie["PosterTS"] = resp.data;
+                selectedMovie["HasNewPoster"] = true;
+            }
+            else
+                selectedMovie.HasPoster = true;
+
             console.log('File uploaded successfuly.');
+            d.resolve(true);
+            return d.promise;
         }, function (msg) {
             dataServiceError(msg);
         });
@@ -161,7 +173,7 @@ function dataService($http, $q, Upload) {
 
     function dataServiceError(errorResponse) {
         if (errorResponse.status == 500) {
-            $("#responseErrorModal").html("קרתה שגיאה במהלך התקשורת עם השרת. בדוק נתונים או נסה שנית.");
+            $("#errorModalText").html("קרתה שגיאה במהלך התקשורת עם השרת. בדוק נתונים או נסה שנית.");
         }
         $('#responseErrorModal').modal('show');
         console.log("ERROR TEXT: " + errorResponse.data);

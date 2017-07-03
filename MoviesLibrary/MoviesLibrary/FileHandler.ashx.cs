@@ -23,13 +23,17 @@ namespace MoviesLibrary
                 {
                     HttpFileCollection files = context.Request.Files;
                     HttpPostedFile file = files[0];
-                    string folderPath = System.Web.Configuration.WebConfigurationManager.AppSettings["UploadFolder"] + "\\";
-                    string filePath = folderPath + fileId + "." + System.IO.Path.GetExtension(file.FileName);
-                    if (System.IO.File.Exists(filePath)){
+                    string folderPath = System.Web.Configuration.WebConfigurationManager.AppSettings["UploadedFolder"] + "\\";
+                    if (context.Request["id"] == "0")
+                        folderPath += "Temp\\";
+                    folderPath = System.Web.HttpContext.Current.Server.MapPath(folderPath);
+                    string filePath = folderPath + fileId + System.IO.Path.GetExtension(file.FileName);
+                    if (System.IO.File.Exists(filePath))
                         System.IO.File.Delete(filePath);
-                    }
+
                     file.SaveAs(filePath);
-                    context.Response.Write(System.IO.Path.GetFileName(filePath));
+                    
+                    context.Response.Write(fileId + System.IO.Path.GetExtension(file.FileName));
                 }
                 catch (Exception ex)
                 {
