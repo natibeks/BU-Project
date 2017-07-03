@@ -42,6 +42,12 @@
                 if (isNew) {
                     $scope.selectedUser.Id = res;
                     $scope.data.User.push($scope.selectedUser);
+                    // to add
+                    $scope.data.UserDomain.push({
+                        UserID: $scope.selectedUser.Id,
+                        DomainID: $scope.selectedUser.DomainID,
+                        IsManager: $scope.selectedUser.Role < 4
+                    });
                 }
                 else {
                     angular.forEach($scope.data.User, function (o,i) {

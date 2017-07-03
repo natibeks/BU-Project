@@ -48,7 +48,7 @@
         var temp = {};
         temp['DomainID'] = Enumerable.From($scope.data.Category).Where(function (x) { return lastTicket.CategoryID == x.Id }).Select(function (y) { return y.DomainID }).FirstOrDefault();
         temp['TicketID'] = lastTicket.Id;
-        temp['UserID'] = $scope.currentUser.Id;
+        temp['UserID_Created'] = $scope.currentUser.Id;
         temp['MainUser'] = Enumerable.From($scope.data.UserTicket).Where(function (x) { return x.UserID == $scope.currentUser.Id && x.TicketID == lastTicket.Id }).Select(function (y) { return y.MainUser }).FirstOrDefault();
         temp['TimeClose'] = lastTicket.TimeClose;
         temp['TimeOpen'] = lastTicket.TimeOpen;
@@ -141,6 +141,9 @@
                 function (response) {
                     if (!response.RequestSucceed) return;
                     var Id = parseInt(response.Data);
+                    // to add
+                    $scope.selectedTicket.TimeOpen = moment($scope.selectedTicket.TimeOpen).format("DD/MM/YYYY HH:mm");
+
                     $scope.selectedTicket.Id = Id;
                     $scope.data.Ticket.push(angular.copy($scope.selectedTicket));
 

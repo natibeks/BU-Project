@@ -27,7 +27,7 @@
                 data-ng-class="getTicketClass(u)">
                 <td data-ng-bind="u.TicketID"></td>
                 <td data-ng-repeat="col in pageConfig[1].Table">
-                    <div data-ng-bind="u.TimeClose" data-ng-if="col.Data=='TimeClose'"></div>
+                    <div data-ng-bind="u.TimeOpen" data-ng-if="col.Data=='TimeOpen'"></div>
                     <div data-ng-bind="getUserDisplayName(u.UserID_Created)" data-ng-if="col.Data=='DisplayName'"></div>
                     <div data-ng-bind="getCategory(u.CategoryID)" data-ng-if="col.Data=='Category'"></div>
                     <div data-ng-bind="getStatus(u.Status)" data-ng-if="col.Data=='Status'"></div>
