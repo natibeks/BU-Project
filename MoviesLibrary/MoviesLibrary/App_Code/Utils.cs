@@ -138,6 +138,27 @@ namespace MoviesLibrary
                     b.Plot = Convert.ToString(obj["Plot"]);
                     b.Name = Convert.ToString(obj["Name"]);
                     b.HasPoster = Convert.ToBoolean(obj["HasPoster"]) || Convert.ToBoolean(obj["HasNewPoster"]);
+
+                    var currActors = db.MovieActor.Where(i => i.MovieID == id).ToArray();
+
+                    foreach (var x in obj["Actors"])
+                    {
+                        int actorid = Convert.ToInt32(x["Id"]);
+                        var exist = currActors.Where(z => z.ActorID == actorid).FirstOrDefault();
+                        if (exist == null)
+                        {
+                            var newActor = new MovieActor();
+                            newActor.MovieID = id;
+                            newActor.ActorID = actorid;
+                            db.MovieActor.Add(newActor);
+                        }
+                        else
+                            currActors = currActors.Where(z => z.ActorID != exist.ActorID).ToArray();
+                    }
+
+                    foreach (MovieActor x in currActors)
+                        db.MovieActor.Remove(x);
+
                     if (isNew)
                         db.Movie.Add(b);
                     db.SaveChanges();
@@ -179,6 +200,11 @@ namespace MoviesLibrary
                 {
                     var b = db.Movie.Where(i => i.Id == movie).FirstOrDefault();
                     b.IsArchive = true;
+                    var a = db.MovieActor.Where(i => i.MovieID == movie).ToArray();
+                    foreach(MovieActor ac in a)
+                    {
+                        db.MovieActor.Remove(ac);
+                    }
                     db.SaveChanges();
 
                     return "ok";

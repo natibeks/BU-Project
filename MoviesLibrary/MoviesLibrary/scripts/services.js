@@ -85,6 +85,7 @@ function dataService($http, $q, Upload) {
 
     dataService.updateMovie = function (selectedMovie) {
         var d = $q.defer();
+        selectedMovie["HasNewPoster"] = selectedMovie["HasNewPoster"] == undefined ? false : selectedMovie["HasNewPoster"];
         dataService.makePostRequest("updatemovie", selectedMovie).then(
             function (response) {
                 if (!response.RequestSucceed) d.reject(false);
@@ -145,7 +146,8 @@ function dataService($http, $q, Upload) {
                     }
                 });
                 d.resolve(true);
-            })
+            });
+        return d.promise;
     }
 
     dataService.uploadImage = function (file, selectedMovie) {
@@ -173,7 +175,7 @@ function dataService($http, $q, Upload) {
 
     function dataServiceError(errorResponse) {
         if (errorResponse.status == 500) {
-            $("#errorModalText").html("קרתה שגיאה במהלך התקשורת עם השרת. בדוק נתונים או נסה שנית.");
+            $("#errorModalText").html("Server operation failed. It may happened because server failure.");
         }
         $('#responseErrorModal').modal('show');
         console.log("ERROR TEXT: " + errorResponse.data);

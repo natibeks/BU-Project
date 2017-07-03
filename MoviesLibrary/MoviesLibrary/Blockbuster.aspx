@@ -45,13 +45,12 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#Home">BLOCKBUSTER</a>
+                    <a class="navbar-brand" href="#Home" data-ng-click="setPage(1,true)">BLOCKBUSTER</a>
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" data-ng-if="loginStatus">
                     <ul class="nav navbar-nav">
                         <li data-ng-class="{'active':$scope.currentPage==1}"><a href="#Home" data-ng-click="setPage(1,true)">Main<span class="sr-only">(current)</span></a></li>
                         <li data-ng-class="{'active':$scope.currentPage==2}"><a href="#Movies" prevent-default data-ng-click="setPage(2)">Movies</a></li>
-                        <li data-ng-class="{'active':$scope.currentPage==3}"><a href="#Managment" prevent-default data-ng-click="setPage(3)">Managment</a></li>
                     </ul>
                 </div>
             </div>
