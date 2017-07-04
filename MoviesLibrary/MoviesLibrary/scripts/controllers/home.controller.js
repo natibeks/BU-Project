@@ -57,6 +57,10 @@
         return !(AuthService.currentUser.MovieID > 0);
     }
 
+    $scope.isMovieFreeToBeRent = function (movie) {
+        return !(movie.WhoRent > 0);
+    }
+
     $scope.setEditMode = function (flag) {
         $scope.editMode = flag;
         if (flag)
@@ -153,7 +157,13 @@
         if ($scope.search.Text.length > 0)
             return "Search Result";
         if ($scope.currentPage == 1)
-            return "Movie Page";
+        {
+            if ($scope.popularPage)
+                return "Popular Movie";
+            else
+                return "Movie Page";
+        }
+            
         if ($scope.currentPage == 2)
             return "Movies Table";
     }
@@ -212,6 +222,7 @@
     $scope.$on('setNewestSelectedMovie', function (e) {
         var a = Enumerable.From($scope.data.Movie).Where(function (x) { return x.IsArchive != true && (x.WhoRent == 0 || x.WhoRent == null); }).ToArray();
         $scope.selectedMovie = angular.copy(a[a.length - 1]);
+
     })
 
     $scope.$on('resetMode', function (e) {

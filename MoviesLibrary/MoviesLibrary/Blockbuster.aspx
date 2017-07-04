@@ -49,8 +49,13 @@
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" data-ng-if="loginStatus">
                     <ul class="nav navbar-nav">
-                        <li data-ng-class="{'active':$scope.currentPage==1}"><a href="#Home" data-ng-click="setPage(1,true)">Main<span class="sr-only">(current)</span></a></li>
-                        <li data-ng-class="{'active':$scope.currentPage==2}"><a href="#Movies" prevent-default data-ng-click="setPage(2)">Movies</a></li>
+                        <li data-ng-class="{'active':currentPage==1}"><a href="#Home" data-ng-click="setPage(1,true)">Main<span class="sr-only">(current)</span></a></li>
+                        <li data-ng-class="{'active':currentPage==2}"><a href="#Movies" data-ng-click="setPage(2)">Movies</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#Logout">Logout</a>
+                        </li>
                     </ul>
                 </div>
             </div>

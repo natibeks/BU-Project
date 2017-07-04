@@ -11,9 +11,11 @@
 
     })
 
-    $scope.setPage = function (page,newest) {
+    $scope.setPage = function (page, newest) {
+        $scope.popularPage = false;
         if (page == 1 && newest==true) {
             $scope.$broadcast('setNewestSelectedMovie');
+            $scope.popularPage = true;
         }
         $scope.$broadcast('resetMode');
         $scope.currentPage = page;

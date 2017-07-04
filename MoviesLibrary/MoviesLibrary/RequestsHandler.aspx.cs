@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Newtonsoft.Json.Linq;
+using System.Security.Authentication;
+using System.Threading.Tasks;
 
 namespace MoviesLibrary
 {
@@ -23,7 +25,8 @@ namespace MoviesLibrary
                     case "getdata":
                         var id = Convert.ToString(Request["id"]);
                         var admin = Convert.ToBoolean(Request["isadmin"]);
-                        Response.Write(Utils.GetInitData(id, admin));
+                        Task<string> taskResp = Task.Run(() => Utils.GetInitDataAsync(id, admin));
+                        Response.Write(taskResp.Result);
                         break;
                     case "login":
                         Response.Write(Utils.Login(obj));
@@ -52,6 +55,8 @@ namespace MoviesLibrary
             catch (Exception ex)
             {
                 Response.StatusCode = 500;
+                if(ex is AuthenticationException)
+                    Response.StatusCode = 501;
                 Response.Write(ex.Message);
             }
         }

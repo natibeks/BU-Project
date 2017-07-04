@@ -30,7 +30,8 @@
         <a href="#" prevent-default class="btn btn-success" data-ng-click="saveChanges()" data-ng-if="currentPage==1 && currentUser.Admin && editMode ">Save Movie</a>
         <a href="#" prevent-default class="btn btn-success" data-ng-click="setNewMovie()" data-ng-if="currentPage==2 && currentUser.Admin && !editMode">New Movie</a>
         <a href="#" prevent-default class="btn btn-warning" data-ng-click="returnMovie()" data-ng-if="!isUserFreeToRent() && !editMode">Stop Rental</a>
+        <a href="#" prevent-default class="btn btn-success" data-ng-click="rentMovie(selectedMovie.Id)" data-ng-if="currentPage == 1 && isUserFreeToRent() && isMovieFreeToBeRent(selectedMovie) && !editMode">Rent It</a>
     </div>
 </div>
-<div data-ng-show="currentPage == 1 && search.Text.length == 0" data-ng-include="'inc/movie.html'"></div>
-<div data-ng-controller="TableController" data-ng-show="search.Text.length > 0 || currentPage == 2" data-ng-include="'inc/table.html'"></div>
+<div data-ng-if="currentPage == 1 && search.Text.length == 0" data-ng-include="'inc/movie.html'"></div>
+<div data-ng-controller="TableController" data-ng-if="search.Text.length > 0 || currentPage == 2" data-ng-include="'inc/table.html'"></div>

@@ -32,6 +32,10 @@
                             <button type="submit" class="btn btn-primary" data-ng-disabled="!loginForm.$valid">Submit</button>
                         </div>
                     </div>
+                    <div class="alert alert-danger" style="text-align:center;padding:5px" data-ng-if="loginFailed">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <p>Worng id or password.</p>
+                    </div>
                 </form>
             </div>
         </div>

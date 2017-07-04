@@ -40,5 +40,8 @@
         })
     }
 
+    $scope.logout = function () {
+        AuthService.logout();
+    }
 
 });

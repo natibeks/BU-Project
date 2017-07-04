@@ -12,55 +12,48 @@ using System.Globalization;
 using System.Web.Configuration;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Security.Authentication;
 
 namespace MoviesLibrary
 {
     public class Utils
     {
-        private static SqlConnection conn;
-        public static string GetInitData(string uid, bool admin)
+        public static async Task<string> GetInitDataAsync(string uid, bool admin)
         {
             var connectStr = WebConfigurationManager.AppSettings["SQLServer"];
+            var conn = new SqlConnection(connectStr);
 
-            using (conn = new SqlConnection(connectStr))
-            {
-                SqlCommand sqlComm = new SqlCommand("GetData", conn);
-                sqlComm.Parameters.AddWithValue("@userId", uid);
-                sqlComm.Parameters.AddWithValue("@isAdmin", admin);
-                sqlComm.CommandType = CommandType.StoredProcedure;
-                SqlDataAdapter da = new SqlDataAdapter();
-                da.SelectCommand = sqlComm;
-                DataSet data = new DataSet();
-                da.Fill(data);
+            SqlCommand sqlComm = new SqlCommand("GetData", conn);
+            sqlComm.Parameters.AddWithValue("@userId", uid);
+            sqlComm.Parameters.AddWithValue("@isAdmin", admin);
+            sqlComm.CommandType = CommandType.StoredProcedure;
+            SqlDataAdapter da = new SqlDataAdapter();
+            da.SelectCommand = sqlComm;
+            Task<DataSet> data = new Task<DataSet>(()=>FillDataSet(da));
+            data.Start();
 
-                data.Tables[0].TableName = "User";
-                data.Tables[1].TableName = "Movie";
-                data.Tables[2].TableName = "Actor";
-                data.Tables[3].TableName = "Director";
-                data.Tables[4].TableName = "Genre";
-                data.Tables[5].TableName = "MovieActor";
+            //Async action..
+            conn.Close();
 
-                //return data;
-                //DataSet data = await Task.Run(new Action(FillDataSet(da)));
+            DataSet respose = await data;
 
-                return JsonConvert.SerializeObject(data);
-            }
+            return JsonConvert.SerializeObject(respose);
         }
 
-        //private static Task<DataSet> FillDataSet(SqlDataAdapter da)
-        //{
-        //    DataSet data = new DataSet();
-        //    da.Fill(data);
+        private static DataSet FillDataSet(SqlDataAdapter da)
+        {
+            DataSet data = new DataSet();
+            da.Fill(data);
 
-        //    data.Tables[0].TableName = "User";
-        //    data.Tables[1].TableName = "Movie";
-        //    data.Tables[2].TableName = "Actor";
-        //    data.Tables[3].TableName = "Director";
-        //    data.Tables[4].TableName = "Genre";
-        //    data.Tables[5].TableName = "MovieActor";
+            data.Tables[0].TableName = "User";
+            data.Tables[1].TableName = "Movie";
+            data.Tables[2].TableName = "Actor";
+            data.Tables[3].TableName = "Director";
+            data.Tables[4].TableName = "Genre";
+            data.Tables[5].TableName = "MovieActor";
 
-        //    return data;
-        //}
+            return data;
+        }
 
         public static string Login(dynamic user)
         {
@@ -70,8 +63,8 @@ namespace MoviesLibrary
                 {
                     string id = Convert.ToString(user.userId);
                     string pass = Convert.ToString(user.password);
-                    var b = db.User.Where(i => i.Id == id && i.Password==pass) .FirstOrDefault();
-
+                    var b = db.User.Where(i => i.Id == id && i.Password == pass).FirstOrDefault();
+                    if (b == null) throw new AuthenticationException("Invalid identification data.");
                     return JsonConvert.SerializeObject(b);
                 }
             }
@@ -81,7 +74,7 @@ namespace MoviesLibrary
             }
         }
 
-        public static string RentMovie(string user,int movie)
+        public static string RentMovie(string user, int movie)
         {
             try
             {
@@ -174,7 +167,7 @@ namespace MoviesLibrary
             }
         }
 
-        public static string ConvertPosterNameToId (string tsFilaname, string id)
+        public static string ConvertPosterNameToId(string tsFilaname, string id)
         {
             try
             {
@@ -201,7 +194,7 @@ namespace MoviesLibrary
                     var b = db.Movie.Where(i => i.Id == movie).FirstOrDefault();
                     b.IsArchive = true;
                     var a = db.MovieActor.Where(i => i.MovieID == movie).ToArray();
-                    foreach(MovieActor ac in a)
+                    foreach (MovieActor ac in a)
                     {
                         db.MovieActor.Remove(ac);
                     }
@@ -220,7 +213,7 @@ namespace MoviesLibrary
         {
             try
             {
-                using (var db = new MoviesDBEntities() )
+                using (var db = new MoviesDBEntities())
                 {
                     var u = db.User.Where(x => x.Id == userId).FirstOrDefault();
                     if (u == null)

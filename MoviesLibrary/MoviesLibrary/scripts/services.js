@@ -176,20 +176,20 @@ function dataService($http, $q, Upload) {
     function dataServiceError(errorResponse) {
         if (errorResponse.status == 500) {
             $("#errorModalText").html("Server operation failed. It may happened because server failure.");
-        }
-        $('#responseErrorModal').modal('show');
+            $('#responseErrorModal').modal('show');
+        }      
         console.log("ERROR TEXT: " + errorResponse.data);
         return { RequestSucceed: false };
     }
 
     return dataService;
 }
-function authService(DataService) {
+function authService(DataService, $location) {
     var authService = {};
     authService.login = function (userObj) {
         return DataService.makePostRequest("login", userObj).then(
             function (response) {
-                if (!response.RequestSucceed) return;
+                if (!response.RequestSucceed) return { Succeed: false };
                 if (response.Data.Id.length > 0) {
                     authService.currentUser = response.Data;
                     return { Succeed: true, User: response.Data };
@@ -198,6 +198,11 @@ function authService(DataService) {
                     return { Succeed: false }
                 }
             })
+    };
+
+    authService.logout = function () {
+        authService.currentUser = null;
+        $location.path('/Login');
     };
 
     return authService;
