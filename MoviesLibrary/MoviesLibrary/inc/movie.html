@@ -10,9 +10,9 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-xs-12 col-sm-5 col-lg-5">
-                        <div data-ng-if="!selectedMovie.HasPoster && uploadedImg.File==null" ngf-drop ngf-select ng-file-to-preview data-ng-model="uploadedImg.File" class="drop-box"
+                        <div data-ng-if="!selectedMovie.HasPoster && uploadedImg.File==null && editMode" ngf-drop ngf-select ng-file-to-preview data-ng-model="uploadedImg.File" class="drop-box"
                              ngf-drag-over-class="'dragover'" ngf-multiple="false" accept="image/*">
-                            גרור לפה תמונה מסוג jpeg/jpg בלבד
+                            גרור לפה תמונה מסוג JPEG/JPG בלבד
                         </div>
                         <div ngf-no-file-drop>התמונה לא נתמכת</div>
                         <img class="img-responsive" title="{{selectedMovie.Name}}"

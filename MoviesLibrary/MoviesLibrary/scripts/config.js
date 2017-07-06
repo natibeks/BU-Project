@@ -30,9 +30,5 @@
             }
         }
     })
-    //.when('AdminManagment', {
-    //    templateUrl: "inc/adminman.html",
-    //    controller: "AdminController",
-    //})
     .otherwise({ redirectTo: '/Login' });
 });

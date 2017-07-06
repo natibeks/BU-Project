@@ -20,4 +20,9 @@
         $scope.$broadcast('resetMode');
         $scope.currentPage = page;
     }
+
+    $scope.logout = function () {
+        AuthService.logout();
+    }
+
 });

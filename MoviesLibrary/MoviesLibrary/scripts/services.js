@@ -167,10 +167,10 @@ function dataService($http, $q, Upload) {
 
             console.log('File uploaded successfuly.');
             d.resolve(true);
-            return d.promise;
         }, function (msg) {
             dataServiceError(msg);
         });
+        return d.promise;
     }
 
     function dataServiceError(errorResponse) {

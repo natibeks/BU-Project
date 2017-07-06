@@ -29,9 +29,10 @@
     <script src="scripts/config.js"></script>
     <script src="scripts/filters.js"></script>
     <script src="scripts/controllers/login.controller.js"></script>
-    <script src="scripts/controllers/home.controller.js"></script>
-    <script src="scripts/controllers/main.controller.js"></script>
+    <script src="scripts/controllers/home.controller.js"></script>    
     <script src="scripts/controllers/table.controller.js"></script>
+    <script src="scripts/controllers/movie.controller.js"></script>
+    <script src="scripts/controllers/main.controller.js"></script>
 </head>
 <body data-ng-app="myApp" data-ng-controller="MainController">
     <header>
@@ -39,7 +40,7 @@
         <nav class="navbar navbar-default">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2" data-ng-if="loginStatus">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" data-ng-if="loginStatus">
                         <span class="sr-only">Toggle navigation</span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
@@ -54,7 +55,7 @@
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li>
-                            <a href="#Logout">Logout</a>
+                            <a href="#Logout" data-ng-click="logout()">Logout</a>
                         </li>
                     </ul>
                 </div>

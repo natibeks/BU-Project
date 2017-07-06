@@ -124,6 +124,7 @@
     <Content Include="scripts\controllers\home.controller.js" />
     <Content Include="scripts\controllers\login.controller.js" />
     <Content Include="scripts\controllers\main.controller.js" />
+    <Content Include="scripts\controllers\movie.controller.js" />
     <Content Include="scripts\controllers\table.controller.js" />
     <Content Include="scripts\directives.js" />
     <Content Include="scripts\filters.js" />

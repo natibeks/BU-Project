@@ -1,4 +1,14 @@
-﻿<table class="table table-striped table-hover">
+﻿<ul class="pager" ng-show="data.Movie.length>0" style="text-align:left">
+    <li data-ng-class="{'disabled':isFirstPage()}">
+        <a href="" data-ng-if="!isFirstPage()" data-ng-click="decPage()">Previous</a>
+    </li>
+    <li><span> {{pager.curr + 1}} of {{ numberOfPages() }}</span></li>
+    <li data-ng-class="{'disabled':isLastPage()}">
+        <a href="" data-ng-if="!isLastPage()" data-ng-click="incPage()">Next</a>
+    </li>
+</ul>
+
+<table class="table table-striped table-hover">
     <thead>
         <tr>
             <th data-ng-repeat="field in tableFields" data-ng-style="{'width':field.Width}">
@@ -18,7 +28,7 @@
                 <div data-ng-bind="movie.Year" data-ng-if="field.Title == 'Year'"></div>
                 <div data-ng-bind="fitString(movie.Plot,50)" title="{{movie.Plot}}" data-ng-if="field.Title == 'Plot'"></div>
                 <div data-ng-if="field.Title == 'Actors'">
-                    <div data-ng-repeat="ma in data.MovieActor | filter:{MovieID: selectedMovie.Id}">
+                    <div data-ng-repeat="ma in data.MovieActor | filter:{MovieID: movie.Id}">
                         <div data-ng-bind="$last?getActorName(ma.ActorID) : getActorName(ma.ActorID)+' , '"></div>
                     </div>
                 </div>
@@ -41,7 +51,7 @@
                         </td>
                         <td style="width:25px">
                             <span title="Already rented." class="ion-ios-pricetag text-default" style="font-size:25px"
-                                  data-ng-if="!isMovieFreeToBeRent(movie)"></span>
+                                  data-ng-if="!isMovieFreeToBeRent(movie) && isUserFreeToRent()"></span>
                         </td>
                     </tr>
                    

@@ -1,4 +1,4 @@
-﻿app.controller('TableController', function ($scope, DataService) {
+﻿app.controller('TableController', function ($scope, DataService, AuthService) {
     $scope.sort = {
         Name: "Id",
         Desc: false
@@ -13,6 +13,11 @@
 
     $scope.isMovieFreeToBeRent = function (movie) {
         return !(movie.WhoRent > 0);
+    }
+
+    $scope.isUserFreeToRent = function () {
+        if (AuthService.currentUser == undefined) return;
+        return !(AuthService.currentUser.MovieID > 0);
     }
 
     $scope.tableFields = [{ Title: "#", Width: "50px" },
