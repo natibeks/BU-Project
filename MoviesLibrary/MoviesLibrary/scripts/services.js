@@ -50,15 +50,14 @@ function dataService($http, $q, Upload) {
         dataService.makeGetRequest("rentmovie", { user: userId, movie: movieId }).then(
             function (response) {
                 if (!response.RequestSucceed) d.reject(false);
-                angular.forEach(dataService.dataObject.User, function (o, i) {
-                    if (o.Id == userId) {
-                        dataService.dataObject.User[i].MovieID = movieId;
-                    }
+                dataService.dataObject.push({
+                    UserID: userId,
+                    MovieID: movieId
                 });
                 angular.forEach(dataService.dataObject.Movie, function (o, i) {
                     if (o.Id == movieId)
-                        dataService.dataObject.Movie[i].WhoRent = userId;
-                })
+                        dataService.dataObject.Movie[i].FreeQuantity--;
+                });
                 d.resolve(true);
             });
         return d.promise;
@@ -66,18 +65,19 @@ function dataService($http, $q, Upload) {
 
     dataService.setMovieAsAvailable = function (movieId,userId) {
         var d = $q.defer();
-        dataService.makeGetRequest("returnmovie", { movie: movieId }).then(
+        dataService.makeGetRequest("returnmovie", { user: userId ,movie: movieId }).then(
             function (response) {
                 if (!response.RequestSucceed) d.reject(false);
-                angular.forEach(dataService.dataObject.User, function (o, i) {
-                    if (o.Id == userId) {
-                        dataService.dataObject.User[i].MovieID = 0;
+
+                angular.forEach(dataService.dataObject.UserMovie, function (o, i) {
+                    if (o.UserID == userId && o.MovieID == movieId) {
+                        dataService.dataObject.UserMovie.splice(i,1);
                     }
                 });
                 angular.forEach(dataService.dataObject.Movie, function (o, i) {
                     if (o.Id == movieId)
-                        dataService.dataObject.Movie[i].WhoRent = "";
-                })
+                        dataService.dataObject.Movie[i].FreeQuantity++;
+                });
                 d.resolve(true);
             });
         return d.promise;
@@ -143,6 +143,11 @@ function dataService($http, $q, Upload) {
                 angular.forEach(dataService.dataObject.Movie, function (o, i) {
                     if (o.Id == selectedMovie.Id) {
                         dataService.dataObject.Movie[i] = angular.copy(selectedMovie);
+                    }
+                });
+                angular.forEach(dataService.dataObject.UserMovie, function (o, i) {
+                    if (o.MovieID == movieId) {
+                        dataService.dataObject.UserMovie.splice(i, 1);
                     }
                 });
                 d.resolve(true);

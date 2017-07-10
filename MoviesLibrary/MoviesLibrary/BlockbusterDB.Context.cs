@@ -31,5 +31,6 @@ namespace MoviesLibrary
         public virtual DbSet<MovieActor> MovieActor { get; set; }
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<Movie> Movie { get; set; }
+        public virtual DbSet<UserMovie> UserMovie { get; set; }
     }
 }

@@ -12,17 +12,9 @@ namespace MoviesLibrary
     using System;
     using System.Collections.Generic;
     
-    public partial class Movie
+    public partial class UserMovie
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Plot { get; set; }
-        public int Genre { get; set; }
-        public int Year { get; set; }
-        public int Director { get; set; }
-        public string WhoRent { get; set; }
-        public Nullable<bool> IsArchive { get; set; }
-        public Nullable<bool> HasPoster { get; set; }
-        public Nullable<int> FreeQuantity { get; set; }
+        public string UserID { get; set; }
+        public int MovieID { get; set; }
     }
 }

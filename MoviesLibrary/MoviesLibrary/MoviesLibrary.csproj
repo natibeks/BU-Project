@@ -153,7 +153,6 @@
     <Compile Include="Genre.cs">
       <DependentUpon>BlockbusterDB.tt</DependentUpon>
     </Compile>
-    <Compile Include="App_Code\MailSender.cs" />
     <Compile Include="Movie.cs">
       <DependentUpon>BlockbusterDB.tt</DependentUpon>
     </Compile>
@@ -189,6 +188,9 @@
       <DependentUpon>RequestsHandler.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Code\Utils.cs" />
+    <Compile Include="UserMovie.cs">
+      <DependentUpon>BlockbusterDB.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="posters\Temp\" />

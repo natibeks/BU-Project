@@ -11,13 +11,8 @@
             $scope.hoverMovie = 0;
     }
 
-    $scope.isMovieFreeToBeRent = function (movie) {
-        return !(movie.WhoRent > 0);
-    }
-
-    $scope.isUserFreeToRent = function () {
-        if (AuthService.currentUser == undefined) return;
-        return !(AuthService.currentUser.MovieID > 0);
+    $scope.isMovieCanBeRented = function (movie) {
+        return (movie.FreeQuantity > 0);
     }
 
     $scope.tableFields = [{ Title: "#", Width: "50px" },
@@ -25,10 +20,12 @@
         { Title: "Plot", Width: "auto" },
         { Title: "Actors", Width: "150px" },
         { Title: "Year", Width: "100px" },
-        { Title: "Genre", Width: "150px" },];
+        { Title: "Genre", Width: "150px" },
+    { Title: "At Stock", Width: "80px"}];
 
     $scope.tableFilter = function (m) {
         var k = $scope.search.Text.trim();
+        k.toLowerCase();
         var contains = k == "";
 
         if ($scope.search.Advanced) {

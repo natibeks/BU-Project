@@ -18,7 +18,7 @@ namespace MoviesLibrary
 {
     public class Utils
     {
-        public static async Task<string> GetInitDataAsync(string uid, bool admin)
+        public static string GetInitData(string uid, bool admin)
         {
             var connectStr = WebConfigurationManager.AppSettings["SQLServer"];
             var conn = new SqlConnection(connectStr);
@@ -29,15 +29,10 @@ namespace MoviesLibrary
             sqlComm.CommandType = CommandType.StoredProcedure;
             SqlDataAdapter da = new SqlDataAdapter();
             da.SelectCommand = sqlComm;
-            Task<DataSet> data = new Task<DataSet>(()=>FillDataSet(da));
-            data.Start();
-
-            //Async action..
+            DataSet data = FillDataSet(da);
             conn.Close();
 
-            DataSet respose = await data;
-
-            return JsonConvert.SerializeObject(respose);
+            return JsonConvert.SerializeObject(data);
         }
 
         private static DataSet FillDataSet(SqlDataAdapter da)
@@ -51,6 +46,7 @@ namespace MoviesLibrary
             data.Tables[3].TableName = "Director";
             data.Tables[4].TableName = "Genre";
             data.Tables[5].TableName = "MovieActor";
+            data.Tables[6].TableName = "UserMovie";
 
             return data;
         }
@@ -80,10 +76,12 @@ namespace MoviesLibrary
             {
                 using (var db = new MoviesDBEntities())
                 {
+
+                    var um = new UserMovie();
+                    um.UserID = user;
+                    um.MovieID = movie;
                     var m = db.Movie.Where(i => i.Id == movie).FirstOrDefault();
-                    var u = db.User.Where(i => i.Id == user).FirstOrDefault();
-                    m.WhoRent = user;
-                    u.MovieID = movie;
+                    m.FreeQuantity--;
                     db.SaveChanges();
                     return "ok";
                 }
@@ -94,16 +92,17 @@ namespace MoviesLibrary
             }
         }
 
-        public static string ReturnMovie(int movie)
+        public static string ReturnMovie(int movie , string user)
         {
             try
             {
                 using (var db = new MoviesDBEntities())
                 {
+                    var um = db.UserMovie.Where(i => i.MovieID == movie && i.UserID== user).FirstOrDefault();
+                    db.UserMovie.Remove(um);
                     var m = db.Movie.Where(i => i.Id == movie).FirstOrDefault();
-                    var u = db.User.Where(i => i.Id == m.WhoRent).FirstOrDefault();
-                    m.WhoRent = "";
-                    u.MovieID = 0;
+                    
+                    m.FreeQuantity++;
                     db.SaveChanges();
                     return "ok";
                 }
@@ -198,6 +197,9 @@ namespace MoviesLibrary
                     {
                         db.MovieActor.Remove(ac);
                     }
+                    var ums = db.UserMovie.Where(i => i.MovieID == movie).ToArray();
+                    foreach (UserMovie um in ums)
+                        db.UserMovie.Remove(um);
                     db.SaveChanges();
 
                     return "ok";
@@ -209,54 +211,5 @@ namespace MoviesLibrary
             }
         }
 
-        public static string SendForgottenPass(string userId)
-        {
-            try
-            {
-                using (var db = new MoviesDBEntities())
-                {
-                    var u = db.User.Where(x => x.Id == userId).FirstOrDefault();
-                    if (u == null)
-                        return "error";
-                    else
-                    {
-                        string temp = @"{  
-                  'Username': '" + u.Email + @"',
-                  'mailBody': 'הסיסמא שלך היא: " + u.Password + @"',
-                  'mailTitle': 'שיחזור סיסמא'
-                   }
-                ";
-                        dynamic obj = JObject.Parse(temp);
-                        Utils.SendEmail(obj);
-                        return "ok";
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-        public static bool SendEmail(dynamic obj)
-        {
-            try
-            {
-                var to = Convert.ToString(obj["Username"]);
-                var attach = new List<string>();
-                string body = "";
-                string title = "";
-                title = Convert.ToString(obj["mailTitle"]);
-                body = Convert.ToString(obj["mailBody"]);
-                var ms = new MailSender();
-                ms.Send(to, title, body);
-                return true;
-
-            }
-            catch (Exception e)
-            {
-
-                throw e;
-            }
-        }
     }
 }

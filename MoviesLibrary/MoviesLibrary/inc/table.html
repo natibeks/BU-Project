@@ -34,13 +34,14 @@
                 </div>
                 <div data-ng-bind="getDirector(movie.Director)" data-ng-if="field.Title == 'Director'"></div>
                 <div data-ng-bind="getGenre(movie.Genre)" data-ng-if="field.Title == 'Genre'"></div>
+                <div data-ng-bind="movie.FreeQuantity" data-ng-if="field.Title == 'At Stock'"></div>
             </td>
             <td>
                 <table>
                     <tr>
                         <td style="width:25px">
                             <a href="" title="Rent it." prevent-default data-ng-show="hoverMovie==movie.Id" data-ng-click="rentMovie(movie.Id)" style="font-size:25px"
-                               data-ng-if="isUserFreeToRent()">
+                               data-ng-if="isMovieCanBeRented(movie)">
                                 <span class="ion-ios-download-outline text-primary"></span>
                             </a>
                         </td>
@@ -50,8 +51,8 @@
                             </a> 
                         </td>
                         <td style="width:25px">
-                            <span title="Already rented." class="ion-ios-pricetag text-default" style="font-size:25px"
-                                  data-ng-if="!isMovieFreeToBeRent(movie) && isUserFreeToRent()"></span>
+                            <span title="Out Of Stock." class="ion-ios-pricetag text-default" style="font-size:25px"
+                                  data-ng-if="!isMovieCanBeRented(movie)"></span>
                         </td>
                     </tr>
                    

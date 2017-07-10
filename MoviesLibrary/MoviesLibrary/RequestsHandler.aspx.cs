@@ -25,8 +25,7 @@ namespace MoviesLibrary
                     case "getdata":
                         var id = Convert.ToString(Request["id"]);
                         var admin = Convert.ToBoolean(Request["isadmin"]);
-                        Task<string> taskResp = Task.Run(() => Utils.GetInitDataAsync(id, admin));
-                        Response.Write(taskResp.Result);
+                        Response.Write(Utils.GetInitData(id, admin));
                         break;
                     case "login":
                         Response.Write(Utils.Login(obj));
@@ -37,7 +36,7 @@ namespace MoviesLibrary
                         Response.Write(Utils.RentMovie(user, movie));
                         break;
                     case "returnmovie":               
-                        Response.Write(Utils.ReturnMovie(Convert.ToInt32(Request["movie"])));
+                        Response.Write(Utils.ReturnMovie(Convert.ToInt32(Request["movie"]), Request["user"]));
                         break;
                     case "updatemovie":
                         Response.Write(Utils.UpdateMovie(obj));
@@ -46,9 +45,7 @@ namespace MoviesLibrary
                         movie = Convert.ToInt32(Request["movieid"]);
                         Response.Write(Utils.DeleteMovie(movie));
                         break;
-                    case "ForgotPassword":
-                        Response.Write(Utils.SendForgottenPass(Convert.ToString(Request["userId"])));
-                        break;
+
                     default: break;
                 }
             }

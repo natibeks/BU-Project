@@ -42,6 +42,7 @@
           <Property Name="WhoRent" Type="varchar" MaxLength="50" />
           <Property Name="IsArchive" Type="bit" />
           <Property Name="HasPoster" Type="bit" />
+          <Property Name="FreeQuantity" Type="int" />
         </EntityType>
         <EntityType Name="MovieActor">
           <Key>
@@ -66,6 +67,14 @@
           <Property Name="Admin" Type="bit" />
           <Property Name="IsArchive" Type="bit" />
         </EntityType>
+        <EntityType Name="UserMovie">
+          <Key>
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="MovieID" />
+          </Key>
+          <Property Name="UserID" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="MovieID" Type="int" Nullable="false" />
+        </EntityType>
         <EntityContainer Name="MoviesDBModelStoreContainer">
           <EntitySet Name="Actor" EntityType="Self.Actor" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Director" EntityType="Self.Director" Schema="dbo" store:Type="Tables" />
@@ -73,6 +82,7 @@
           <EntitySet Name="Movie" EntityType="Self.Movie" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MovieActor" EntityType="Self.MovieActor" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserMovie" EntityType="Self.UserMovie" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -119,6 +129,7 @@
           <EntitySet Name="MovieActor" EntityType="Self.MovieActor" />
           <EntitySet Name="User" EntityType="MoviesDBModel.User" />
           <EntitySet Name="Movie" EntityType="MoviesDBModel.Movie" />
+          <EntitySet Name="UserMovie" EntityType="MoviesDBModel.UserMovie" />
         </EntityContainer>
         <EntityType Name="User">
           <Key>
@@ -146,6 +157,15 @@
           <Property Name="WhoRent" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="IsArchive" Type="Boolean" />
           <Property Name="HasPoster" Type="Boolean" />
+          <Property Name="FreeQuantity" Type="Int32" />
+        </EntityType>
+        <EntityType Name="UserMovie">
+          <Key>
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="MovieID" />
+          </Key>
+          <Property Name="UserID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="MovieID" Type="Int32" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -207,6 +227,7 @@
           <EntitySetMapping Name="Movie">
             <EntityTypeMapping TypeName="MoviesDBModel.Movie">
               <MappingFragment StoreEntitySet="Movie">
+                <ScalarProperty Name="FreeQuantity" ColumnName="FreeQuantity" />
                 <ScalarProperty Name="HasPoster" ColumnName="HasPoster" />
                 <ScalarProperty Name="IsArchive" ColumnName="IsArchive" />
                 <ScalarProperty Name="WhoRent" ColumnName="WhoRent" />
@@ -216,6 +237,14 @@
                 <ScalarProperty Name="Plot" ColumnName="Plot" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserMovie">
+            <EntityTypeMapping TypeName="MoviesDBModel.UserMovie">
+              <MappingFragment StoreEntitySet="UserMovie">
+                <ScalarProperty Name="MovieID" ColumnName="MovieID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
