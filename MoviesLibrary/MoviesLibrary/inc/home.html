@@ -29,9 +29,11 @@
         <a href="#" prevent-default class="btn btn-danger" data-ng-click="delMovie()" data-ng-if="currentPage==1 && currentUser.Admin && editMode && selectedMovie.Id>0">Delete Movie</a>
         <a href="#" prevent-default class="btn btn-success" data-ng-click="saveChanges()" data-ng-if="currentPage==1 && currentUser.Admin && editMode ">Save Movie</a>
         <a href="#" prevent-default class="btn btn-success" data-ng-click="setNewMovie()" data-ng-if="currentPage==2 && currentUser.Admin && !editMode">New Movie</a>
-        <a href="#" prevent-default class="btn btn-warning" data-ng-click="returnMovie()" data-ng-if="!isUserFreeToRent() && !editMode">Stop Rental</a>
+        <a href="#" prevent-default class="btn btn-warning" data-ng-click="openReturnModal()" data-ng-if="isUserRentedMovies() && !editMode">Return Movie</a>
         <a href="#" prevent-default class="btn btn-success" data-ng-click="rentMovie(selectedMovie.Id)" data-ng-if="currentPage == 1 && isMovieCanBeRented(movie) && !editMode">Rent It</a>
     </div>
 </div>
 <div data-ng-show="currentPage == 1 && search.Text.length == 0" data-ng-include="'inc/movie.html'"></div>
 <div data-ng-controller="TableController" data-ng-show="search.Text.length > 0 || currentPage == 2" data-ng-include="'inc/table.html'"></div>
+
+<div data-ng-include="'inc/modal2.html'"></div>

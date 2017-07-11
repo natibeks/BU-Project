@@ -19,12 +19,18 @@
         })
     }
 
-    $scope.returnMovie = function () {
-        DataService.setMovieAsAvailable(AuthService.currentUser.MovieID, AuthService.currentUser.Id).then(function (x) {
+    $scope.openReturnModal = function () {
+        $("#returnsModal").modal('show');
+    }
+
+    $scope.returnMovie = function (movieId) {
+        DataService.setMovieAsAvailable(movieId, AuthService.currentUser.Id).then(function (x) {
             if (x) {
                 $scope.data = DataService.getData();
-                AuthService.currentUser.MovieID = 0;
-            }
+                var count = Enumerable.From($scope.data.UserMovie).Where(function(x){return x.UserID == AuthService.currentUser.Id}).Count();
+                if(count==0)
+                    $("#returnsModal").modal('hide');
+            }            
 
         })
     }
@@ -121,6 +127,19 @@
 
     $scope.setFormObj = function (formname, formObj) {
         $scope.forms = formObj;
+    }
+
+    $scope.getUserMovieList = function () {
+        if ($scope.currentUser == undefined) return;
+        var movie = DataService.getData();
+        movie = movie.UserMovie;
+        movie = Enumerable.From(movie).Where(function (x) { return x.UserID == $scope.currentUser.Id }).ToArray();
+        return movie;
+
+    }
+
+    $scope.getMovieName = function (movieId) {
+        return DataService.getMovieName(movieId);
     }
 
 }

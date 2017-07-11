@@ -26,13 +26,14 @@
         $scope.search.Advanced = flag;
     }
 
-    $scope.isUserFreeToRent = function () {
+    $scope.isUserRentedMovies = function () {
         if (AuthService.currentUser == undefined) return;
-        return !(AuthService.currentUser.MovieID > 0);
+        var count = Enumerable.From($scope.data.UserMovie).Where(function (x) { return x.UserID == AuthService.currentUser.Id; }).Count();
+        return count > 0;
     }
 
     $scope.isMovieFreeToBeRent = function (movie) {
-        return !(movie.WhoRent > 0);
+        return !(movie.FreeQuantity > 0);
     }
 
     //startGetters
@@ -100,7 +101,7 @@
     { Title: "Year", Data: "Year" }];
 
     $scope.$on('setNewestSelectedMovie', function (e) {
-        var a = Enumerable.From($scope.data.Movie).Where(function (x) { return x.IsArchive != true && (x.WhoRent == 0 || x.WhoRent == null); }).ToArray();
+        var a = Enumerable.From($scope.data.Movie).Where(function (x) { return x.IsArchive != true; }).ToArray();
         $scope.selectedMovie = angular.copy(a[a.length - 1]);
 
     })

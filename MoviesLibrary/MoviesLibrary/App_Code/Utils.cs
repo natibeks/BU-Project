@@ -80,6 +80,7 @@ namespace MoviesLibrary
                     var um = new UserMovie();
                     um.UserID = user;
                     um.MovieID = movie;
+                    db.UserMovie.Add(um);
                     var m = db.Movie.Where(i => i.Id == movie).FirstOrDefault();
                     m.FreeQuantity--;
                     db.SaveChanges();

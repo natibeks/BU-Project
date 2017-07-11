@@ -89,6 +89,7 @@
       <DependentUpon>BlockbusterDB.edmx</DependentUpon>
       <LastGenOutput>BlockbusterDB.cs</LastGenOutput>
     </Content>
+    <Content Include="inc\modal2.html" />
     <Content Include="inc\movie.html" />
     <Content Include="inc\newest.html" />
     <Content Include="inc\table.html" />

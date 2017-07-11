@@ -50,7 +50,7 @@ function dataService($http, $q, Upload) {
         dataService.makeGetRequest("rentmovie", { user: userId, movie: movieId }).then(
             function (response) {
                 if (!response.RequestSucceed) d.reject(false);
-                dataService.dataObject.push({
+                dataService.dataObject.UserMovie.push({
                     UserID: userId,
                     MovieID: movieId
                 });
@@ -176,6 +176,11 @@ function dataService($http, $q, Upload) {
             dataServiceError(msg);
         });
         return d.promise;
+    }
+
+    dataService.getMovieName = function (movieId) {
+        var name = Enumerable.From(dataService.dataObject.Movie).Where(function (x) { return x.Id == movieId }).FirstOrDefault();
+        return name.Name;
     }
 
     function dataServiceError(errorResponse) {

@@ -14,6 +14,33 @@
         $scope.forgotView = flag;
     }
 
+    $scope.setRegisterView = function (flag) {
+        $scope.userInput = {
+            userId: "",
+            user_fname: "",
+            user_lname: "",
+            email: "",
+            password: ""
+        };
+        $scope.registerView = flag;
+    }
+
+    $scope.sendRegister = function (valid) {
+        if (!valid) return;
+        $rootScope.loadingStatus = true;
+        AuthService.register($scope.userInput).then(
+            function (response) {
+                if (response.Succeed) {
+                    //open sucess modal and go to login
+                }       
+                else {
+                    $rootScope.loadingStatus = false;
+                    $scope.registerFailed = true;
+                }
+
+            })
+    }
+
     $scope.sendLogin = function (valid) {
         if (!valid) return;
         $rootScope.loadingStatus = true;
