@@ -4,7 +4,7 @@ app.factory('DataService', dataService);
 app.factory('AuthService', authService);
 app.factory('FileReaderService', fileReaderService);
 
-function dataService($http, $q, Upload) {
+function dataService($http, $q, Upload,$rootScope) {
     var dataService = {};
     dataService.makeGetRequest = function (keyValue, params) {
         var url = "RequestsHandler.aspx?key=";
@@ -187,6 +187,7 @@ function dataService($http, $q, Upload) {
         if (errorResponse.status == 500) {
             $("#errorModalText").html("Server operation failed. It may happened because server failure.");
             $('#responseErrorModal').modal('show');
+            $rootScope.loadingStatus = false;
         }      
         console.log("ERROR TEXT: " + errorResponse.data);
         return { RequestSucceed: false };
@@ -203,6 +204,19 @@ function authService(DataService, $location) {
                 if (response.Data.Id.length > 0) {
                     authService.currentUser = response.Data;
                     return { Succeed: true, User: response.Data };
+                }
+                else {
+                    return { Succeed: false }
+                }
+            })
+    };
+
+    authService.register = function (userObj) {
+        return DataService.makePostRequest("register", userObj).then(
+            function (response) {
+                if (!response.RequestSucceed) return { Succeed: false };
+                if (response.Data.length > 0) {
+                    return { Succeed: true };
                 }
                 else {
                     return { Succeed: false }

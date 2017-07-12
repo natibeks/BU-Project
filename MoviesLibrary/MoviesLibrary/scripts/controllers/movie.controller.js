@@ -19,6 +19,15 @@
         })
     }
 
+    $scope.isMovieCanBeRented = function (movie) {
+        return (movie.FreeQuantity > 0);
+    }
+
+    $scope.isMovieRentedByUser = function (movie) {
+        var c = Enumerable.From($scope.data.UserMovie).Where(function (x) { return x.MovieID == movie.Id }).Count();
+        return c > 0;
+    }
+
     $scope.openReturnModal = function () {
         $("#returnsModal").modal('show');
     }

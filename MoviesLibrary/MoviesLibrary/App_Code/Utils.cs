@@ -70,6 +70,33 @@ namespace MoviesLibrary
             }
         }
 
+        public static string Register(dynamic user)
+        {
+            try
+            {
+                using (var db = new MoviesDBEntities())
+                {
+                    var us = new User();
+                    string id = Convert.ToString(user.userId);
+                    string pass = Convert.ToString(user.password);
+                    us.Id = id;
+                    us.Password = pass;
+                    us.FirstName = Convert.ToString(user.user_fname);
+                    us.LastName = Convert.ToString(user.user_lname);
+                    us.Email = Convert.ToString(user.email);
+                    us.Admin = false;
+                    db.User.Add(us);
+                    db.SaveChanges();
+
+                    return us.Id.ToString();
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public static string RentMovie(string user, int movie)
         {
             try

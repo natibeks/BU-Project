@@ -92,6 +92,7 @@
     <Content Include="inc\modal2.html" />
     <Content Include="inc\movie.html" />
     <Content Include="inc\newest.html" />
+    <Content Include="inc\register.html" />
     <Content Include="inc\table.html" />
     <Content Include="packages.config" />
     <EntityDeploy Include="BlockbusterDB.edmx">

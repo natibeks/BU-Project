@@ -15,6 +15,11 @@
         return (movie.FreeQuantity > 0);
     }
 
+    $scope.isMovieRentedByUser = function (movie) {
+        var c = Enumerable.From($scope.data.UserMovie).Where(function (x) { return x.MovieID == movie.Id }).Count();
+        return c > 0;
+    }
+
     $scope.tableFields = [{ Title: "#", Width: "50px" },
         { Title: "Name", Width: "200px" },
         { Title: "Plot", Width: "auto" },
@@ -59,6 +64,12 @@
         $scope.$parent.selectedMovie = angular.copy(temp);
         $scope.editMode = false;
         $scope.setPage(1);
+    }
+
+    $scope.privilateFilter = function (c) {
+        if (c.Title == 'At Stock')
+            return $scope.currentUser.Admin;
+        return true;
     }
 
     // pagination code

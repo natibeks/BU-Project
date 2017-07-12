@@ -30,6 +30,9 @@ namespace MoviesLibrary
                     case "login":
                         Response.Write(Utils.Login(obj));
                         break;
+                    case "register":
+                        Response.Write(Utils.Register(obj));
+                        break;
                     case "rentmovie":
                         int movie = Convert.ToInt32(Request["movie"]);
                         string user = Convert.ToString(Request["user"]);

@@ -32,6 +32,8 @@
             function (response) {
                 if (response.Succeed) {
                     //open sucess modal and go to login
+                    $("#successRegister").modal('show');
+                    $rootScope.loadingStatus = false;
                 }       
                 else {
                     $rootScope.loadingStatus = false;
