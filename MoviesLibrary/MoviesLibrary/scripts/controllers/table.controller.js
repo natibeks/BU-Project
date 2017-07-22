@@ -29,14 +29,15 @@
     { Title: "At Stock", Width: "80px"}];
 
     $scope.tableFilter = function (m) {
+        if (m.IsArchive) return false;
         var k = $scope.search.Text.trim();
-        k.toLowerCase();
+        k = k.toLowerCase();
         var contains = k == "";
 
         if ($scope.search.Advanced) {
             return (m.Name.toString().toLowerCase().indexOf(k)>-1 && $scope.search.Movie) ||
                 (m.Id.toString().indexOf(k) > -1 && $scope.search.Movie) ||
-                ($scope.isActorsNameMatch(m.Id,k)  && $scope.search.Actors) ||
+                ($scope.isActorsNameMatch(m.Id, k) && $scope.search.Actors) ||
                 ($scope.getDirector(m.Director).toLowerCase().indexOf(k) > -1 && $scope.search.Director) ||
                 ($scope.getGenre(m.Genre).toLowerCase().indexOf(k) > -1 && $scope.search.Genre) ||
                 (m.Year.toString().indexOf(k) > -1 && $scope.search.Year);

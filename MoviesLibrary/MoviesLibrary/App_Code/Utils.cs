@@ -158,6 +158,9 @@ namespace MoviesLibrary
                     b.Plot = Convert.ToString(obj["Plot"]);
                     b.Name = Convert.ToString(obj["Name"]);
                     b.HasPoster = Convert.ToBoolean(obj["HasPoster"]) || Convert.ToBoolean(obj["HasNewPoster"]);
+                    if (isNew)
+                        db.Movie.Add(b);
+
 
                     var currActors = db.MovieActor.Where(i => i.MovieID == id).ToArray();
 
@@ -179,8 +182,8 @@ namespace MoviesLibrary
                     foreach (MovieActor x in currActors)
                         db.MovieActor.Remove(x);
 
-                    if (isNew)
-                        db.Movie.Add(b);
+
+
                     db.SaveChanges();
                     if ((bool)obj["HasNewPoster"] && isNew)
                         ConvertPosterNameToId(Convert.ToString(obj["PosterTS"]), b.Id.ToString());

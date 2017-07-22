@@ -71,7 +71,7 @@
     <div class="loader" data-ng-show="loadingStatus"></div>
 
     <footer>
-        Created By Netanel Avaksis &copy; 2017
+        Created By Yair Schlahetsky &copy; 2017
     </footer>
 </body>
 </html>

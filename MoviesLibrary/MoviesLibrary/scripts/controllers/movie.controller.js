@@ -6,7 +6,8 @@
         Genre: 0,
         Plot: "",
         Name: "",
-        HasPoster: false
+        HasPoster: false,
+        Actors: []
     }
 
     $scope.rentMovie = function (movieId) {
@@ -82,8 +83,12 @@
 
     $scope.delMovie = function () {
         DataService.deleteMovie($scope.selectedMovie).then(function (x) {
-            if (x) // succeed
+            if (x) {
                 $scope.data = DataService.getData();
+                $scope.setPage(2);
+
+            }// succeed
+             
         })
     }
 
@@ -94,6 +99,9 @@
         else
             var temp = $scope.movieTemplate;
         $scope.selectedMovie = angular.copy(temp);
+        console.log($scope.selectedMovie);
+        console.log($scope.data.MovieActor);
+        console.log($scope.data.Movie);
         $scope.editMode = false;
         $scope.setPage(1);
     }

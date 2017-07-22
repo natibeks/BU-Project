@@ -44,7 +44,7 @@
         if ($scope.currentPage == 1)
         {
             if ($scope.popularPage)
-                return "Popular Movie";
+                return "Recent Added Movie";
             else
                 return "Movie Page";
         }
