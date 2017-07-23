@@ -53,7 +53,12 @@
                 return CountExistance > 0;
             }).ToArray();
         else
+        {
             $scope.fromNewToMovies();
+            if($scope.selectedMovie.HasPosterBackup!=undefined)
+                $scope.selectedMovie.HasPoster = $scope.selectedMovie.HasPosterBackup;
+        }
+            
     }
 
     $scope.saveChanges = function () {
@@ -63,8 +68,8 @@
                 {
                     $scope.data = DataService.getData();
                     $scope.editMode = false;
+                    $scope.applySaftly();
                 }
-
             })
         else {
             $("#errorModalText").html("Please fill in all the relavent fields.");
@@ -116,8 +121,17 @@
     $scope.changeImageSelect = function () {
         $scope.tempImageSrc = null;
         $scope.uploadedImg.File = null;
+        if ($scope.selectedMovie.HasPosterBackup != undefined)
+            $scope.selectedMovie.HasPoster = $scope.selectedMovie.HasPosterBackup;
+        else
+            $scope.selectedMovie.HasPosterBackup = $scope.selectedMovie.HasPoster;
         $scope.selectedMovie.HasPoster = false;
         $scope.selectedMovie.HasNewPoster = false;
+    }
+
+    $scope.getPosterSrc = function () {
+        var src = "posters/" + $scope.selectedMovie.Id + ".jpg?" + new Date().getTime();
+        return src;
     }
 
     $scope.$watch('uploadedImg.File', function () {

@@ -17,10 +17,10 @@ namespace MoviesLibrary
             try
             {
                 if (Request["key"] == null) Response.End();
-                var tp = Request["key"] as string;
-                var postData = new System.IO.StreamReader(Request.InputStream).ReadToEnd();
-                dynamic obj = postData == "" ? null : JObject.Parse(postData);
-                switch (tp)
+                var key = Request["key"] as string;
+                var myData = new System.IO.StreamReader(Request.InputStream).ReadToEnd();
+                dynamic obj = myData == "" ? null : JObject.Parse(myData);
+                switch (key)
                 {
                     case "getdata":
                         var id = Convert.ToString(Request["id"]);
