@@ -103,6 +103,7 @@
     $scope.$on('setNewestSelectedMovie', function (e) {
         var a = Enumerable.From($scope.data.Movie).Where(function (x) { return x.IsArchive != true; }).ToArray();
         $scope.selectedMovie = angular.copy(a[a.length - 1]);
+        $scope.setMoviePoster();
 
     })
 

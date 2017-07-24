@@ -16,9 +16,9 @@
                         </div>
                         <div ngf-no-file-drop>התמונה לא נתמכת</div>
                         <img class="img-responsive" title="{{selectedMovie.Name}}"
-                             data-ng-if="selectedMovie.HasPoster && !editMode" data-ng-src="posters/{{selectedMovie.Id}}.jpg"/>
+                             data-ng-if="selectedMovie.HasPoster && !editMode" data-ng-src="{{moviePosterUrl}}"/>
                         <img class="img-responsive" style="cursor:pointer" title="Click to cancel poster"
-                             data-ng-if="selectedMovie.HasPoster && editMode" data-ng-src="posters/{{selectedMovie.Id}}.jpg"
+                             data-ng-if="selectedMovie.HasPoster && editMode" data-ng-src="{{moviePosterUrl}}"
                              data-ng-click="changeImageSelect()" />
                         <div data-ng-if="((uploadedImg.File!=null  || selectedMovie.HasNewPoster) && !selectedMovie.HasPoster)">
                             <img class="img-responsive" style="cursor:pointer" title="Click to cancel poster"
@@ -98,6 +98,18 @@
                             <div data-ng-if="editMode">
                                 <textarea class="form-control" rows="3" name="moviePlot" data-ng-model="selectedMovie.Plot"
                                     required data-ng-minlength="1" ></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="form-group" data-ng-class="{'has-error':!movieForm.movieStock.$valid && movieForm.movieStock.$dirty}">
+                            <label class="control-label" for="movieStock">Available Stock:</label>
+                            <div data-ng-bind="selectedMovie.FreeQuantity" data-ng-if="!editMode"></div>
+                            <div data-ng-if="editMode">
+                                <input class="form-control" type="number" min="1" name="movieStock" data-ng-model="selectedMovie.FreeQuantity" required />
                             </div>
                         </div>
                     </div>

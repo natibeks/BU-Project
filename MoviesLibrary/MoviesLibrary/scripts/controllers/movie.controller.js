@@ -104,6 +104,7 @@
         else
             var temp = $scope.movieTemplate;
         $scope.selectedMovie = angular.copy(temp);
+        $scope.setMoviePoster();
         console.log($scope.selectedMovie);
         console.log($scope.data.MovieActor);
         console.log($scope.data.Movie);
@@ -121,17 +122,21 @@
     $scope.changeImageSelect = function () {
         $scope.tempImageSrc = null;
         $scope.uploadedImg.File = null;
+        $scope.selectedMovie.HasPoster = false;
         if ($scope.selectedMovie.HasPosterBackup != undefined)
             $scope.selectedMovie.HasPoster = $scope.selectedMovie.HasPosterBackup;
         else
-            $scope.selectedMovie.HasPosterBackup = $scope.selectedMovie.HasPoster;
-        $scope.selectedMovie.HasPoster = false;
+            $scope.selectedMovie.HasPosterBackup = $scope.selectedMovie.HasPoster;        
         $scope.selectedMovie.HasNewPoster = false;
     }
 
     $scope.getPosterSrc = function () {
         var src = "posters/" + $scope.selectedMovie.Id + ".jpg?" + new Date().getTime();
         return src;
+    }
+
+    $scope.setMoviePoster = function () {
+        $scope.moviePosterUrl = $scope.getPosterSrc();
     }
 
     $scope.$watch('uploadedImg.File', function () {
@@ -151,6 +156,8 @@
                 $scope.uploadedImg.Uploading = true;
                 DataService.uploadImage(file, $scope.selectedMovie).then(function (x) {
                     $scope.uploadedImg.Uploading = false;
+                    $scope.setMoviePoster();
+
                 });
             }
         }

@@ -91,7 +91,6 @@
     </Content>
     <Content Include="inc\modal2.html" />
     <Content Include="inc\movie.html" />
-    <Content Include="inc\newest.html" />
     <Content Include="inc\register.html" />
     <Content Include="inc\table.html" />
     <Content Include="packages.config" />
@@ -112,7 +111,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Blockbuster.aspx" />
-    <Content Include="inc\adminman.html" />
     <Content Include="inc\forgot.html" />
     <Content Include="inc\home.html" />
     <Content Include="inc\login.html" />

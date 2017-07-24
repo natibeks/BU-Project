@@ -158,6 +158,7 @@ namespace MoviesLibrary
                     b.Plot = Convert.ToString(obj["Plot"]);
                     b.Name = Convert.ToString(obj["Name"]);
                     b.HasPoster = Convert.ToBoolean(obj["HasPoster"]) || Convert.ToBoolean(obj["HasNewPoster"]);
+                    b.FreeQuantity = Convert.ToInt32(obj["FreeQuantity"]);
                     if (isNew)
                         db.Movie.Add(b);
 
